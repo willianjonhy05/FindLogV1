@@ -1,0 +1,270 @@
+       :root {
+           --primary: #0f172a;
+           --primary-light: #1e3a8a;
+           --accent: #0ea5e9;
+           --success: #10b981;
+           --bg: #f8fafc;
+           --text: #334155;
+           --white: #ffffff;
+       }
+
+
+       * {
+           box-sizing: border-box;
+       }
+
+
+       body {
+           margin: 0;
+           font-family: "Inter", "Segoe UI", Arial, sans-serif;
+           background: var(--bg);
+           color: var(--text);
+       }
+
+
+       /* HEADER */
+
+       .topbar {
+
+           height: 70px;
+           background: var(--primary);
+           color: white;
+           position: fixed;
+           top: 0;
+           left: 0;
+           width: 100%;
+           z-index: 1050;
+
+       }
+
+
+       .logo {
+
+           font-size: 1.4rem;
+           font-weight: 800;
+           color: white;
+           text-decoration: none;
+
+       }
+
+
+       .logo i {
+
+           color: var(--accent);
+
+       }
+
+
+
+       .btn-menu {
+
+           color: white;
+           border: none;
+           background: transparent;
+           font-size: 1.5rem;
+
+       }
+
+
+       .profile {
+
+           cursor: pointer;
+
+       }
+
+
+       .dropdown-menu {
+
+           border-radius: 12px;
+           border: none;
+           box-shadow: 0 10px 30px rgba(0, 0, 0, .15);
+
+       }
+
+
+
+       /* SIDEBAR */
+
+       .sidebar {
+
+           position: fixed;
+           top: 70px;
+           left: 0;
+           bottom: 0;
+           width: 260px;
+           background: var(--primary);
+           padding: 20px;
+           transition: .3s;
+           z-index: 1040;
+
+       }
+
+
+       .sidebar a {
+
+           display: flex;
+           align-items: center;
+           gap: 12px;
+           padding: 13px 15px;
+           margin-bottom: 8px;
+           color: #cbd5e1;
+           text-decoration: none;
+           border-radius: 12px;
+           transition: .3s;
+
+       }
+
+
+       .sidebar a:hover,
+       .sidebar a.active {
+
+           background: rgba(14, 165, 233, .15);
+           color: white;
+
+       }
+
+
+       .sidebar a i {
+
+           color: var(--accent);
+
+       }
+
+
+
+       /* CONTENT */
+
+       .main {
+
+           margin-left: 260px;
+           padding-top: 90px;
+           min-height: calc(100vh - 50px);
+           padding-right: 30px;
+           padding-left: 30px;
+
+       }
+
+
+       .welcome-card {
+
+           background: linear-gradient(135deg, var(--primary), var(--primary-light));
+           color: white;
+           border-radius: 22px;
+           padding: 35px;
+
+       }
+
+
+
+       .stat-card {
+
+           border: none;
+           border-radius: 18px;
+           background: white;
+           box-shadow: 0 10px 30px rgba(0, 0, 0, .06);
+           transition: .3s;
+
+       }
+
+
+       .stat-card:hover {
+
+           transform: translateY(-5px);
+
+       }
+
+
+       .stat-icon {
+
+           width: 55px;
+           height: 55px;
+           border-radius: 15px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 25px;
+           background: rgba(14, 165, 233, .15);
+           color: var(--accent);
+
+       }
+
+
+       .table-card {
+
+           border: none;
+           border-radius: 18px;
+           box-shadow: 0 10px 30px rgba(0, 0, 0, .06);
+
+       }
+
+
+
+       /* FOOTER */
+
+       .footer-admin {
+
+           margin-left: 260px;
+           background: white;
+           padding: 15px;
+           text-align: center;
+           color: #64748b;
+           font-size: .9rem;
+
+       }
+
+
+
+       /* MOBILE */
+
+       @media(max-width:991px) {
+
+
+           .sidebar {
+
+               transform: translateX(-100%);
+
+           }
+
+
+           .sidebar.show {
+
+               transform: translateX(0);
+
+           }
+
+
+           .main {
+
+               margin-left: 0;
+               padding-left: 15px;
+               padding-right: 15px;
+
+           }
+
+
+           .footer-admin {
+
+               margin-left: 0;
+
+           }
+
+
+           .overlay {
+
+               display: none;
+               position: fixed;
+               inset: 70px 0 0;
+               background: rgba(0, 0, 0, .45);
+               z-index: 1030;
+
+           }
+
+
+           .overlay.show {
+
+               display: block;
+
+           }
+
+
+       }
