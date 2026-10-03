@@ -1,7 +1,7 @@
 from flask import Flask
 from routes import main_routes
 from database.sqlitedb import SQLiteDB
-from routes.instituicao.routes import instituicao_rotas
+from routes.instituicao_routes import instituicao_rotas
 
 app = Flask(__name__)
 
