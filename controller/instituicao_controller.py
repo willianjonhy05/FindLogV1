@@ -38,11 +38,50 @@ def nova_instituicao():
 
 
 def lista_instituicoes():
-
     instituicoes = Instituicao.get_all()
-
 
     return render_template(
         'admin/instituicao/lista.html',
         instituicoes=instituicoes
     )
+    
+    
+def deletar_instituicao(cnpj):
+    instituicao = Instituicao.get_by_cnpj(cnpj)
+    if instituicao:
+        instituicao.delete()
+        return redirect(url_for('lista_instituicoes'))
+    
+def atualizar_instituicao(cnpj):
+    instituicao = Instituicao.get_by_cnpj(cnpj)
+    if not instituicao:
+        return "Instituição não encontrada", 404
+
+    if request.method == 'GET':
+        return render_template(
+            'admin/instituicao/atualizar.html',
+            instituicao=instituicao
+        )
+
+    elif request.method == 'POST':
+        instituicao.nome = request.form.get('nome')
+        instituicao.endereco = request.form.get('endereco')
+        instituicao.telefone = request.form.get('telefone')
+        instituicao.email = request.form.get('email')
+        instituicao.ativo = bool(request.form.get('ativo'))
+
+        instituicao.update()
+        return redirect(url_for('lista_instituicoes'))
+
+    else:
+        return "Método não permitido", 405
+    
+def instituicao_por_cnpj(cnpj):
+    instituicao = Instituicao.get_by_cnpj(cnpj)
+    if instituicao:
+        return render_template(
+            'admin/instituicao/detalhes.html',
+            instituicao=instituicao
+        )
+    else:
+        return "Instituição não encontrada", 404

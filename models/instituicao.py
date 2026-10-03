@@ -4,10 +4,7 @@ from utils.cnpj import validar_cnpj
 
 
 class Instituicao:
-
-
     def __init__(self, nome, cnpj, endereco, telefone, email):
-
         self.nome = nome
         self.cnpj = cnpj
         self.endereco = endereco
@@ -15,13 +12,8 @@ class Instituicao:
         self.email = email
         self.ativo = False
 
-
-
     def __str__(self):
-
         return self.nome
-
-
 
     def save(self):
         from daos.instituicao_dao import InstituicaoDAO
@@ -29,17 +21,27 @@ class Instituicao:
         resultado = dao.add_instituicao(self)
         return resultado == 1
 
-
-
-
     @staticmethod
     def get_all():
         from daos.instituicao_dao import InstituicaoDAO
         dao = InstituicaoDAO()
         return dao.get_instituicoes()
-
-
-
+    
+    @staticmethod
+    def get_by_cnpj(cnpj):
+        from daos.instituicao_dao import InstituicaoDAO
+        dao = InstituicaoDAO()
+        return dao.get_instituicao_by_cnpj(cnpj)
+    
+    def delete(self):
+        from daos.instituicao_dao import InstituicaoDAO
+        dao = InstituicaoDAO()
+        dao.deletar_instituicao(self.cnpj)
+        
+    def update(self):
+        from daos.instituicao_dao import InstituicaoDAO
+        dao = InstituicaoDAO()
+        dao.atualizar_instituicao(self)
 
 
     # ==========================
@@ -48,24 +50,16 @@ class Instituicao:
 
     @property
     def nome(self):
-
         return self._nome
-
-
 
     @nome.setter
     def nome(self, value):
-
         if not value or not value.strip():
-
             raise ValueError(
                 "O nome da instituição não pode ser vazio."
             )
 
         self._nome = value.strip()
-
-
-
 
 
     # ==========================
@@ -74,25 +68,15 @@ class Instituicao:
 
     @property
     def cnpj(self):
-
         return self._cnpj
-
-
 
     @cnpj.setter
     def cnpj(self, value):
-
         if not value or not validar_cnpj(value):
-
             raise ValueError(
                 "O CNPJ informado não é válido."
             )
-
         self._cnpj = formatar(value)
-
-
-
-
 
     # ==========================
     # ENDEREÇO
@@ -100,25 +84,15 @@ class Instituicao:
 
     @property
     def endereco(self):
-
         return self._endereco
-
-
 
     @endereco.setter
     def endereco(self, value):
-
         if not value or not value.strip():
-
             raise ValueError(
                 "O endereço não pode ser vazio."
             )
-
         self._endereco = value.strip()
-
-
-
-
 
     # ==========================
     # TELEFONE
@@ -126,36 +100,21 @@ class Instituicao:
 
     @property
     def telefone(self):
-
         return self._telefone
-
-
 
     @telefone.setter
     def telefone(self, value):
-
         if not value:
-
             raise ValueError(
                 "O telefone não pode ser vazio."
             )
-
-
         value = formatar(value)
 
-
         if len(value) < 10:
-
             raise ValueError(
-                "O telefone deve possuir pelo menos 11 dígitos."
+                "O telefone deve possuir pelo menos 10 dígitos."
             )
-
-
         self._telefone = value
-
-
-
-
 
     # ==========================
     # EMAIL
@@ -163,26 +122,15 @@ class Instituicao:
 
     @property
     def email(self):
-
         return self._email
-
-
 
     @email.setter
     def email(self, value):
-
         if not value or not validar_email(value):
-
             raise ValueError(
                 "O e-mail informado não é válido."
             )
-
-
         self._email = value
-
-
-
-
 
     # ==========================
     # STATUS
@@ -190,19 +138,12 @@ class Instituicao:
 
     @property
     def ativo(self):
-
         return self._ativo
-
-
 
     @ativo.setter
     def ativo(self, value):
-
         if not isinstance(value, bool):
-
             raise ValueError(
                 "O status deve ser booleano."
             )
-
-
         self._ativo = value
