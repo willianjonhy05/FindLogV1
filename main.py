@@ -2,6 +2,7 @@ from flask import Flask
 from routes import main_routes
 from database.sqlitedb import SQLiteDB
 from routes.instituicao_routes import instituicao_rotas
+from routes.sala_routes import sala_rotas
 import os
 from supabase import create_client, Client
 from dotenv import load_dotenv
@@ -22,3 +23,4 @@ db.desconectar()
 
 main_routes.adicionar_rotas(app)
 instituicao_rotas(app)
+sala_rotas(app)

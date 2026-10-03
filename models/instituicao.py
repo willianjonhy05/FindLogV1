@@ -20,6 +20,16 @@ class Instituicao:
         dao = InstituicaoDAO()
         resultado = dao.add_instituicao(self)
         return resultado
+    
+    def listar_instituicoes_ativas(self):
+        from daos.instituicao_dao import InstituicaoDAO
+        dao = InstituicaoDAO()
+        return dao.get_nome_e_cnpj_ativos()
+    
+    def nome_por_cnpj(self, cnpj):
+        from daos.instituicao_dao import InstituicaoDAO
+        dao = InstituicaoDAO()
+        return dao.get_nome_por_cnpj(cnpj)
 
     @staticmethod
     def get_all():

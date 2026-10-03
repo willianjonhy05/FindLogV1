@@ -149,3 +149,27 @@ class InstituicaoDAO:
         #     instituicao.ativo = bool(row[5])
         #     return instituicao
         # return None
+        
+        
+    def get_nome_e_cnpj_ativos(self):
+        from main import supabase
+        from models.instituicao import Instituicao
+        response = supabase.table("instituicoes").select("nome, cnpj, ativo").execute()
+        instituicoes = []
+        for row in response.data:
+            if row["ativo"]:
+                instituicao = Instituicao(
+                    nome=row["nome"],
+                    cnpj=row["cnpj"]
+            )
+            instituicoes.append(instituicao)
+        return instituicoes
+    
+    
+    def get_nome_por_cnpj(self, cnpj):
+        from main import supabase
+        response = supabase.table("instituicoes").select("nome").eq("cnpj", cnpj).execute()
+        if response.data:
+            return response.data[0]["nome"]
+        return None
+    
