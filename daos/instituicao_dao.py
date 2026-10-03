@@ -7,47 +7,76 @@ class InstituicaoDAO:
         self.db = SQLiteDB()
 
     def get_instituicoes(self):
+        from main import supabase
         from models.instituicao import Instituicao
-        self.db.conectar()
-        sql = "SELECT nome, cnpj, endereco, telefone, email, ativo FROM instituicoes;"
-        resultados = self.db.consultar(query=sql)
+        response = supabase.table('instituicoes').select("*").execute()
         instituicoes = []
-        for row in resultados:
-            nome=row[0]
-            cnpj=row[1]
-            endereco=row[2]
-            telefone=row[3]
-            email=row[4]
-            instituicao = Instituicao(nome=nome, cnpj=cnpj, endereco=endereco, telefone=telefone, email=email)
-            instituicao.ativo = bool(row[5])
+        for row in response.data:
+            instituicao = Instituicao(
+                nome=row["nome"],
+                cnpj=row["cnpj"],
+                endereco=row["endereco"],
+                telefone=row["telefone"],
+                email=row["email"]
+            )
+            instituicao.ativo = bool(row["ativo"])
             instituicoes.append(instituicao)
-        self.db.desconectar()
         return instituicoes
+        
+        
+        # self.db.conectar()
+        # sql = "SELECT nome, cnpj, endereco, telefone, email, ativo FROM instituicoes;"
+        # resultados = self.db.consultar(query=sql)
+        # instituicoes = []
+        # for row in resultados:
+        #     nome=row[0]
+        #     cnpj=row[1]
+        #     endereco=row[2]
+        #     telefone=row[3]
+        #     email=row[4]
+        #     instituicao = Instituicao(nome=nome, cnpj=cnpj, endereco=endereco, telefone=telefone, email=email)
+        #     instituicao.ativo = bool(row[5])
+        #     instituicoes.append(instituicao)
+        # self.db.desconectar()
+        # return instituicoes
 
     from models.instituicao import Instituicao
     def add_instituicao(self, instituicao):
+        from main import supabase
+        
+        dados = {
+            "nome": instituicao.nome,
+            "cnpj": instituicao.cnpj,
+            "endereco": instituicao.endereco,
+            "telefone": instituicao.telefone,
+            "email": instituicao.email,
+            "ativo": int(instituicao.ativo)
+        }
+        
+        resposta = supabase.table("instituicoes").insert(dados).execute()
+        return resposta.data[0] if resposta.data else None
 
-        self.db.conectar()
+        # self.db.conectar()
 
-        sql = """
-        INSERT INTO instituicoes 
-        (nome, cnpj, endereco, telefone, email, ativo)
-        VALUES (?, ?, ?, ?, ?, ?)
-        """
+        # sql = """
+        # INSERT INTO instituicoes 
+        # (nome, cnpj, endereco, telefone, email, ativo)
+        # VALUES (?, ?, ?, ?, ?, ?)
+        # """
 
-        self.db.executar(
-            sql,
-            (
-                instituicao.nome,
-                instituicao.cnpj,
-                instituicao.endereco,
-                instituicao.telefone,
-                instituicao.email,
-                int(instituicao.ativo)
-            )
-        )
+        # self.db.executar(
+        #     sql,
+        #     (
+        #         instituicao.nome,
+        #         instituicao.cnpj,
+        #         instituicao.endereco,
+        #         instituicao.telefone,
+        #         instituicao.email,
+        #         int(instituicao.ativo)
+        #     )
+        # )
 
-        self.db.desconectar()
+        # self.db.desconectar()
 
         return 1  
 

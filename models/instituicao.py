@@ -19,7 +19,7 @@ class Instituicao:
         from daos.instituicao_dao import InstituicaoDAO
         dao = InstituicaoDAO()
         resultado = dao.add_instituicao(self)
-        return resultado == 1
+        return resultado
 
     @staticmethod
     def get_all():
