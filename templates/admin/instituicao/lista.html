@@ -78,11 +78,8 @@ Lista de Instituições
 
                     <th>Status</th>
 
-                    <th>Telefone</th>
 
-                    <th>E-mail</th>
-
-                    <th>Ações</th>
+                    <th colspan="3">Ações</th>
 
                 </tr>
 
@@ -142,21 +139,6 @@ Lista de Instituições
 
 
 
-                    <td class="telefone-format">
-
-                        {{ instituicao.telefone }}
-
-                    </td>
-
-
-
-                    <td>
-
-                        {{ instituicao.email }}
-
-                    </td>
-
-
 
                     <td>
 
@@ -170,6 +152,17 @@ Lista de Instituições
                         </a>
 
 
+
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('view_instituicao', cnpj=instituicao.cnpj) }}" class="btn btn-sm btn-outline-info">
+                            <i class="bi bi-eye"></i>
+                        </a>
 
                     </td>
 

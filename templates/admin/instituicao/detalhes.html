@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Detalhes da Instituição
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<div class="welcome-card mb-4">
+
+
+    <h1 class="fw-bold">
+
+        <i class="bi bi-building"></i>
+
+        Detalhes da Instituição
+
+    </h1>
+
+
+    <p class="mb-0">
+
+        Visualização completa das informações cadastradas no FindLog.
+
+    </p>
+
+
+</div>
+
+
+
+
+
+<div class="row g-4">
+
+
+
+    <!-- Informações principais -->
+
+    <div class="col-lg-8">
+
+
+        <div class="card table-card p-4">
+
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+
+                <h4 class="fw-bold mb-0">
+
+                    Dados da Instituição
+
+                </h4>
+
+
+                <span class="badge {% if instituicao.ativo %}bg-success{% else %}bg-danger{% endif %}">
+
+                    {% if instituicao.ativo %}
+                    Ativo
+                    {% else %}
+                    Inativo
+                    {% endif %}
+
+                </span>
+
+
+            </div>
+
+
+
+
+
+            <div class="row g-4">
+
+
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+
+                        Nome
+
+                    </label>
+
+
+                    <div class="fw-semibold">
+
+                        {{ instituicao.nome }}
+
+                    </div>
+
+                </div>
+
+
+
+
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+
+                        CNPJ
+
+                    </label>
+
+
+                    <div class="fw-semibold cnpj-format">
+
+                        {{ instituicao.cnpj }}
+
+                    </div>
+
+                </div>
+
+
+
+
+
+
+                <div class="col-12">
+
+
+                    <label class="text-muted small">
+
+                        Endereço
+
+                    </label>
+
+
+                    <div class="fw-semibold">
+
+                        {{ instituicao.endereco }}
+
+                    </div>
+
+
+                </div>
+
+
+
+
+
+
+                <div class="col-md-6">
+
+
+                    <label class="text-muted small ">
+
+                        Telefone
+
+                    </label>
+
+
+                    <div class="fw-semibold telefone-format">
+
+
+                        <i class="bi bi-telephone text-info"></i>
+
+                        {{ instituicao.telefone }}
+
+
+                    </div>
+
+
+                </div>
+
+
+
+
+
+
+                <div class="col-md-6">
+
+
+                    <label class="text-muted small">
+
+                        E-mail
+
+                    </label>
+
+
+                    <div class="fw-semibold">
+
+
+                        <i class="bi bi-envelope text-info"></i>
+
+                        {{ instituicao.email }}
+
+
+                    </div>
+
+
+                </div>
+
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+    <!-- Card lateral -->
+
+    <div class="col-lg-4">
+
+
+        <div class="card table-card p-4">
+
+
+            <h5 class="fw-bold mb-4">
+
+                Ações
+
+            </h5>
+
+
+
+            <div class="d-grid gap-3">
+
+
+
+                <a href="#" class="btn btn-primary-custom">
+
+
+                    <i class="bi bi-pencil"></i>
+
+                    Editar Instituição
+
+
+                </a>
+
+
+
+
+
+                <a href="{{ url_for('lista_instituicoes') }}" class="btn btn-outline-secondary">
+
+
+                    <i class="bi bi-arrow-left"></i>
+
+                    Voltar para Lista
+
+
+                </a>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+        <div class="card table-card p-4 mt-4">
+
+
+            <h6 class="fw-bold">
+
+                Status do Cadastro
+
+            </h6>
+
+
+            <p class="mb-0 text-muted">
+
+                {% if instituicao.ativo %}
+
+                Esta instituição está habilitada para utilização do sistema.
+
+                {% else %}
+
+                Esta instituição está desativada.
+
+                {% endif %}
+
+            </p>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+</div>
+
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/formatar_dados.js') }}"></script>
+    
+{% endblock %}
