@@ -236,13 +236,11 @@ Detalhes da Instituição
 
 
 
-                <a href="#" class="btn btn-primary-custom">
-
+                <a href="{{ url_for('atualizar_instituicao', cnpj=instituicao.cnpj) }}" class="btn btn-primary-custom">
 
                     <i class="bi bi-pencil"></i>
 
                     Editar Instituição
-
 
                 </a>
 
@@ -317,5 +315,5 @@ Detalhes da Instituição
 {% block scripts %}
 
 <script src="{{ url_for('static', filename='js/formatar_dados.js') }}"></script>
-    
+
 {% endblock %}

@@ -143,7 +143,8 @@ Lista de Instituições
                     <td>
 
 
-                        <a href="#" class="btn btn-sm btn-outline-primary">
+                        <a href="{{ url_for('atualizar_instituicao', cnpj=instituicao.cnpj) }}"
+                            class="btn btn-sm btn-outline-primary">
 
 
                             <i class="bi bi-pencil"></i>
@@ -155,12 +156,18 @@ Lista de Instituições
 
                     </td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-outline-danger">
+
+                        <a href="{{ url_for('deletar_instituicao', cnpj=instituicao.cnpj) }}"
+                            class="btn btn-sm btn-outline-danger btn-delete" data-nome="{{ instituicao.nome }}">
+
                             <i class="bi bi-trash"></i>
+
                         </a>
+
                     </td>
                     <td>
-                        <a href="{{ url_for('view_instituicao', cnpj=instituicao.cnpj) }}" class="btn btn-sm btn-outline-info">
+                        <a href="{{ url_for('view_instituicao', cnpj=instituicao.cnpj) }}"
+                            class="btn btn-sm btn-outline-info">
                             <i class="bi bi-eye"></i>
                         </a>
 
@@ -193,5 +200,6 @@ Lista de Instituições
 {% block scripts %}
 
 <script src="{{ url_for('static', filename='js/formatar_dados.js') }}"></script>
-    
+<script src="{{ url_for('static', filename='js/confirmar_exclusao.js') }}"></script>
+
 {% endblock %}

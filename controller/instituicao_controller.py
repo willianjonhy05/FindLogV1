@@ -51,6 +51,7 @@ def deletar_instituicao(cnpj):
     if instituicao:
         instituicao.delete()
         return redirect(url_for('lista_instituicoes'))
+    return "Instituição não encontrada", 404
     
 def atualizar_instituicao(cnpj):
     instituicao = Instituicao.get_by_cnpj(cnpj)
@@ -68,7 +69,7 @@ def atualizar_instituicao(cnpj):
         instituicao.endereco = request.form.get('endereco')
         instituicao.telefone = request.form.get('telefone')
         instituicao.email = request.form.get('email')
-        instituicao.ativo = bool(request.form.get('ativo'))
+        instituicao.ativo = request.form.get('ativo') == "1"
 
         instituicao.update()
         return redirect(url_for('lista_instituicoes'))

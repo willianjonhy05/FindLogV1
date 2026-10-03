@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Atualizar Instituição
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<div class="welcome-card mb-4">
+
+
+    <h1 class="fw-bold">
+
+        <i class="bi bi-pencil-square"></i>
+
+        Atualizar Instituição
+
+    </h1>
+
+
+    <p class="mb-0">
+
+        Edite as informações da instituição cadastrada no FindLog.
+
+    </p>
+
+
+</div>
+
+
+
+
+
+<div class="card table-card p-4">
+
+
+    <form method="POST" action="{{ url_for('atualizar_instituicao', cnpj=instituicao.cnpj) }}">
+
+
+
+        <div class="row g-4">
+
+
+
+
+
+            <!-- CNPJ -->
+
+            <div class="col-md-4">
+
+
+                <label class="form-label fw-semibold">
+
+                    CNPJ
+
+                </label>
+
+
+                <input type="text" class="form-control" value="{{ instituicao.cnpj }}" readonly>
+
+
+                <small class="text-muted">
+
+                    O CNPJ não pode ser alterado.
+
+                </small>
+
+
+            </div>
+
+
+
+
+
+
+
+            <!-- Nome -->
+
+
+            <div class="col-md-8">
+
+
+                <label class="form-label fw-semibold">
+
+                    Nome da Instituição
+
+                </label>
+
+
+                <input type="text" name="nome" class="form-control" value="{{ instituicao.nome }}" required>
+
+
+            </div>
+
+
+
+
+
+
+
+            <!-- Endereço -->
+
+
+            <div class="col-12">
+
+
+                <label class="form-label fw-semibold">
+
+                    Endereço
+
+                </label>
+
+
+                <input type="text" name="endereco" class="form-control" value="{{ instituicao.endereco }}" required>
+
+
+            </div>
+
+
+
+
+
+
+
+            <!-- Telefone -->
+
+
+            <div class="col-md-6">
+
+
+                <label class="form-label fw-semibold">
+
+                    Telefone
+
+                </label>
+
+
+                <input type="text" name="telefone" class="form-control" value="{{ instituicao.telefone }}" required>
+
+
+            </div>
+
+
+
+
+
+
+
+
+            <!-- Email -->
+
+
+            <div class="col-md-6">
+
+
+                <label class="form-label fw-semibold">
+
+                    E-mail
+
+                </label>
+
+
+                <input type="email" name="email" class="form-control" value="{{ instituicao.email }}" required>
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+            <!-- Status -->
+
+
+            <div class="col-md-6">
+
+
+                <label class="form-label fw-semibold">
+
+                    Status da Instituição
+
+                </label>
+
+
+
+                <select name="ativo" class="form-select">
+
+
+
+                    <option value="1" {% if instituicao.ativo %} selected {% endif %}>
+
+                        Ativo
+
+                    </option>
+
+
+
+
+                    <option value="0" {% if not instituicao.ativo %} selected {% endif %}>
+
+                        Inativo
+
+                    </option>
+
+
+
+                </select>
+
+
+
+            </div>
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+        <hr class="my-4">
+
+
+
+
+
+
+        <div class="d-flex justify-content-end gap-3">
+
+
+            <a href="{{ url_for('lista_instituicoes') }}" class="btn btn-outline-secondary">
+
+
+                <i class="bi bi-arrow-left"></i>
+
+                Cancelar
+
+
+            </a>
+
+
+
+
+
+            <button type="submit" class="btn btn-primary-custom">
+
+
+                <i class="bi bi-check-circle"></i>
+
+                Salvar Alterações
+
+
+            </button>
+
+
+
+        </div>
+
+
+
+
+
+    </form>
+
+
+
+</div>
+
+
+
+
+
+{% endblock %}
