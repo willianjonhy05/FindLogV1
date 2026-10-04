@@ -24,3 +24,58 @@ CREATE TABLE IF NOT EXISTS salas (
         ON DELETE CASCADE 
         ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS categorias (
+    codigo INTEGER PRIMARY KEY,
+    nome TEXT NOT NULL,
+    descricao TEXT
+);
+
+CREATE TABLE IF NOT EXISTS itens (
+    id INTEGER PRIMARY KEY,
+    cor TEXT,
+    tamanho TEXT,
+    data TEXT NOT NULL,
+    foto TEXT,
+    categoria_codigo INTEGER NOT NULL,
+    onde_encontrado TEXT NOT NULL,
+    quem_encontrou TEXT NOT NULL,
+    onde_guardado TEXT NOT NULL,
+    CONSTRAINT fk_categoria
+        FOREIGN KEY (categoria_codigo)
+        REFERENCES categorias (codigo)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS itens (
+    id INTEGER PRIMARY KEY,
+    cor TEXT,
+    tamanho TEXT,
+    data TEXT NOT NULL,
+    foto TEXT,
+    categoria_codigo INTEGER NOT NULL,
+    onde_encontrado TEXT NOT NULL,
+    usuario_matricula TEXT NOT NULL,
+    onde_guardado TEXT NOT NULL,
+    instituicao_cnpj TEXT NOT NULL,
+
+    CONSTRAINT fk_categoria
+        FOREIGN KEY (categoria_codigo)
+        REFERENCES categorias (codigo)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_usuario
+        FOREIGN KEY (usuario_matricula)
+        REFERENCES usuarios (matricula)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_instituicao
+        FOREIGN KEY (instituicao_cnpj)
+        REFERENCES instituicoes (cnpj)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+
+);
