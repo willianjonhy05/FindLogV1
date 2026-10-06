@@ -36,12 +36,12 @@ class CategoriaDAO:
 
         for row in response.data:
             categoria = Categoria(
-                nome=linha['nome'],
-                descricao=linha['descricao'],
-                codigo=linha['codigo'],
-                slug=linha['slug']
+                nome=row['nome'],
+                descricao=row['descricao'],
+                codigo=row['codigo'],
+                slug=row['slug']
             )
-            categoria.ativa = bool(linha['ativa'])
+            categoria.ativa = bool(row['ativa'])
             categorias.append(categoria)
 
         return categorias
