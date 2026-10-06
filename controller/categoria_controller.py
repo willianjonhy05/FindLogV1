@@ -25,7 +25,7 @@ def listar_categorias():
     categorias = Categoria.get_all()
     return render_template('admin/categoria/lista.html', categorias=categorias)
 
-def atualizar_categoria():
+def atualizar_categoria(codigo):
     categoria = Categoria.get_by_codigo(codigo)
     if not categoria:
         return "Categoria não encontrada", 404
