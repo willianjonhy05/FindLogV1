@@ -12,6 +12,13 @@ class Instituicao:
         self.email = email
         self.ativo = False
 
+        # self.data = data
+        # self.errors = []
+
+    # def validate():
+    #     pass
+
+
     def __str__(self):
         return self.nome
 

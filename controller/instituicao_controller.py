@@ -36,7 +36,6 @@ def nova_instituicao():
 
 
 
-
 def lista_instituicoes():
     instituicoes = Instituicao.get_all()
 
