@@ -39,7 +39,14 @@ Com o ambiente virtual ativado, instale as dependências do projeto:
 pip install -r requirements.txt
 ```
 
+
 ### Passo 6
+
+Entre em contato com o William para preecher corretamente as variáveis do arquivo .env
+
+
+### Passo 7
+
 Para rodar o sistema localmente em modo de desenvolvimento, execute o comando:
 
 ```
