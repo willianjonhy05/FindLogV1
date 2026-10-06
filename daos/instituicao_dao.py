@@ -22,7 +22,51 @@ class InstituicaoDAO:
             instituicao.ativo = bool(row["ativo"])
             instituicoes.append(instituicao)
         return instituicoes
-        
+
+
+        # from database.infinityfree import conectar_banco
+        # from models.instituicao import Instituicao
+        # import mysql.connector
+
+        # conexao = None
+        # cursor = None
+        # lista_instituicoes = []
+
+        # try:
+        #     conexao = conectar_banco()
+        #     if not conexao:
+        #         return lista_instituicoes
+
+        #     cursor = conexao.cursor(dictionary=True)
+
+        #     query = "SELECT nome, cnpj, endereco, telefone, email, ativo FROM instituicoes"
+        #     cursor.execute(query)
+        #     resultados = cursor.fetchall()
+
+        #     for linha in resultados:
+        #         inst = Instituicao(
+        #             nome=linha['nome'],
+        #             cnpj=linha['cnpj'],
+        #             endereco=linha['endereco'],
+        #             telefone=linha['telefone'],
+        #             email=linha['email']
+        #         )
+                
+        #         inst.ativo = bool(linha['ativo'])
+                
+        #         lista_instituicoes.append(inst)
+
+        # except mysql.connector.Error as erro:
+        #     print(f"Erro ao consultar o banco de dados: {erro}")
+
+        # finally:
+        #     if cursor:
+        #         cursor.close()
+        #     if conexao and conexao.is_connected():
+        #         conexao.close()
+
+        # return lista_instituicoes
+
         
         # self.db.conectar()
         # sql = "SELECT nome, cnpj, endereco, telefone, email, ativo FROM instituicoes;"
@@ -39,6 +83,7 @@ class InstituicaoDAO:
         #     instituicoes.append(instituicao)
         # self.db.desconectar()
         # return instituicoes
+
 
     from models.instituicao import Instituicao
     def add_instituicao(self, instituicao):
