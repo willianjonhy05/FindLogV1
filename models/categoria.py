@@ -1,8 +1,14 @@
+import unicodedata
+import re
+
 class Categoria:
-    def __init__(self, nome, codigo, descricao):
+    def __init__(self, nome, descricao, codigo=None, slug=None):
         self.nome = nome
-        self.codigo = codigo
+        self.ativa = True
         self.descricao = descricao
+        
+        self._codigo = codigo if codigo else self._gerar_codigo_inicial(nome)
+        self._slug = slug if slug else self._gerar_slug(nome)
 
     def __str__(self):
         return self.nome
@@ -11,6 +17,36 @@ class Categoria:
         from daos.categoria_dao import CategoriaDAO
         dao = CategoriaDAO()
         return dao.add_categoria(self)
+
+
+    @staticmethod
+    def _gerar_slug(nome):
+        """Converte o nome em um slug amigável para URLs (ex: 'Tecnologia da Informação' -> 'tecnologia-da-informacao')"""
+        if not nome:
+            return ""
+        # Normaliza para remover acentos
+        nfkd_form = unicodedata.normalize('NFKD', nome)
+        texto_sem_acento = "".join([c for c in nfkd_form if not unicodedata.combining(c)])
+        
+        # Converte para minúsculas, remove caracteres especiais e substitui espaços por hífens
+        slug = texto_sem_acento.lower()
+        slug = re.sub(r'[^a-z0-9\s-]', '', slug)
+        slug = re.sub(r'[\s-]+', '-', slug).strip('-')
+        return slug
+
+    @staticmethod
+    def _gerar_codigo_inicial(nome):
+        """Gera as duas primeiras letras do nome em maiúsculo + dois números padrão (ex: TE01)"""
+        if not nome or len(nome.strip()) < 2:
+            return "XX01"
+        
+        limpo = nome.strip().upper()
+        # Pega as 2 primeiras letras (ignorando espaços ou caracteres especiais iniciais se necessário)
+        letras = re.sub(r'[^A-Z]', '', limpo)[:2]
+        if len(letras) < 2:
+            letras = (letras + 'X')[:2]
+            
+        return f"{letras}01"        
 
     @staticmethod
     def get_all():
@@ -57,15 +93,13 @@ class Categoria:
     def codigo(self):
         return self._codigo
 
-    @codigo.setter
-    def codigo(self, value):
-        if not value:
-            raise ValueError("O código da categoria não pode ser vazio.")
+    # ==========================
+    # SLUG (Imutável - Apenas Getter)
+    # ==========================
+    @property
+    def slug(self):
+        return self._slug        
 
-        if not isinstance(value, int):
-            raise ValueError("O código deve ser um número inteiro.")
-
-        self._codigo = value
 
     # ==========================
     # DESCRIÇÃO
@@ -81,3 +115,17 @@ class Categoria:
             raise ValueError("A descrição não pode ser vazia.")
 
         self._descricao = value.strip()
+
+
+    # ==========================
+    # ATIVA
+    # ==========================
+    @property
+    def ativa(self):
+        return self._ativa
+
+    @ativa.setter
+    def ativa(self, value):
+        if not isinstance(value, bool):
+            raise ValueError("O status deve ser booleano.")
+        self._ativa = value        

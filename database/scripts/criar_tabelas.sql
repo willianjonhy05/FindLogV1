@@ -26,10 +26,13 @@ CREATE TABLE IF NOT EXISTS salas (
 );
 
 CREATE TABLE IF NOT EXISTS categorias (
-    codigo INTEGER PRIMARY KEY,
-    nome TEXT NOT NULL,
-    descricao TEXT
+    codigo VARCHAR(4) PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL UNIQUE,
+    descricao TEXT,
+    ativa BOOLEAN DEFAULT TRUE
 );
+
 
 CREATE TABLE IF NOT EXISTS itens (
     id INTEGER PRIMARY KEY,
