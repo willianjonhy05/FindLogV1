@@ -70,6 +70,30 @@ class Categoria:
         dao = CategoriaDAO()
         dao.atualizar_categoria(self)
 
+
+    @staticmethod
+    def contar_total():
+        from daos.categoria_dao import CategoriaDAO
+        dao = CategoriaDAO()
+        return dao.contar_total()
+
+    @staticmethod
+    def contar_por_status(ativa=True):
+        from daos.categoria_dao import CategoriaDAO
+        dao = CategoriaDAO()
+        return dao.contar_por_status(ativa)
+
+    @staticmethod
+    def obter_estatisticas():
+        """Retorna um dicionário com o total, ativas e inativas de uma só vez."""
+        from daos.categoria_dao import CategoriaDAO
+        dao = CategoriaDAO()
+        return {
+            "total": dao.contar_total(),
+            "ativas": dao.contar_por_status(True),
+            "inativas": dao.contar_por_status(False)
+        }
+
     # ==========================
     # NOME
     # ==========================

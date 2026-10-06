@@ -128,3 +128,21 @@ class CategoriaDAO:
     #         categoria.descricao,
     #         categoria.codigo
     #     ))
+
+    def contar_total(self):
+        from main import supabase
+        try:
+            resposta = supabase.table("categorias").select("*", count="exact", head=True).execute()
+            return resposta.count if resposta.count is not None else 0
+        except Exception as e:
+            print(f"Erro ao contar total de categorias: {e}")
+            return 0
+
+    def contar_por_status(self, ativa):
+        from main import supabase
+        try:
+            resposta = supabase.table("categorias").select("*", count="exact", head=True).eq("ativa", ativa).execute()
+            return resposta.count if resposta.count is not None else 0
+        except Exception as e:
+            print(f"Erro ao contar categorias por status: {e}")
+            return 0

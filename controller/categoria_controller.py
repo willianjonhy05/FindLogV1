@@ -45,7 +45,6 @@ def atualizar_categoria(codigo):
         categoria.update()
         return redirect(url_for('lista_categorias'))
 
-
     else:
         return "Método não permitido", 405
 
