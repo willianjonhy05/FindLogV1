@@ -4,13 +4,76 @@ from utils.cnpj import validar_cnpj
 
 
 class Instituicao:
-    def __init__(self, nome, cnpj, endereco, telefone, email):
-        self.nome = nome
-        self.cnpj = cnpj
-        self.endereco = endereco
-        self.telefone = telefone
-        self.email = email
-        self.ativo = False
+    def __init__(self, data):
+        self.data = data
+        self.errors = []
+
+        if "ativo" not in self.data:
+            self.data["ativo"] = False
+
+    def __str__(self):
+        return self.data.get("nome", "Nome não definido")
+    
+    def validate(self):
+        self.errors = []
+        if not self.data.get("nome") or not self.data.get("nome").strip():
+            self.errors.append("O nome da instituição não pode ser vazio.")
+
+        # Validação do CNPJ
+        cnpj = self.data.get("cnpj")
+        if not cnpj:
+            self.errors.append("O CNPJ não pode ser vazio.")
+        else:
+            cnpj_valido = validar_cnpj(cnpj)
+            if isinstance(cnpj_valido, str):
+                self.errors.append(cnpj_valido)
+
+        # Validação do endereço
+        if not self.data.get("endereco") or not self.data.get("endereco").strip():
+            self.errors.append("O endereço não pode ser vazio.")
+
+        # Validação do telefone
+        telefone = self.data.get("telefone")
+        if not telefone:
+            self.errors.append("O telefone não pode ser vazio.")
+        else:
+            telefone_formatado = formatar(telefone)
+            if len(telefone_formatado) < 10:
+                self.errors.append("O telefone deve possuir pelo menos 10 dígitos.")
+
+        # Validação do e-mail
+        email = self.data.get("email")
+        if not email:
+            self.errors.append("O e-mail não pode ser vazio.")
+        else:
+            email_valido = validar_email(email)
+            if isinstance(email_valido, str):
+                self.errors.append(email_valido)
+
+        return len(self.errors) == 0
+
+    def save(self):
+        from daos.instituicao_dao import InstituicaoDAO
+        dao = InstituicaoDAO()
+        return dao.add_instituicao(self)
+    
+    def delete(self):
+        from daos.instituicao_dao import InstituicaoDAO
+        dao = InstituicaoDAO()
+        dao.deletar_instituicao(self.cnpj)
+         
+    def update(self):
+        from daos.instituicao_dao import InstituicaoDAO
+        dao = InstituicaoDAO()
+        dao.atualizar_instituicao(self)
+    
+    # def __init__(self, nome, cnpj, endereco, telefone, email):
+    #     self.nome = nome
+    #     self.cnpj = cnpj
+    #     self.endereco = endereco
+    #     self.telefone = telefone
+    #     self.email = email
+    #     self.ativo = False
 
         # self.data = data
         # self.errors = []
@@ -18,22 +81,14 @@ class Instituicao:
     # def validate():
     #     pass
 
-
-    def __str__(self):
-        return self.nome
-
-    def save(self):
-        from daos.instituicao_dao import InstituicaoDAO
-        dao = InstituicaoDAO()
-        resultado = dao.add_instituicao(self)
-        return resultado
-    
-    def listar_instituicoes_ativas(self):
+    @staticmethod
+    def listar_instituicoes_ativas():
         from daos.instituicao_dao import InstituicaoDAO
         dao = InstituicaoDAO()
         return dao.get_nome_e_cnpj_ativos()
     
-    def nome_por_cnpj(self, cnpj):
+    @staticmethod
+    def nome_por_cnpj(cnpj):
         from daos.instituicao_dao import InstituicaoDAO
         dao = InstituicaoDAO()
         return dao.get_nome_por_cnpj(cnpj)
@@ -48,119 +103,34 @@ class Instituicao:
     def get_by_cnpj(cnpj):
         from daos.instituicao_dao import InstituicaoDAO
         dao = InstituicaoDAO()
-        return dao.get_instituicao_by_cnpj(cnpj)
-    
-    def delete(self):
-        from daos.instituicao_dao import InstituicaoDAO
-        dao = InstituicaoDAO()
-        dao.deletar_instituicao(self.cnpj)
-        
-    def update(self):
-        from daos.instituicao_dao import InstituicaoDAO
-        dao = InstituicaoDAO()
-        dao.atualizar_instituicao(self)
-
-
-    # ==========================
-    # NOME
-    # ==========================
+        return dao.get_instituicao_by_cnpj(cnpj)    
 
     @property
     def nome(self):
-        return self._nome
-
-    @nome.setter
-    def nome(self, value):
-        if not value or not value.strip():
-            raise ValueError(
-                "O nome da instituição não pode ser vazio."
-            )
-
-        self._nome = value.strip()
-
-
-    # ==========================
-    # CNPJ
-    # ==========================
+        return self.data.get("nome")
 
     @property
     def cnpj(self):
-        return self._cnpj
-
-    @cnpj.setter
-    def cnpj(self, value):
-        if not value or not validar_cnpj(value):
-            raise ValueError(
-                "O CNPJ informado não é válido."
-            )
-        self._cnpj = formatar(value)
-
-    # ==========================
-    # ENDEREÇO
-    # ==========================
+        return self.data.get("cnpj")
 
     @property
     def endereco(self):
-        return self._endereco
-
-    @endereco.setter
-    def endereco(self, value):
-        if not value or not value.strip():
-            raise ValueError(
-                "O endereço não pode ser vazio."
-            )
-        self._endereco = value.strip()
-
-    # ==========================
-    # TELEFONE
-    # ==========================
+        return self.data.get("endereco")
 
     @property
     def telefone(self):
-        return self._telefone
-
-    @telefone.setter
-    def telefone(self, value):
-        if not value:
-            raise ValueError(
-                "O telefone não pode ser vazio."
-            )
-        value = formatar(value)
-
-        if len(value) < 10:
-            raise ValueError(
-                "O telefone deve possuir pelo menos 10 dígitos."
-            )
-        self._telefone = value
-
-    # ==========================
-    # EMAIL
-    # ==========================
+        return self.data.get("telefone")
 
     @property
     def email(self):
-        return self._email
-
-    @email.setter
-    def email(self, value):
-        if not value or not validar_email(value):
-            raise ValueError(
-                "O e-mail informado não é válido."
-            )
-        self._email = value
-
-    # ==========================
-    # STATUS
-    # ==========================
+        return self.data.get("email")
 
     @property
     def ativo(self):
-        return self._ativo
+        return self.data.get("ativo", False)
 
     @ativo.setter
     def ativo(self, value):
         if not isinstance(value, bool):
-            raise ValueError(
-                "O status deve ser booleano."
-            )
-        self._ativo = value
+            raise ValueError("O status deve ser booleano.")
+        self.data["ativo"] = value
