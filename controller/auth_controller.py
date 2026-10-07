@@ -6,14 +6,14 @@ def login():
         # Se já estiver logado, redireciona para a home/dashboard
         if 'usuario_username' in session:
             return redirect(url_for('lista_usuarios'))
-        return render_template('admin/auth/login.html')
+        return render_template('login.html')
 
     elif request.method == 'POST':
         username = request.form.get('username')
         senha = request.form.get('senha')
 
         if not username or not senha:
-            return render_template('admin/auth/login.html', erro="Preencha todos os campos."), 400
+            return render_template('login.html', erro="Preencha todos os campos."), 400
 
         # Busca o usuário pelo username
         usuario = Usuario.get_by_username(username)
@@ -27,7 +27,7 @@ def login():
             
             return redirect(url_for('lista_usuarios')) # Altere para sua rota inicial protegida
 
-        return render_template('admin/auth/login.html', erro="Usuário ou senha inválidos."), 401
+        return render_template('login.html', erro="Usuário ou senha inválidos."), 401
 
     else:
         return "Método não permitido", 405
