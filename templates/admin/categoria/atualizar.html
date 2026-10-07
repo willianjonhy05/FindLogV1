@@ -1,11 +1,191 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends "base.html" %}
+
+
+{% block title %}
+Atualizar Categoria
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<div class="welcome-card mb-4">
+
+
+    <h1 class="fw-bold">
+
+        <i class="bi bi-pencil-square"></i>
+
+        Atualizar Categoria
+
+    </h1>
+
+
+    <p class="mb-0">
+
+        Edite as informações da instituição cadastrada no FindLog.
+
+    </p>
+
+
+</div>
+
+
+
+
+
+<div class="card table-card p-4">
+
+
+    <form method="POST" action="{{ url_for('atualizar_categoria', codigo=categoria.codigo) }}">
+
+
+
+        <div class="row g-4">
+
+
+
+
+
+            <div class="col-12">
+
+
+                <label class="form-label fw-semibold">
+
+                    Nome da Categoria
+
+                </label>
+
+
+                <input type="text" name="nome" class="form-control" value="{{ categoria.nome }}" required>
+
+
+            </div>
+
+
+            <div class="col-12">
+
+
+                <label class="form-label fw-semibold">
+
+                    Descrição da Categoria
+
+                </label>
+
+
+                <input type="text" name="descricao" class="form-control" value="{{ categoria.descricao }}" required>
+
+
+            </div>
+
+
+
+
+            <!-- Status -->
+
+
+            <div class="col-md-6">
+
+
+                <label class="form-label fw-semibold">
+
+                    Status da Categoria
+
+                </label>
+
+
+
+                <select name="ativo" class="form-select">
+
+
+
+                    <option value="1" {% if categoria.ativa %} selected {% endif %}>
+
+                        Ativo
+
+                    </option>
+
+
+
+
+                    <option value="0" {% if not categoria.ativa %} selected {% endif %}>
+
+                        Inativo
+
+                    </option>
+
+
+
+                </select>
+
+
+
+            </div>
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+        <hr class="my-4">
+
+
+
+
+
+
+        <div class="d-flex justify-content-end gap-3">
+
+
+            <a href="{{ url_for('lista_categorias') }}" class="btn btn-outline-secondary">
+
+
+                <i class="bi bi-arrow-left"></i>
+
+                Cancelar
+
+
+            </a>
+
+
+
+
+
+            <button type="submit" class="btn btn-primary-custom">
+
+
+                <i class="bi bi-check-circle"></i>
+
+                Salvar Alterações
+
+
+            </button>
+
+
+
+        </div>
+
+
+
+
+
+    </form>
+
+
+
+</div>
+
+
+
+
+
+{% endblock %}
+
