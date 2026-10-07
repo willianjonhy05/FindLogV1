@@ -49,7 +49,7 @@
 
         <div class="d-flex align-items-center gap-4">
 
-
+<!-- 
             <button class="btn text-white position-relative">
 
                 <i class="bi bi-bell fs-5"></i>
@@ -58,7 +58,7 @@
                     3
                 </span>
 
-            </button>
+            </button> -->
 
 
 
@@ -168,6 +168,15 @@
 
         <a href="#">
 
+            <i class="bi bi-people"></i>
+
+            Usuários
+
+
+        </a>
+
+        <a href="#">
+
             <i class="bi bi-box-seam"></i>
 
             Itens Cadastrados
@@ -175,11 +184,11 @@
         </a>
 
 
-        <a href="#">
+        <a href="#" class="{{ 'active' if request.endpoint == 'lista_salas' else '' }}">
 
-            <i class="bi bi-arrow-left-right"></i>
+            <i class="bi bi-door-closed"></i>
 
-            Solicitações
+            Salas
 
         </a>
 
