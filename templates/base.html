@@ -140,11 +140,28 @@
         </div>
 
 
-        <a href="#" class="active">
+        <a href="#" class="">
 
             <i class="bi bi-speedometer2"></i>
 
             Dashboard
+
+        </a>
+
+        
+        <a href="{{ url_for('lista_instituicoes') }}" class="{{ 'active' if request.endpoint == 'lista_instituicoes' else '' }}">
+
+            <i class="bi bi-building"></i>
+
+            Instituições
+
+        </a>
+
+        <a href="{{ url_for('lista_categorias') }}" class="{{ 'active' if request.endpoint == 'lista_categorias' else '' }}">
+
+            <i class="bi bi-bookmarks"></i>
+
+            Categorias
 
         </a>
 
@@ -176,13 +193,6 @@
         </a>
 
 
-        <a href="{{ url_for('lista_instituicoes') }}">
-
-            <i class="bi bi-building"></i>
-
-            Instituições
-
-        </a>
 
 
         <a href="#">

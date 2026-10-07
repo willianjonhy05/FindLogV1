@@ -1,4 +1,3 @@
-
 from models.categoria import Categoria
 from flask import render_template, redirect, request, url_for
 
@@ -6,17 +5,28 @@ def nova_categoria():
     if request.method == 'GET':
         return render_template('admin/categoria/nova.html')
 
-    elif resquest.method == 'POST':
-        nome = request.form.get('nome')
-        descricao = request.form.get('descricao')
+    elif request.method == 'POST':
+        # Empacota os dados do formulário em um dicionário
+        dados = {
+            "nome": request.form.get('nome'),
+            "descricao": request.form.get('descricao'),
+            "ativa": True # Padrão para nova categoria
+        }
 
-        categoria = Categoria(
-            nome=nome,
-            descricao=descricao
-        )
+        # Instancia a classe passando o dicionário data
+        categoria = Categoria(data=dados)
 
-        if categoria.save():
+        # Valida (is_new=True verifica unicidade de código e slug)
+        if categoria.validate(is_new=True):
+            categoria.save()
             return redirect(url_for('lista_categorias'))
+
+        # Se houver erros, retorna para o formulário exibindo as mensagens de erro
+        return render_template(
+            'admin/categoria/nova.html',
+            categoria=categoria,
+            erros=categoria.errors
+        ), 400
 
     else:
         return "Método não permitido", 405
@@ -34,21 +44,33 @@ def atualizar_categoria(codigo):
         return render_template('admin/categoria/atualizar.html', categoria=categoria)
 
     elif request.method == 'POST':
-        novo_nome = request.form.get('nome')        
-        nova_descricao = request.form.get('descricao')
-        ativo_form = True if request.form.get('ativa') else False
+        # Atualiza os dados através das propriedades (que modificam o self.data interno)
+        try:
+            categoria.nome = request.form.get('nome')
+            categoria.descricao = request.form.get('descricao')
+            categoria.ativa = True if request.form.get('ativa') else False
+        except ValueError as e:
+            # Caso algum setter lance uma exceção (ex: valor vazio)
+            return render_template(
+                'admin/categoria/atualizar.html',
+                categoria=categoria,
+                erros=[str(e)]
+            ), 400
 
-        categoria.nome = novo_nome
-        categoria.descricao = nova_descricao
-        categoria.ativa = ativo_form
+        # Valida a atualização (is_new=False pois já existe no banco)
+        if categoria.validate(is_new=False):
+            categoria.update()
+            return redirect(url_for('lista_categorias'))
 
-        categoria.update()
-        return redirect(url_for('lista_categorias'))
+        # Se houver erros de validação
+        return render_template(
+            'admin/categoria/atualizar.html',
+            categoria=categoria,
+            erros=categoria.errors
+        ), 400
 
     else:
         return "Método não permitido", 405
-
-
 
 def apagar_categoria(codigo):
     categoria = Categoria.get_by_codigo(codigo)
