@@ -5,6 +5,7 @@ from routes.instituicao_routes import instituicao_rotas
 from routes.sala_routes import sala_rotas
 from routes.categoria_routes import categoria_routes
 from routes.usuario_routes import usuario_routes
+from routes.item_routes import item_rotas
 import os
 from supabase import create_client, Client
 from dotenv import load_dotenv
@@ -26,5 +27,6 @@ supabase = create_client(
 main_routes.adicionar_rotas(app)
 instituicao_rotas(app)
 categoria_routes(app)
+item_rotas(app)
 usuario_routes(app)
 sala_rotas(app)
