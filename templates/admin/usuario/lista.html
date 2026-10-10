@@ -1,11 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Lista de Usuários</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .btn { background: #007bff; color: white; padding: 6px 12px; text-decoration: none; border-radius: 3px; }
+        .btn-novo { margin-bottom: 20px; display: inline-block; }
+        img { border-radius: 50%; object-fit: cover; }
+    </style>
 </head>
 <body>
-    
+
+    <h1>Usuários Cadastrados</h1>
+
+    <a href="{{ url_for('novo_usuario') }}" class="btn btn-novo">+ Novo Usuário</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Foto</th>
+                <th>Username</th>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>CPF</th>
+                <th>Tipo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in usuarios %}
+            <tr>
+                <td>
+                    {% if u.foto_perfil %}
+                        <img src="{{ url_for('static', filename=u.foto_perfil) }}" alt="Foto" width="40" height="40">
+                    {% else %}
+                        <span>-</span>
+                    {% endif %}
+                </td>
+                <td>{{ u.username }}</td>
+                <td>{{ u.nome }}</td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.cpf }}</td>
+                <td>
+                    {% if u.tipo_usuario == 1 %} Administrador
+                    {% elif u.tipo_usuario == 2 %} Usuário Comum
+                    {% elif u.tipo_usuario == 3 %} Servidor
+                    {% endif %}
+                </td>
+                <td>
+                    <!-- Adicione links para editar/visualizar se necessário -->
+                    <a href="#" class="btn" style="background: #ffc107; color: black;">Editar</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" style="text-align: center;">Nenhum usuário cadastrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 </body>
 </html>

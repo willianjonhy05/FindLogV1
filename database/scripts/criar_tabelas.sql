@@ -51,52 +51,96 @@ CREATE TABLE IF NOT EXISTS usuarios (
 );
 
 
-
 CREATE TABLE IF NOT EXISTS itens (
-    id INTEGER PRIMARY KEY,
-    cor TEXT,
+    codigo TEXT PRIMARY KEY,
+    cor TEXT NOT NULL,
     tamanho TEXT,
-    data TEXT NOT NULL,
+    material TEXT,
+    detalhes TEXT,
     foto TEXT,
-    categoria_codigo INTEGER NOT NULL,
-    onde_encontrado TEXT NOT NULL,
-    quem_encontrou TEXT NOT NULL,
-    onde_guardado TEXT NOT NULL,
-    CONSTRAINT fk_categoria
-        FOREIGN KEY (categoria_codigo)
-        REFERENCES categorias (codigo)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS itens (
-    id INTEGER PRIMARY KEY,
-    cor TEXT,
-    tamanho TEXT,
-    data TEXT NOT NULL,
-    foto TEXT,
-    categoria_codigo INTEGER NOT NULL,
-    onde_encontrado TEXT NOT NULL,
-    usuario_matricula TEXT NOT NULL,
-    onde_guardado TEXT NOT NULL,
+    status INTEGER NOT NULL DEFAULT 1,
+    data_cadastro TIMESTAMP NOT NULL,
+    data_devolucao TIMESTAMP,
+    onde_encontrado TEXT,
+    categoria_codigo VARCHAR(4) NOT NULL,
     instituicao_cnpj TEXT NOT NULL,
-
-    CONSTRAINT fk_categoria
-        FOREIGN KEY (categoria_codigo)
-        REFERENCES categorias (codigo)
-        ON DELETE CASCADE
+    onde_guardado_codigo TEXT,
+    quem_encontrou_username TEXT,
+    dono_username TEXT,
+    CONSTRAINT fk_categoria 
+        FOREIGN KEY (categoria_codigo) 
+        REFERENCES categorias (codigo) 
+        ON DELETE RESTRICT 
         ON UPDATE CASCADE,
-
-    CONSTRAINT fk_usuario
-        FOREIGN KEY (usuario_matricula)
-        REFERENCES usuarios (matricula)
-        ON DELETE CASCADE
+    CONSTRAINT fk_instituicao_item 
+        FOREIGN KEY (instituicao_cnpj) 
+        REFERENCES instituicoes (cnpj) 
+        ON DELETE CASCADE 
         ON UPDATE CASCADE,
-
-    CONSTRAINT fk_instituicao
-        FOREIGN KEY (instituicao_cnpj)
-        REFERENCES instituicoes (cnpj)
-        ON DELETE CASCADE
+    CONSTRAINT fk_onde_guardado 
+        FOREIGN KEY (onde_guardado_codigo) 
+        REFERENCES salas (codigo) 
+        ON DELETE SET NULL 
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_quem_encontrou 
+        FOREIGN KEY (quem_encontrou_username) 
+        REFERENCES usuarios (username) 
+        ON DELETE SET NULL 
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_dono 
+        FOREIGN KEY (dono_username) 
+        REFERENCES usuarios (username) 
+        ON DELETE SET NULL 
         ON UPDATE CASCADE
-
 );
+
+
+
+-- CREATE TABLE IF NOT EXISTS itens (
+--     id INTEGER PRIMARY KEY,
+--     cor TEXT,
+--     tamanho TEXT,
+--     data TEXT NOT NULL,
+--     foto TEXT,
+--     categoria_codigo INTEGER NOT NULL,
+--     onde_encontrado TEXT NOT NULL,
+--     quem_encontrou TEXT NOT NULL,
+--     onde_guardado TEXT NOT NULL,
+--     CONSTRAINT fk_categoria
+--         FOREIGN KEY (categoria_codigo)
+--         REFERENCES categorias (codigo)
+--         ON DELETE CASCADE
+--         ON UPDATE CASCADE
+-- );
+
+-- CREATE TABLE IF NOT EXISTS itens (
+--     id INTEGER PRIMARY KEY,
+--     cor TEXT,
+--     tamanho TEXT,
+--     data TEXT NOT NULL,
+--     foto TEXT,
+--     categoria_codigo INTEGER NOT NULL,
+--     onde_encontrado TEXT NOT NULL,
+--     usuario_matricula TEXT NOT NULL,
+--     onde_guardado TEXT NOT NULL,
+--     instituicao_cnpj TEXT NOT NULL,
+
+--     CONSTRAINT fk_categoria
+--         FOREIGN KEY (categoria_codigo)
+--         REFERENCES categorias (codigo)
+--         ON DELETE CASCADE
+--         ON UPDATE CASCADE,
+
+--     CONSTRAINT fk_usuario
+--         FOREIGN KEY (usuario_matricula)
+--         REFERENCES usuarios (matricula)
+--         ON DELETE CASCADE
+--         ON UPDATE CASCADE,
+
+--     CONSTRAINT fk_instituicao
+--         FOREIGN KEY (instituicao_cnpj)
+--         REFERENCES instituicoes (cnpj)
+--         ON DELETE CASCADE
+--         ON UPDATE CASCADE
+
+-- );
