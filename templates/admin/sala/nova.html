@@ -1,11 +1,151 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+Nova Sala
+{% endblock %}
+
+{% block content %}
+
+<div class="welcome-card mb-4">
+    <h1 class="fw-bold">
+        <i class="bi bi-door-closed"></i>
+        Nova Sala
+    </h1>
+    <p>
+        Cadastre uma nova sala ou laboratório no sistema.
+    </p>
+</div>
+
+<div class="card table-card p-4">
+    <form method="POST" action="{{ url_for('nova_sala') }}">
+
+        <div class="row g-4">
+
+            <!-- Instituição (Select) -->
+            <div class="col-md-6">
+                <label for="instituicao_cnpj" class="form-label fw-semibold">
+                    Instituição
+                </label>
+                <select id="instituicao_cnpj" name="instituicao_cnpj" class="form-select {{ 'is-invalid' if erros and 'instituicao' in erros else '' }}" required>
+                    <option value="" disabled selected>Selecione a instituição...</option>
+                    {% for inst in instituicoes %}
+                        <option value="{{ inst.cnpj }}" {{ 'selected' if sala and sala.data.get('instituicao') == inst.cnpj else '' }}>
+                            {{ inst.nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+                {% if erros and 'instituicao' in erros %}
+                    <div class="invalid-feedback">
+                        {{ erros['instituicao'] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Prédio -->
+            <div class="col-md-6">
+                <label for="predio" class="form-label fw-semibold">
+                    Prédio
+                </label>
+                <input type="text" id="predio" name="predio" class="form-control {{ 'is-invalid' if erros and 'predio' in erros else '' }}"
+                    placeholder="Ex: Prédio Central / Bloco A" value="{{ sala.data.get('predio', '') if sala and sala.data else '' }}" required>
+                {% if erros and 'predio' in erros %}
+                    <div class="invalid-feedback">
+                        {{ erros['predio'] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Número da Sala -->
+            <div class="col-md-4">
+                <label for="numero" class="form-label fw-semibold">
+                    Número da Sala
+                </label>
+                <input type="text" id="numero" name="numero" class="form-control {{ 'is-invalid' if erros and 'numero' in erros else '' }}"
+                    placeholder="Ex: 101, 204" value="{{ sala.data.get('numero', '') if sala and sala.data else '' }}" required>
+                {% if erros and 'numero' in erros %}
+                    <div class="invalid-feedback">
+                        {{ erros['numero'] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Andar -->
+            <div class="col-md-4">
+                <label for="andar" class="form-label fw-semibold">
+                    Andar
+                </label>
+                <input type="text" id="andar" name="andar" class="form-control {{ 'is-invalid' if erros and 'andar' in erros else '' }}"
+                    placeholder="Ex: 1º Andar, Térreo" value="{{ sala.data.get('andar', '') if sala and sala.data else '' }}">
+                {% if erros and 'andar' in erros %}
+                    <div class="invalid-feedback">
+                        {{ erros['andar'] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Telefone -->
+            <div class="col-md-4">
+                <label for="telefone" class="form-label fw-semibold">
+                    Telefone da Sala
+                </label>
+                <input type="text" id="telefone" name="telefone" class="form-control {{ 'is-invalid' if erros and 'telefone' in erros else '' }}"
+                    placeholder="(00) 0000-0000" value="{{ sala.data.get('telefone', '') if sala and sala.data else '' }}">
+                {% if erros and 'telefone' in erros %}
+                    <div class="invalid-feedback">
+                        {{ erros['telefone'] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Descrição -->
+            <div class="col-12">
+                <label for="descricao" class="form-label fw-semibold">
+                    Descrição
+                </label>
+                <textarea id="descricao" name="descricao" rows="3" class="form-control {{ 'is-invalid' if erros and 'descricao' in erros else '' }}"
+                    placeholder="Detalhes adicionais sobre a sala...">{{ sala.data.get('descricao', '') if sala and sala.data else '' }}</textarea>
+                {% if erros and 'descricao' in erros %}
+                    <div class="invalid-feedback">
+                        {{ erros['descricao'] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Checkboxes (Tipo de Espaço) -->
+            <div class="col-12">
+                <label class="form-label fw-semibold d-block mb-2">
+                    Tipo de Espaço
+                </label>
+                <div class="d-flex gap-4">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="laboratorio" name="laboratorio" value="true"
+                            {{ 'checked' if sala and sala.data.get('laboratorio') else '' }}>
+                        <label class="form-check-label" for="laboratorio">É Laboratório</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="sala_de_aula" name="sala_de_aula" value="true"
+                            {{ 'checked' if sala and sala.data.get('sala_de_aula') else '' }}>
+                        <label class="form-check-label" for="sala_de_aula">É Sala de Aula</label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <hr class="my-4">
+
+        <div class="d-flex justify-content-end gap-3">
+            <a href="{{ url_for('lista_salas') }}" class="btn btn-outline-secondary">
+                Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle"></i>
+                Salvar Sala
+            </button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}
+

@@ -1,11 +1,165 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+Editar Sala
+{% endblock %}
+
+{% block content %}
+
+<div class="welcome-card mb-4">
+    <h1 class="fw-bold">
+        <i class="bi bi-pencil-square"></i>
+        Editar Sala
+    </h1>
+    <p>
+        Atualize as informações da sala ou laboratório selecionado.
+    </p>
+</div>
+
+<!-- Exibição de Erros Globais (caso venham como lista de strings) -->
+{% if erros and erros is iterable and erros is not mapping %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <strong>Atenção:</strong>
+        <ul class="mb-0 mt-1">
+            {% for erro in erros %}
+                <li>{{ erro }}</li>
+            {% endfor %}
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
+
+<div class="card table-card p-4">
+    <form method="POST" action="{{ url_for('editar_sala', codigo=sala.codigo) }}">
+
+        <div class="row g-4">
+
+            <!-- Instituição (Select) -->
+            <div class="col-md-6">
+                <label for="instituicao_cnpj" class="form-label fw-semibold">
+                    Instituição
+                </label>
+                <select id="instituicao_cnpj" name="instituicao_cnpj" class="form-select {{ 'is-invalid' if erros is mapping and 'instituicao' in erros else '' }}" required>
+                    <option value="" disabled>Selecione a instituição...</option>
+                    {% for inst in instituicoes %}
+                        <option value="{{ inst.cnpj }}" {{ 'selected' if sala.instituicao == inst.cnpj else '' }}>
+                            {{ inst.nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+                {% if erros is mapping and 'instituicao' in erros %}
+                    <div class="invalid-feedback">
+                        {{ erros['instituicao'] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Prédio -->
+            <div class="col-md-6">
+                <label for="predio" class="form-label fw-semibold">
+                    Prédio
+                </label>
+                <input type="text" id="predio" name="predio" class="form-control {{ 'is-invalid' if erros is mapping and 'predio' in erros else '' }}"
+                    placeholder="Ex: Prédio Central / Bloco A" value="{{ sala.predio or '' }}" required>
+                {% if erros is mapping and 'predio' in erros %}
+                    <div class="invalid-feedback">
+                        {{ erros['predio'] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Número da Sala -->
+            <div class="col-md-4">
+                <label for="numero" class="form-label fw-semibold">
+                    Número da Sala
+                </label>
+                <input type="text" id="numero" name="numero" class="form-control {{ 'is-invalid' if erros is mapping and 'numero' in erros else '' }}"
+                    placeholder="Ex: 101, 204" value="{{ sala.numero or '' }}" required>
+                {% if erros is mapping and 'numero' in erros %}
+                    <div class="invalid-feedback">
+                        {{ erros['numero'] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Andar -->
+            <div class="col-md-4">
+                <label for="andar" class="form-label fw-semibold">
+                    Andar
+                </label>
+                <input type="text" id="andar" name="andar" class="form-control {{ 'is-invalid' if erros is mapping and 'andar' in erros else '' }}"
+                    placeholder="Ex: 1º Andar, Térreo" value="{{ sala.andar or '' }}">
+                {% if erros is mapping and 'andar' in erros %}
+                    <div class="invalid-feedback">
+                        {{ erros['andar'] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Telefone -->
+            <div class="col-md-4">
+                <label for="telefone" class="form-label fw-semibold">
+                    Telefone da Sala
+                </label>
+                <input type="text" id="telefone" name="telefone" class="form-control {{ 'is-invalid' if erros is mapping and 'telefone' in erros else '' }}"
+                    placeholder="(00) 0000-0000" value="{{ sala.telefone or '' }}">
+                {% if erros is mapping and 'telefone' in erros %}
+                    <div class="invalid-feedback">
+                        {{ erros['telefone'] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Descrição -->
+            <div class="col-12">
+                <label for="descricao" class="form-label fw-semibold">
+                    Descrição
+                </label>
+                <textarea id="descricao" name="descricao" rows="3" class="form-control {{ 'is-invalid' if erros is mapping and 'descricao' in erros else '' }}"
+                    placeholder="Detalhes adicionais sobre a sala...">{{ sala.descricao or '' }}</textarea>
+                {% if erros is mapping and 'descricao' in erros %}
+                    <div class="invalid-feedback">
+                        {{ erros['descricao'] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Checkboxes (Tipo de Espaço) -->
+            <div class="col-12">
+                <label class="form-label fw-semibold d-block mb-2">
+                    Tipo de Espaço
+                </label>
+                <div class="d-flex gap-4">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="laboratorio" name="laboratorio" value="true"
+                            {{ 'checked' if sala.laboratorio else '' }}>
+                        <label class="form-check-label" for="laboratorio">É Laboratório</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="sala_de_aula" name="sala_de_aula" value="true"
+                            {{ 'checked' if sala.sala_de_aula else '' }}>
+                        <label class="form-check-label" for="sala_de_aula">É Sala de Aula</label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <hr class="my-4">
+
+        <div class="d-flex justify-content-end gap-3">
+            <a href="{{ url_for('lista_salas') }}" class="btn btn-outline-secondary">
+                Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle"></i>
+                Salvar Alterações
+            </button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}
+

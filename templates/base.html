@@ -186,7 +186,7 @@
         </a>
 
 
-        <a href="#" class="{{ 'active' if request.endpoint == 'lista_salas' else '' }}">
+        <a href="{{ url_for('lista_salas') }}" class="{{ 'active' if request.endpoint == 'lista_salas' else '' }}">
 
             <i class="bi bi-door-closed"></i>
 
