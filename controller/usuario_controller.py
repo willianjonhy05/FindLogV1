@@ -175,10 +175,16 @@ def deletar_usuario(username):
 
 def visualizar_usuario(username):
     usuario = Usuario.get_by_username(username)
+    cpnj_instituicao = usuario.instituicao    
+    context = {
+        "usuario": usuario,
+        "cpnj_instituicao": cpnj_instituicao
+    }
+
     if usuario:
         return render_template(
             'admin/usuario/detalhes.html',
-            usuario=usuario
+            **context
         )
     else:
         return "Usuário não encontrado", 404

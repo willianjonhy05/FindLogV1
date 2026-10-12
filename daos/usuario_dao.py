@@ -151,3 +151,35 @@ class UsuarioDAO:
         except Exception as e:
             print(f"Erro ao contar total de usuários: {e}")
             return 0
+
+
+    def qtd_usuarios_na_instituicao(self, cnpj):
+        from main import supabase
+
+        try:
+            resposta = supabase.table("usuarios").select("*", count="exact", head=True).eq("instituicao_cnpj", cnpj).execute()
+            return resposta.count if resposta.count is not None else 0
+
+        except Exception as e:
+            print(f"Erro ao contar total de usuários: {e}")
+            return 0
+
+    def get_usuarios_by_instituicao(self, cnpj):
+        from main import supabase
+        from models.usuario import Usuario
+        
+        response = supabase.table('usuarios').select("*").eq("instituicao_cnpj", cnpj).execute()
+        usuarios = []
+        
+        data_rows = response.data if hasattr(response, 'data') else response
+        
+        for row in data_rows:
+            # Mapeia as colunas do banco para as chaves internas que o modelo Usuario espera
+            row_data = row.copy()
+            row_data["instituicao"] = row.get("instituicao_cnpj")
+            row_data["sala"] = row.get("sala_codigo")
+            
+            usuario = Usuario(data=row_data)
+            usuarios.append(usuario)
+            
+        return usuarios            

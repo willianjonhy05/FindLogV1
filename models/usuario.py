@@ -160,6 +160,12 @@ class Usuario:
         return dao.get_usuarios()
 
     @staticmethod
+    def get_all_by_instituicao(cnpj):
+        from daos.usuario_dao import UsuarioDAO
+        dao = UsuarioDAO()
+        return dao.get_usuarios_by_instituicao(cnpj)    
+
+    @staticmethod
     def get_by_username(username):
         from daos.usuario_dao import UsuarioDAO
         dao = UsuarioDAO()
@@ -357,3 +363,10 @@ class Usuario:
         from daos.usuario_dao import UsuarioDAO
         dao = UsuarioDAO()
         return dao.contar_total()
+
+
+    @staticmethod
+    def quantidade_de_usuarios_por_instituicao(cnpj):
+        from daos.usuario_dao import UsuarioDAO
+        dao = UsuarioDAO()
+        return dao.qtd_usuarios_na_instituicao(cnpj)

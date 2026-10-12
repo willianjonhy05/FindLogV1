@@ -87,11 +87,21 @@ def atualizar_instituicao(cnpj):
         return "Método não permitido", 405
     
 def instituicao_por_cnpj(cnpj):
+    from models.usuario import Usuario
     instituicao = Instituicao.get_by_cnpj(cnpj)
+    qtde_usuarios = Usuario.quantidade_de_usuarios_por_instituicao(cnpj)
+    usuarios = Usuario.get_all_by_instituicao(cnpj)
+
+    context = {
+        "instituicao": instituicao,
+        "qtde_usuarios": qtde_usuarios,
+        "usuarios": usuarios
+    }
+
     if instituicao:
         return render_template(
             'admin/instituicao/detalhes.html',
-            instituicao=instituicao
+            **context
         )
     else:
         return "Instituição não encontrada", 404

@@ -104,10 +104,12 @@ Detalhes do Usuário
                     <label class="text-muted small">
                         Instituição Vinculada
                     </label>
+                    <a href="{{ url_for('view_instituicao', cnpj=cpnj_instituicao) }}" class="text-decoration-none">
                     <div class="fw-semibold">
                         <i class="bi bi-building text-info me-1"></i>
                         {{ usuario.nome_instituicao or 'Não vinculada' }}
                     </div>
+                    </a>
                 </div>
 
                 {% if usuario.tipo_usuario == 3 %}
