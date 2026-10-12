@@ -212,7 +212,59 @@
 
        }
 
+       /* ========================================= */
+       /* BARRA DE PESQUISA GLOBAL (TOPBAR)         */
+       /* ========================================= */
 
+       .topbar-search-form .input-group {
+           background: rgba(255, 255, 255, 0.05);
+           border-radius: 10px;
+           border: 1px solid rgba(255, 255, 255, 0.1);
+           overflow: hidden;
+           transition: all 0.3s ease;
+       }
+
+       .topbar-search-form .input-group:focus-within {
+           background: rgba(255, 255, 255, 0.08);
+           border-color: var(--accent);
+           box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+       }
+
+       .topbar-search-input {
+           background: transparent !important;
+           border: none !important;
+           color: #ffffff !important;
+           font-size: 0.9rem;
+           box-shadow: none !important;
+           padding-left: 15px;
+       }
+
+       .topbar-search-input::placeholder {
+           color: #94a3b8;
+       }
+
+       .topbar-search-btn {
+           background: transparent !important;
+           border: none !important;
+           color: #94a3b8 !important;
+           transition: color 0.2s ease;
+       }
+
+       .topbar-search-btn:hover {
+           color: var(--accent) !important;
+       }
+
+       .topbar-search-clear {
+           background: transparent !important;
+           border: none !important;
+           color: #f43f5e !important;
+           /* Tom de alerta/vermelho suave para limpar */
+           transition: color 0.2s ease;
+       }
+
+       .topbar-search-clear:hover {
+           color: #e11d48 !important;
+       }
 
        /* MOBILE */
 

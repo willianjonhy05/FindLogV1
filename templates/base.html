@@ -21,111 +21,54 @@
 
 
     <!-- HEADER -->
-
     <header class="topbar d-flex align-items-center justify-content-between px-3 px-lg-4">
 
-
         <div class="d-flex align-items-center gap-3">
-
-
             <button class="btn-menu d-lg-none" id="sidebarToggle">
-
                 <i class="bi bi-list"></i>
-
             </button>
 
-
             <a href="#" class="logo">
-
                 <i class="bi bi-search"></i>
                 FindLog
-
             </a>
-
-
         </div>
 
-
+        <!-- BLOCO DE PESQUISA GLOBAL OPCIONAL -->
+        <div class="flex-grow-1 px-4 d-none d-md-block" style="max-width: 400px;">
+            {% block search %}
+            <!-- As telas de listagem podem preencher este bloco com um form de busca -->
+            {% endblock %}
+        </div>
 
         <div class="d-flex align-items-center gap-4">
-
-<!-- 
-            <button class="btn text-white position-relative">
-
-                <i class="bi bi-bell fs-5"></i>
-
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    3
-                </span>
-
-            </button> -->
-
-
-
+            <!-- (Resto do seu código do perfil e dropdown...) -->
             <div class="dropdown">
-
                 <div class="profile d-flex align-items-center gap-2" data-bs-toggle="dropdown">
-
-
                     <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center"
                         style="width:40px;height:40px">
-
                         <i class="bi bi-person"></i>
-
                     </div>
-
-
-                <div class="d-none d-md-block">
-                    {% if session.usuario_email %}
+                    <div class="d-none d-md-block">
+                        {% if session.usuario_email %}
                         <strong>{{ session.usuario_nome }}</strong>
-                    {% else %}
+                        {% else %}
                         <strong>Administrador</strong>
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
-
-
-                </div>
-
-
-
                 <ul class="dropdown-menu dropdown-menu-end">
-
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <i class="bi bi-person"></i>
-                            Perfil
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <i class="bi bi-gear"></i>
-                            Configurações
-                        </a>
-                    </li>
-
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Perfil</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Configurações</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-
-                    <li>
-                        <a class="dropdown-item text-danger" href="{{ url_for('logout') }}">
-                            <i class="bi bi-box-arrow-right"></i>
-                            Sair
-                        </a>
-                    </li>
-
+                    <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}"><i
+                                class="bi bi-box-arrow-right"></i> Sair</a></li>
                 </ul>
-
-
             </div>
-
-
         </div>
-
-
     </header>
-
 
 
 
@@ -142,7 +85,8 @@
         </div>
 
 
-        <a href="{{ url_for('dashboard_admin') }}" class="{{ 'active' if request.endpoint == 'dashboard_admin' else '' }}">
+        <a href="{{ url_for('dashboard_admin') }}"
+            class="{{ 'active' if request.endpoint == 'dashboard_admin' else '' }}">
 
             <i class="bi bi-speedometer2"></i>
 
@@ -150,8 +94,9 @@
 
         </a>
 
-        
-        <a href="{{ url_for('lista_instituicoes') }}" class="{{ 'active' if request.endpoint == 'lista_instituicoes' else '' }}">
+
+        <a href="{{ url_for('lista_instituicoes') }}"
+            class="{{ 'active' if request.endpoint == 'lista_instituicoes' else '' }}">
 
             <i class="bi bi-building"></i>
 
@@ -159,7 +104,8 @@
 
         </a>
 
-        <a href="{{ url_for('lista_categorias') }}" class="{{ 'active' if request.endpoint == 'lista_categorias' else '' }}">
+        <a href="{{ url_for('lista_categorias') }}"
+            class="{{ 'active' if request.endpoint == 'lista_categorias' else '' }}">
 
             <i class="bi bi-bookmarks"></i>
 
@@ -168,7 +114,8 @@
         </a>
 
 
-        <a href="{{ url_for('lista_usuarios') }}" class="{{ 'active' if request.endpoint == 'lista_usuarios' else '' }}">
+        <a href="{{ url_for('lista_usuarios') }}"
+            class="{{ 'active' if request.endpoint == 'lista_usuarios' else '' }}">
 
             <i class="bi bi-people"></i>
 
@@ -228,17 +175,17 @@
 
     <!-- MAIN -->
 
-   
+
     <main class="main">
 
-    {% block content %}
+        {% block content %}
 
-    {% endblock %}
+        {% endblock %}
 
-</main>
+    </main>
 
 
-    
+
 
 
 
@@ -259,10 +206,10 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-{% block scripts %}
+    {% block scripts %}
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-    
-{% endblock %}
+
+    {% endblock %}
 
 </body>
 

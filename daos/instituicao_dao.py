@@ -11,7 +11,6 @@ class InstituicaoDAO:
         response = supabase.table('instituicoes').select("*").execute()
         instituicoes = []
         
-        # O Supabase v2 costuma retornar os dados em .data
         data_rows = response.data if hasattr(response, 'data') else response
         
         for row in data_rows:
@@ -20,84 +19,38 @@ class InstituicaoDAO:
             instituicoes.append(instituicao)
         return instituicoes
 
-        # from main import supabase
-        # from models.instituicao import Instituicao
-        # response = supabase.table('instituicoes').select("*").execute()
-        # instituicoes = []
-        # for row in response.data:
-        #     instituicao = Instituicao(
-        #         nome=row["nome"],
-        #         cnpj=row["cnpj"],
-        #         endereco=row["endereco"],
-        #         telefone=row["telefone"],
-        #         email=row["email"]
-        #     )
-        #     instituicao.ativo = bool(row["ativo"])
-        #     instituicoes.append(instituicao)
-        # return instituicoes
-
-
-        # from database.infinityfree import conectar_banco
-        # from models.instituicao import Instituicao
-        # import mysql.connector
-
-        # conexao = None
-        # cursor = None
-        # lista_instituicoes = []
-
-        # try:
-        #     conexao = conectar_banco()
-        #     if not conexao:
-        #         return lista_instituicoes
-
-        #     cursor = conexao.cursor(dictionary=True)
-
-        #     query = "SELECT nome, cnpj, endereco, telefone, email, ativo FROM instituicoes"
-        #     cursor.execute(query)
-        #     resultados = cursor.fetchall()
-
-        #     for linha in resultados:
-        #         inst = Instituicao(
-        #             nome=linha['nome'],
-        #             cnpj=linha['cnpj'],
-        #             endereco=linha['endereco'],
-        #             telefone=linha['telefone'],
-        #             email=linha['email']
-        #         )
-                
-        #         inst.ativo = bool(linha['ativo'])
-                
-        #         lista_instituicoes.append(inst)
-
-        # except mysql.connector.Error as erro:
-        #     print(f"Erro ao consultar o banco de dados: {erro}")
-
-        # finally:
-        #     if cursor:
-        #         cursor.close()
-        #     if conexao and conexao.is_connected():
-        #         conexao.close()
-
-        # return lista_instituicoes
-
+    def get_instituicoes_paginated(self, page=1, per_page=10, search=None):
+        from main import supabase
+        from models.instituicao import Instituicao
         
-        # self.db.conectar()
-        # sql = "SELECT nome, cnpj, endereco, telefone, email, ativo FROM instituicoes;"
-        # resultados = self.db.consultar(query=sql)
-        # instituicoes = []
-        # for row in resultados:
-        #     nome=row[0]
-        #     cnpj=row[1]
-        #     endereco=row[2]
-        #     telefone=row[3]
-        #     email=row[4]
-        #     instituicao = Instituicao(nome=nome, cnpj=cnpj, endereco=endereco, telefone=telefone, email=email)
-        #     instituicao.ativo = bool(row[5])
-        #     instituicoes.append(instituicao)
-        # self.db.desconectar()
-        # return instituicoes
+        # Calcula o intervalo para paginação
+        start = (page - 1) * per_page
+        end = start + per_page - 1
+        
+        # Inicia a query básica pedindo contagem exata
+        query = supabase.table('instituicoes').select("*", count="exact")
+        
+        # Se houver um termo de pesquisa, aplica o filtro OR (nome ou cnpj)
+        if search and search.strip():
+            termo = f"%{search.strip()}%"
+            # O .or_() no Supabase Python filtra se o termo bate em qualquer um dos campos
+            query = query.or_(f"nome.ilike.{termo},cnpj.ilike.{termo}")
+            
+        # Aplica a ordenação e a paginação por range
+        response = query.range(start, end).execute()
+            
+        instituicoes = []
+        data_rows = response.data if hasattr(response, 'data') else []
+        
+        for row in data_rows:
+            instituicao = Instituicao(data=row)
+            instituicoes.append(instituicao)
+            
+        total_count = response.count if hasattr(response, 'count') else len(data_rows)
+        
+        return instituicoes, total_count
 
-
+    
     from models.instituicao import Instituicao
     def add_instituicao(self, instituicao):
         from main import supabase

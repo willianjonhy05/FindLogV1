@@ -104,6 +104,12 @@ class Instituicao:
         from daos.instituicao_dao import InstituicaoDAO
         dao = InstituicaoDAO()
         return dao.get_instituicoes()
+
+    @staticmethod
+    def get_paginated(page=1, per_page=10, search=None):
+        from daos.instituicao_dao import InstituicaoDAO
+        dao = InstituicaoDAO()
+        return dao.get_instituicoes_paginated(page=page, per_page=per_page, search=search)
     
     @staticmethod
     def get_by_cnpj(cnpj):

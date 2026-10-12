@@ -5,6 +5,26 @@ Lista de Instituições
 {% endblock %}
 
 
+{% block search %}
+<form method="GET" action="{{ url_for('lista_instituicoes') }}" class="topbar-search-form">
+    <div class="input-group input-group-sm">
+        <input type="text" name="q" class="form-control topbar-search-input" 
+            placeholder="Pesquisar..." value="{{ request.args.get('q', '') }}">
+            
+        {% if request.args.get('q') %}
+            <a href="{{ url_for('lista_instituicoes') }}" class="btn topbar-search-clear d-flex align-items-center px-2" title="Limpar busca">
+                <i class="bi bi-x-lg"></i>
+            </a>
+        {% endif %}
+        
+        <button class="btn topbar-search-btn px-3" type="submit">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+</form>
+{% endblock %}
+
+
 {% block content %}
 
 
@@ -188,6 +208,36 @@ Lista de Instituições
 
 
     </div>
+
+    <!-- Componente de Paginação do Bootstrap -->
+    {% if total_pages > 1 %}
+    <nav aria-label="Navegação de páginas" class="mt-4">
+        <ul class="pagination justify-content-end mb-0">
+
+            <!-- Botão Anterior -->
+            <li class="page-item {{ 'disabled' if page <= 1 else '' }}">
+                <a class="page-link" href="{{ url_for('lista_instituicoes', page=page-1) }}">
+                    <i class="bi bi-chevron-left"></i> Anterior
+                </a>
+            </li>
+
+            <!-- Números das Páginas -->
+            {% for p in range(1, total_pages + 1) %}
+            <li class="page-item {{ 'active' if p == page else '' }}">
+                <a class="page-link" href="{{ url_for('lista_instituicoes', page=p) }}">{{ p }}</a>
+            </li>
+            {% endfor %}
+
+            <!-- Botão Próxima -->
+            <li class="page-item {{ 'disabled' if page >= total_pages else '' }}">
+                <a class="page-link" href="{{ url_for('lista_instituicoes', page=page+1) }}">
+                    Próxima <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+    {% endif %}
 
 
 

@@ -37,13 +37,32 @@ def nova_instituicao():
         return "Método não permitido", 405
 
 
+# def lista_instituicoes():
+#     instituicoes = Instituicao.get_all()
+#     return render_template(
+#         'admin/instituicao/lista.html',
+#         instituicoes=instituicoes
+#     )
+
+
 def lista_instituicoes():
-    instituicoes = Instituicao.get_all()
+    # Captura a página atual (padrão 1) e o termo de busca 'q' da URL
+    page = request.args.get('page', 1, type=int)
+    termo_busca = request.args.get('q', '', type=str)
+    per_page = 10  # Itens por página
+    
+    # Busca as instituições filtrando por nome/cnpj e aplicando paginação
+    instituicoes, total_registros = Instituicao.get_paginated(page=page, per_page=per_page, search=termo_busca)
+    
+    # Calcula o total de páginas
+    total_pages = (total_registros + per_page - 1) // per_page if total_registros else 1
+    
     return render_template(
         'admin/instituicao/lista.html',
-        instituicoes=instituicoes
+        instituicoes=instituicoes,
+        page=page,
+        total_pages=total_pages
     )
-    
     
 def deletar_instituicao(cnpj):
     instituicao = Instituicao.get_by_cnpj(cnpj)
