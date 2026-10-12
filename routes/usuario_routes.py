@@ -7,4 +7,4 @@ def usuario_routes(app):
     app.add_url_rule('/usuario/lista', endpoint='lista_usuarios', view_func=lista_usuarios, methods=['GET'])
     app.add_url_rule('/usuario/editar/<username>', endpoint='editar_usuario', view_func=editar_usuario, methods=['GET', 'POST'])
     app.add_url_rule('/usuario/deletar/<username>', endpoint='deletar_usuario', view_func=deletar_usuario, methods=['POST'])
-    app.add_url_rule('/usuario//<username>', endpoint='visualizar_usuario', view_func=visualizar_usuario, methods=['GET'])
+    app.add_url_rule('/usuario/<username>', endpoint='visualizar_usuario', view_func=visualizar_usuario, methods=['GET'])
