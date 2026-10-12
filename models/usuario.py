@@ -165,6 +165,13 @@ class Usuario:
         dao = UsuarioDAO()
         return dao.get_usuario_by_username(username)
 
+
+    @staticmethod
+    def get_by_email(email):
+        from daos.usuario_dao import UsuarioDAO
+        dao = UsuarioDAO()
+        return dao.get_usuario_by_email(email)
+
     @staticmethod
     def get_by_cpf(cpf):
         from daos.usuario_dao import UsuarioDAO
@@ -178,6 +185,14 @@ class Usuario:
     @property
     def nome(self):
         return self.data.get("nome")
+
+    @property
+    def primeiro_nome(self):
+        nome_completo = self.data.get("nome")
+        if not nome_completo:
+            return "Usuário"
+        lista_nome = nome_completo.split()
+        return lista_nome[0] if lista_nome else "Usuário"
 
     @nome.setter
     def nome(self, value):
@@ -295,3 +310,10 @@ class Usuario:
             self.data["telefone"] = limpo
         else:
             self.data["telefone"] = None
+
+
+    @staticmethod
+    def contar_total():
+        from daos.usuario_dao import UsuarioDAO
+        dao = UsuarioDAO()
+        return dao.contar_total()

@@ -14,6 +14,8 @@ load_dotenv()
 
 app = Flask(__name__)
 
+app.secret_key = os.environ.get('SECRET_KEY')
+
 supabase = create_client(
     supabase_url=os.getenv("SUPABASE_URL"),
     supabase_key=os.getenv("SUPABASE_KEY")

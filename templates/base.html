@@ -75,11 +75,13 @@
                     </div>
 
 
-                    <div class="d-none d-md-block">
-
+                <div class="d-none d-md-block">
+                    {% if session.usuario_email %}
+                        <strong>{{ session.usuario_nome }}</strong>
+                    {% else %}
                         <strong>Administrador</strong>
-
-                    </div>
+                    {% endif %}
+                </div>
 
 
                 </div>
@@ -107,7 +109,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item text-danger" href="#">
+                        <a class="dropdown-item text-danger" href="{{ url_for('logout') }}">
                             <i class="bi bi-box-arrow-right"></i>
                             Sair
                         </a>
@@ -140,7 +142,7 @@
         </div>
 
 
-        <a href="#" class="">
+        <a href="{{ url_for('dashboard_admin') }}" class="{{ 'active' if request.endpoint == 'dashboard_admin' else '' }}">
 
             <i class="bi bi-speedometer2"></i>
 

@@ -99,6 +99,13 @@ class Item:
             if not cls.get_by_codigo(codigo):
                 return codigo
 
+    @staticmethod
+    def contar_total():
+        from daos.item_dao import ItemDAO
+        dao = ItemDAO()
+        return dao.contar_total()
+
+
     def save(self):
         from daos.item_dao import ItemDAO
         dao = ItemDAO()

@@ -65,6 +65,26 @@ class UsuarioDAO:
             
         return None
 
+    def get_usuario_by_email(self, email):
+        from main import supabase
+        from models.usuario import Usuario
+
+        try:
+            resposta = supabase.table("usuarios").select("*").eq("email", email).execute()
+            data_rows = resposta.data if hasattr(resposta, 'data') else resposta
+
+            if data_rows and len(data_rows) > 0:
+                row = data_rows[0]
+                row_data = row.copy()
+                row_data["instituicao"] = row.get("instituicao_cnpj")
+                row_data["sala"] = row.get("sala_codigo")
+                return Usuario(data=row_data)
+        except Exception as erro:
+            print(f"Erro ao buscar usuário por email: {erro}") # <--- Corrigido a mensagem
+
+        return None
+
+
     def get_usuario_by_cpf(self, cpf):
         from main import supabase
         from models.usuario import Usuario
@@ -119,3 +139,13 @@ class UsuarioDAO:
         except Exception as erro:
             print(f"Erro ao deletar usuário: {erro}")
             return None
+
+
+    def contar_total(self):
+        from main import supabase
+        try:
+            resposta = supabase.table("usuarios").select("*", count="exact", head=True).execute()
+            return resposta.count if resposta.count is not None else 0
+        except Exception as e:
+            print(f"Erro ao contar total de usuários: {e}")
+            return 0

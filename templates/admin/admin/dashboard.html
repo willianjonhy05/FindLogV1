@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <!-- CARTÃO DE BOAS-VINDAS -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="welcome-card shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <h1 class="h3 fw-bold mb-1">Bem-vindo ao FindLog!</h1>
+                    <p class="mb-0 text-white-50">Aqui está um resumo geral do sistema de localização e logística.</p>
+                </div>
+                <div>
+                    <span class="badge bg-light text-dark px-3 py-2 rounded-pill fs-6">
+                        <i class="bi bi-calendar-event me-1"></i> Painel Administrativo
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARDS DE ESTATÍSTICAS -->
+    <div class="row g-4 mb-4">
+        
+        <!-- Salas -->
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card stat-card p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted d-block mb-1 text-uppercase fw-semibold" style="font-size: 0.8rem;">Salas</span>
+                        <h2 class="fw-bold mb-0 text-dark">{{ total_salas|default(0) }}</h2>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="bi bi-door-closed"></i>
+                    </div>
+                </div>
+                <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between">
+                    <a href="#" class="text-decoration-none small text-primary fw-medium">
+                        Ver salas <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Usuários -->
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card stat-card p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted d-block mb-1 text-uppercase fw-semibold" style="font-size: 0.8rem;">Usuários</span>
+                        <h2 class="fw-bold mb-0 text-dark">{{ total_usuarios|default(0) }}</h2>
+                    </div>
+                    <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--success);">
+                        <i class="bi bi-people"></i>
+                    </div>
+                </div>
+                <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between">
+                    <a href="#" class="text-decoration-none small text-success fw-medium">
+                        Ver usuários <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Itens Cadastrados -->
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card stat-card p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted d-block mb-1 text-uppercase fw-semibold" style="font-size: 0.8rem;">Itens Cadastrados</span>
+                        <h2 class="fw-bold mb-0 text-dark">{{ total_itens|default(0) }}</h2>
+                    </div>
+                    <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                </div>
+                <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between">
+                    <a href="#" class="text-decoration-none small fw-medium" style="color: #f59e0b;">
+                        Ver itens <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instituições -->
+        <div class="col-12 col-sm-6 col-xl-6">
+            <div class="card stat-card p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted d-block mb-1 text-uppercase fw-semibold" style="font-size: 0.8rem;">Instituições</span>
+                        <h2 class="fw-bold mb-0 text-dark">{{ total_instituicoes|default(0) }}</h2>
+                    </div>
+                    <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15); color: #6366f1;">
+                        <i class="bi bi-building"></i>
+                    </div>
+                </div>
+                <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between">
+                    <a href="{{ url_for('lista_instituicoes') }}" class="text-decoration-none small fw-medium" style="color: #6366f1;">
+                        Ver instituições <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categorias -->
+        <div class="col-12 col-sm-6 col-xl-6">
+            <div class="card stat-card p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted d-block mb-1 text-uppercase fw-semibold" style="font-size: 0.8rem;">Categorias</span>
+                        <h2 class="fw-bold mb-0 text-dark">{{ total_categorias|default(0) }}</h2>
+                    </div>
+                    <div class="stat-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;">
+                        <i class="bi bi-bookmarks"></i>
+                    </div>
+                </div>
+                <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between">
+                    <a href="{{ url_for('lista_categorias') }}" class="text-decoration-none small fw-medium" style="color: #ec4899;">
+                        Ver categorias <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

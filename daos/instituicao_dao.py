@@ -185,6 +185,15 @@ class InstituicaoDAO:
         resposta = supabase.table("instituicoes").update(dados).eq("cnpj", instituicao.cnpj).execute()
         data_resposta = resposta.data if hasattr(resposta, 'data') else resposta
         return data_resposta[0] if data_resposta else None
+
+
+    def quantidade_instituicoes():
+        from main import supabase
+        # Faz a consulta pedindo apenas a contagem exata
+        response = supabase.table("instituicoes").select("*", count="exact").execute()
+        
+        # O número total de registros vem na propriedade 'count' do objeto de resposta
+        return response.count if hasattr(response, 'count') else len(response.data)
         
         # dados = {
         #     "nome": instituicao.nome,

@@ -111,3 +111,12 @@ class ItemDAO:
         except Exception as erro:
             print(f"Erro ao deletar item: {erro}")
             return None
+
+    def contar_total(self):
+        from main import supabase
+        try:
+            resposta = supabase.table("itens").select("*", count="exact", head=True).execute()
+            return resposta.count if resposta.count is not None else 0
+        except Exception as e:
+            print(f"Erro ao contar total de itens: {e}")
+            return 0

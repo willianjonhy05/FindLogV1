@@ -66,6 +66,12 @@ class Instituicao:
         from daos.instituicao_dao import InstituicaoDAO
         dao = InstituicaoDAO()
         dao.atualizar_instituicao(self)
+
+    @staticmethod
+    def quantidade():
+        from daos.instituicao_dao import InstituicaoDAO
+        dao = InstituicaoDAO
+        return dao.quantidade_instituicoes()
     
     # def __init__(self, nome, cnpj, endereco, telefone, email):
     #     self.nome = nome

@@ -101,6 +101,12 @@ class Sala:
         return dao.deletar_sala(self.codigo)
 
     @staticmethod
+    def contar_total():
+        from daos.sala_dao import SalaDAO
+        dao = SalaDAO()
+        return dao.contar_total()
+
+    @staticmethod
     def get_all():
         from daos.sala_dao import SalaDAO
         dao = SalaDAO()
