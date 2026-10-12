@@ -1,68 +1,104 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista de Usuários</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #f4f4f4; }
-        .btn { background: #007bff; color: white; padding: 6px 12px; text-decoration: none; border-radius: 3px; }
-        .btn-novo { margin-bottom: 20px; display: inline-block; }
-        img { border-radius: 50%; object-fit: cover; }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <h1>Usuários Cadastrados</h1>
+{% block title %}
+Lista de Usuários
+{% endblock %}
 
-    <a href="{{ url_for('novo_usuario') }}" class="btn btn-novo">+ Novo Usuário</a>
+{% block content %}
 
-    <table>
-        <thead>
-            <tr>
-                <th>Foto</th>
-                <th>Username</th>
-                <th>Nome</th>
-                <th>E-mail</th>
-                <th>CPF</th>
-                <th>Tipo</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for u in usuarios %}
-            <tr>
-                <td>
-                    {% if u.foto_perfil %}
-                        <img src="{{ url_for('static', filename=u.foto_perfil) }}" alt="Foto" width="40" height="40">
-                    {% else %}
-                        <span>-</span>
-                    {% endif %}
-                </td>
-                <td>{{ u.username }}</td>
-                <td>{{ u.nome }}</td>
-                <td>{{ u.email }}</td>
-                <td>{{ u.cpf }}</td>
-                <td>
-                    {% if u.tipo_usuario == 1 %} Administrador
-                    {% elif u.tipo_usuario == 2 %} Usuário Comum
-                    {% elif u.tipo_usuario == 3 %} Servidor
-                    {% endif %}
-                </td>
-                <td>
-                    <!-- Adicione links para editar/visualizar se necessário -->
-                    <a href="#" class="btn" style="background: #ffc107; color: black;">Editar</a>
-                </td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="7" style="text-align: center;">Nenhum usuário cadastrado.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="welcome-card mb-4">
+    <h1 class="fw-bold">
+        <i class="bi bi-people"></i>
+        Usuários
+    </h1>
+    <p class="mb-0">
+        Gerencie os usuários e permissões cadastrados no FindLog.
+    </p>
+</div>
 
-</body>
-</html>
+<div class="card table-card p-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">
+            Lista de Usuários
+        </h4>
+
+        <a href="{{ url_for('novo_usuario') }}" class="btn btn-primary-custom">
+            <i class="bi bi-person-plus"></i>
+            Novo Usuário
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Primeiro Nome</th>
+                    <th>E-mail</th>
+                    <th>CPF</th>
+                    <th>Tipo</th>
+                    <th colspan="3">Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <td>
+                        <strong>{{ usuario.primeiro_nome }}</strong>
+                    </td>
+                    <td>
+                        {{ usuario.email }}
+                    </td>
+                    <td class="cpf-format">
+                        {{ usuario.cpf }}
+                    </td>
+                    <td>
+                        {% if usuario.tipo_usuario == 1 %}
+                            <span class="badge bg-danger">Administrador</span>
+                        {% elif usuario.tipo_usuario == 3 %}
+                            <span class="badge bg-info text-dark">Gestor de Sala</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Comum</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- Ações -->
+                    <td>
+                        <a href="{{ url_for('editar_usuario', username=usuario.username) }}"
+                            class="btn btn-sm btn-outline-primary" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('deletar_usuario', username=usuario.username) }}"
+                            class="btn btn-sm btn-outline-danger btn-delete" data-nome="{{ usuario.nome }}" title="Excluir">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('visualizar_usuario', username=usuario.username) }}"
+                            class="btn btn-sm btn-outline-info" title="Visualizar">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">
+                        Nenhum usuário cadastrado no momento.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/formatar_dados.js') }}"></script>
+<script src="{{ url_for('static', filename='js/confirmar_exclusao.js') }}"></script>
+{% endblock %}

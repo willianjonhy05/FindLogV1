@@ -9,10 +9,12 @@ from routes.item_routes import item_rotas
 import os
 from supabase import create_client, Client
 from dotenv import load_dotenv
+from flask_sitemap import Sitemap
 
 load_dotenv()
 
 app = Flask(__name__)
+ext = Sitemap(app=app)
 
 app.secret_key = os.environ.get('SECRET_KEY')
 
@@ -32,3 +34,6 @@ categoria_routes(app)
 item_rotas(app)
 usuario_routes(app)
 sala_rotas(app)
+
+if __name__ == "__main__":
+    app.run()

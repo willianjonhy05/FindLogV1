@@ -168,7 +168,7 @@
         </a>
 
 
-        <a href="#">
+        <a href="{{ url_for('lista_usuarios') }}" class="{{ 'active' if request.endpoint == 'lista_usuarios' else '' }}">
 
             <i class="bi bi-people"></i>
 

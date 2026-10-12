@@ -194,6 +194,35 @@ class Usuario:
         lista_nome = nome_completo.split()
         return lista_nome[0] if lista_nome else "Usuário"
 
+    @property
+    def idade(self):
+        from datetime import date
+        
+        # Pega a string de data de nascimento do dicionário
+        data_nasc_str = self.data.get("data_nascimento")
+        if not data_nasc_str:
+            return None  # Retorna None caso não esteja preenchida
+            
+        # Converte a string "AAAA-MM-DD" para um objeto date do Python
+        # Se ela já for um objeto date/datetime, o fromisoformat lida bem ou podemos checar o tipo
+        if isinstance(data_nasc_str, str):
+            ano, mes, dia = map(int, data_nasc_str.split("-"))
+            nascimento = date(ano, mes, dia)
+        else:
+            nascimento = data_nasc_str  # Caso já seja um objeto de data
+
+        hoje = date.today()
+        
+        # Calcula a idade considerando se já fez aniversário este ano
+        idade = (
+            hoje.year
+            - nascimento.year
+            - ((hoje.month, hoje.day) < (nascimento.month, nascimento.day))
+        )
+        
+        return idade
+
+
     @nome.setter
     def nome(self, value):
         if not value or not str(value).strip():
@@ -251,9 +280,20 @@ class Usuario:
     def data_cadastro(self):
         return self.data.get("data_cadastro")  # Automático (sem setter)
 
+
     @property
     def instituicao(self):
         return self.data.get("instituicao")
+
+    @property
+    def nome_instituicao(self):
+        from models.instituicao import Instituicao
+        cnpj = self.data.get("instituicao")
+        nome = Instituicao.nome_por_cnpj(cnpj)
+        if nome:
+            return nome
+        else:
+            return "Inválido"
 
     @instituicao.setter
     def instituicao(self, value):

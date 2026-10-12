@@ -15,13 +15,19 @@ def novo_usuario():
         )
 
     elif request.method == 'POST':
-        # 1. Empacota os dados recebidos do formulário
         tipo_usuario = int(request.form.get('tipo_usuario', 1))
-        
+        senha = request.form.get('senha')
+        confirmar_senha = request.form.get('confirmar_senha')
+
+        # Validação básica de senhas coincidentes antes de instanciar
+        erros_customizados = {}
+        if senha != confirmar_senha:
+            erros_customizados['confirmar_senha'] = "As senhas não coincidem."
+
         dados = {
             "nome": request.form.get('nome'),
             "email": request.form.get('email'),
-            "senha": request.form.get('senha'),
+            "senha": senha,
             "cpf": request.form.get('cpf'),
             "data_nascimento": request.form.get('data_nascimento'),
             "instituicao": request.form.get('instituicao_cnpj'),
@@ -30,36 +36,41 @@ def novo_usuario():
             "sala": request.form.get('sala_codigo') if tipo_usuario == 3 else None
         }
 
-        # 2. Instancia o usuário (o username será gerado automaticamente)
         usuario = Usuario(data=dados)
+        
+        # Se houver erro de senha ou de validação do modelo, unimos os erros
+        if erros_customizados or not usuario.validate(is_new=True):
+            if erros_customizados:
+                # Se o objeto usuario já tiver erros, unimos, senão criamos o dicionário
+                if hasattr(usuario, 'errors') and isinstance(usuario.errors, dict):
+                    usuario.errors.update(erros_customizados)
+                else:
+                    usuario.errors = erros_customizados
 
-        # 3. Trata o upload da foto de perfil, se houver
+            instituicoes = Instituicao.listar_instituicoes_ativas()
+            salas = Sala.get_all()
+            return render_template(
+                'admin/usuario/novo.html',
+                usuario=usuario,
+                instituicoes=instituicoes,
+                salas=salas,
+                erros=usuario.errors
+            ), 400
+
+        # Tratamento do upload da foto de perfil
         arquivo_foto = request.files.get('foto_perfil')
         if arquivo_foto and arquivo_foto.filename != '':
             caminho_foto = salvar_foto_perfil(arquivo_foto, usuario.username)
             if caminho_foto:
                 usuario.foto_perfil = caminho_foto
 
-        # 4. Valida os dados (is_new=True verifica unicidade de CPF e username)
-        if usuario.validate(is_new=True):
-            if usuario.save():
-                return redirect(url_for('lista_usuarios'))
-            return "Erro ao salvar usuário no banco de dados", 500
-
-        # Se houver erros, retorna para o formulário exibindo as mensagens
-        instituicoes = Instituicao.listar_instituicoes_ativas()
-        salas = Sala.get_all()
-        return render_template(
-            'admin/usuario/novo.html',
-            usuario=usuario,
-            instituicoes=instituicoes,
-            salas=salas,
-            erros=usuario.errors
-        ), 400
+        if usuario.save():
+            return redirect(url_for('lista_usuarios'))
+        
+        return "Erro ao salvar usuário no banco de dados", 500
 
     else:
         return "Método não permitido", 405
-
 
 def lista_usuarios():
     usuarios = Usuario.get_all()

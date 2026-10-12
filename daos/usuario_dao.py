@@ -27,6 +27,7 @@ class UsuarioDAO:
             "username": usuario.username,
             "nome": usuario.nome,
             "email": usuario.email,
+            "telefone": usuario.telefone,
             "senha": usuario.senha,
             "cpf": usuario.cpf,
             "data_nascimento": str(usuario.data_nascimento),
@@ -110,6 +111,7 @@ class UsuarioDAO:
         dados = {
             "nome": usuario.nome,
             "email": usuario.email,
+            "telefone": usuario.telefone,
             "senha": usuario.senha,
             "cpf": usuario.cpf,
             "data_nascimento": str(usuario.data_nascimento),

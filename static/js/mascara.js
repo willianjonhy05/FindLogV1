@@ -20,6 +20,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 document.addEventListener('DOMContentLoaded', function () {
+  const cpfInput = document.getElementById('cpf');
+
+  if (cpfInput) {
+    cpfInput.addEventListener('input', function (e) {
+      let value = e.target.value;
+
+      // Remove tudo o que não for dígito
+      value = value.replace(/\D/g, "");
+
+      // Limita a 11 dígitos
+      if (value.length > 11) {
+        value = value.slice(0, 11);
+      }
+
+      // Aplica a máscara (000.000.000-00)
+      if (value.length > 9) {
+        value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/, "$1.$2.$3-$4");
+      } else if (value.length > 6) {
+        value = value.replace(/^(\d{3})(\d{3})(\d{3}).*/, "$1.$2.$3");
+      } else if (value.length > 3) {
+        value = value.replace(/^(\d{3})(\d{3}).*/, "$1.$2");
+      }
+
+      e.target.value = value;
+    });
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
   const telefoneInput = document.getElementById('telefone');
 
   if (telefoneInput) {
