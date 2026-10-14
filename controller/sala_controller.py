@@ -39,7 +39,7 @@ def nova_sala():
         ), 400
 
     else:
-        return "Método não permitido", 405
+        return render_template("admin/errors/405.html"), 405
     
 def lista_salas():
     salas = Sala.get_all()
@@ -51,7 +51,7 @@ def lista_salas():
 def editar_sala(codigo):
     sala = Sala.get_by_codigo(codigo)
     if not sala:
-        return "Sala não encontrada", 404
+        return render_template("admin/errors/404.html"), 404
 
     if request.method == 'GET':
         instituicoes = Instituicao.listar_instituicoes_ativas()
@@ -97,26 +97,26 @@ def editar_sala(codigo):
         ), 400
 
     else:
-        return "Método não permitido", 405
+        return render_template("admin/errors/405.html"), 405
     
 def deletar_sala(codigo):
     sala = Sala.get_by_codigo(codigo)
     if not sala:
-        return "Sala não encontrada", 404
+        return render_template("admin/errors/404.html"), 404
 
     if request.method == 'POST':
         if sala.delete():
             return redirect(url_for('lista_salas'))
-        return "Erro ao deletar sala", 500
+        return render_template("admin/errors/500.html"), 500
 
     else:
-        return "Método não permitido", 405
+        return render_template("admin/errors/405.html"), 405
     
 
 def detalhes_sala(codigo):
     sala = Sala.get_by_codigo(codigo)
     if not sala:
-        return "Sala não encontrada", 404
+        return render_template("admin/errors/404.html"), 404
 
     return render_template(
         'admin/sala/detalhes.html',

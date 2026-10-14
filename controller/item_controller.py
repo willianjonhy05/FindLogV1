@@ -58,7 +58,7 @@ def novo_item():
         if item.validate(is_new=True):
             if item.save():
                 return redirect(url_for('lista_itens'))
-            return "Erro ao salvar item no banco de dados", 500
+            return render_template("admin/errors/500.html"), 500
 
         # Se houver erros, recarrega o formulário enviando as dependências
         categorias = Categoria.get_all()
@@ -76,7 +76,7 @@ def novo_item():
         ), 400
 
     else:
-        return "Método não permitido", 405
+        return render_template("admin/errors/405.html"), 405
 
 
 def lista_itens():
@@ -90,7 +90,7 @@ def lista_itens():
 def editar_item(codigo):
     item = Item.get_by_codigo(codigo)
     if not item:
-        return "Item não encontrado", 404
+        return render_template("admin/errors/404.html"), 404
 
     if request.method == 'GET':
         categorias = Categoria.get_all()
@@ -154,7 +154,7 @@ def editar_item(codigo):
         if item.validate(is_new=False):
             if item.update():
                 return redirect(url_for('lista_itens'))
-            return "Erro ao atualizar item no banco de dados", 500
+            return render_template("admin/errors/500.html"), 500
 
         # Se houver erros de validação
         categorias = Categoria.get_all()
@@ -172,21 +172,21 @@ def editar_item(codigo):
         ), 400
 
     else:
-        return "Método não permitido", 405
+        return render_template("admin/errors/405.html"), 405
 
 
 def deletar_item(codigo):
     item = Item.get_by_codigo(codigo)
     if not item:
-        return "Item não encontrado", 404
+        return render_template("admin/errors/404.html"), 404
 
     if request.method == 'POST':
         if item.delete():
             return redirect(url_for('lista_itens'))
-        return "Erro ao deletar item", 500
+        return render_template("admin/errors/500.html"), 500
 
     else:
-        return "Método não permitido", 405
+        return render_template("admin/errors/405.html"), 405
 
 
 def visualizar_item(codigo):
@@ -197,4 +197,4 @@ def visualizar_item(codigo):
             item=item
         )
     else:
-        return "Item não encontrado", 404
+        return render_template("admin/errors/404.html"), 404

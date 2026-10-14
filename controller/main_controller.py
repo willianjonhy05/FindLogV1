@@ -70,3 +70,16 @@ def visualizar_rotas():
 #         return "Login realizado com sucesso!"
 #     else:
 #         return "Método não permitido", 405
+
+
+def nao_autorizado(e):
+    return render_template("admin/errors/403.html"), 403
+
+def nao_encontrado(e):
+    return render_template("admin/errors/404.html"), 404
+
+def metodo_nao_suportado(e):
+    return render_template("admin/errors/405.html"), 405
+
+def erro_interno(e):
+    return render_template("admin/errors/500.html"), 500

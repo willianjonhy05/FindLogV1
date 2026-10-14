@@ -39,19 +39,39 @@ Com o ambiente virtual ativado, instale as dependências do projeto:
 pip install -r requirements.txt
 ```
 
-
 ### Passo 6
 
-Entre em contato com o William para preecher corretamente as variáveis do arquivo .env
+Entre no site https://randomkeygen.com/flask-secret-key e gere uma chave secreta. Copie o código, vá no seu arquivo .env e crie a seguinte variável: 
 
+
+```
+SECRET_KEY=cole_aqui_o_codigo gerado
+
+```
 
 ### Passo 7
+
+Entre em contato com o William para preecher corretamente outras variáveis do arquivo .env
+
+
+### Passo 8
 
 Para rodar o sistema localmente em modo de desenvolvimento, execute o comando:
 
 ```
 flask --app main run --debug
 ```
+
+### Passo 9
+
+Acesse o endereço: http://localhost:5000/usuario/novo preencha corretamente todos os campos para criar um usuário.
+
+Obs: Em Instituição, seleciona a Primeira Classe, em Tipo de Usuário escolha administrador; a foto não é obrigatória.
+
+
+Se obtiver algum erro, por favor, faça print da página e entre em contato imediatamente com o William
+
+
 Pronto! O sistema estará rodando e disponível para acesso no seu navegador através do endereço gerado pelo Flask.
 
 Projeto desenvolvido pela Equipe Primeira Classe de Desenvolvimento.

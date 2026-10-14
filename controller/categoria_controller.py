@@ -29,7 +29,7 @@ def nova_categoria():
         ), 400
 
     else:
-        return "Método não permitido", 405
+        return render_template("admin/errors/405.html"), 405
 
 def listar_categorias():
     categorias = Categoria.get_all()
@@ -38,7 +38,7 @@ def listar_categorias():
 def atualizar_categoria(codigo):
     categoria = Categoria.get_by_codigo(codigo)
     if not categoria:
-        return "Categoria não encontrada", 404
+        return render_template("admin/errors/404.html"), 404
 
     if request.method == 'GET':
         return render_template('admin/categoria/atualizar.html', categoria=categoria)
@@ -70,18 +70,18 @@ def atualizar_categoria(codigo):
         ), 400
 
     else:
-        return "Método não permitido", 405
+        return render_template("admin/errors/405.html"), 405
 
 def apagar_categoria(codigo):
     categoria = Categoria.get_by_codigo(codigo)
     if categoria:
         categoria.delete()
         return redirect(url_for('lista_categorias'))
-    return "Categoria não encontrada", 404
+    return render_template("admin/errors/404.html"), 404
 
 def visualizar_categoria(codigo):
     categoria = Categoria.get_by_codigo(codigo)
     if categoria:
         return render_template('admin/categoria/detalhes.html', categoria=categoria)
     else:
-        return "Categoria não encontrada", 404
+        return render_template("admin/errors/404.html"), 404

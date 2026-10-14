@@ -67,10 +67,10 @@ def novo_usuario():
         if usuario.save():
             return redirect(url_for('lista_usuarios'))
         
-        return "Erro ao salvar usuário no banco de dados", 500
+        return render_template("admin/errors/500.html"), 500
 
     else:
-        return "Método não permitido", 405
+        return render_template("admin/errors/405.html"), 405
 
 def lista_usuarios():
     usuarios = Usuario.get_all()
@@ -83,7 +83,7 @@ def lista_usuarios():
 def editar_usuario(username):
     usuario = Usuario.get_by_username(username)
     if not usuario:
-        return "Usuário não encontrado", 404
+        return render_template("admin/errors/404.html"), 404
 
     if request.method == 'GET':
         instituicoes = Instituicao.listar_instituicoes_ativas()
@@ -142,7 +142,7 @@ def editar_usuario(username):
         if usuario.validate(is_new=False):
             if usuario.update():
                 return redirect(url_for('lista_usuarios'))
-            return "Erro ao atualizar usuário no banco de dados", 500
+            return render_template("admin/errors/500.html"), 500
 
         # Se houver erros de validação
         instituicoes = Instituicao.listar_instituicoes_ativas()
@@ -156,21 +156,21 @@ def editar_usuario(username):
         ), 400
 
     else:
-        return "Método não permitido", 405
+        return render_template("admin/errors/405.html"), 405
 
 
 def deletar_usuario(username):
     usuario = Usuario.get_by_username(username)
     if not usuario:
-        return "Usuário não encontrado", 404
+        return render_template("admin/errors/404.html"), 404
 
     if request.method == 'POST':
         if usuario.delete():
             return redirect(url_for('lista_usuarios'))
-        return "Erro ao deletar usuário", 500
+        return render_template("admin/errors/500.html"), 500
 
     else:
-        return "Método não permitido", 405
+        return render_template("admin/errors/405.html"), 405
 
 
 def visualizar_usuario(username):
@@ -187,4 +187,4 @@ def visualizar_usuario(username):
             **context
         )
     else:
-        return "Usuário não encontrado", 404
+        return render_template("admin/errors/404.html"), 404

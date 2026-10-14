@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+Método Não Permitido
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center align-items-center" style="min-height: calc(100vh - 220px);">
+    <div class="col-12 col-md-8 col-lg-6 text-center">
+        
+        <div class="welcome-card p-5 shadow-lg">
+            <!-- Ícone de Bloqueio/Interdição -->
+            <div class="display-1 text-danger mb-3">
+                <i class="bi bi-slash-circle-fill"></i>
+            </div>
+
+            <!-- Código e Título -->
+            <h1 class="fw-bold mb-2" style="font-size: 2.5rem;">405</h1>
+            <h3 class="fw-semibold mb-3">Método Não Permitido</h3>
+
+            <!-- Mensagem explicativa -->
+            <p class="text-white-50 mb-4 px-lg-3">
+                O método HTTP utilizado para acessar esta rota não é suportado pelo servidor do FindLog. Verifique se o envio do formulário ou a requisição foi feita corretamente.
+            </p>
+
+            <!-- Ações -->
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="javascript:history.back()" class="btn btn-outline-light px-4">
+                    <i class="bi bi-arrow-left me-1"></i> Voltar
+                </a>
+                <a href="{{ url_for('dashboard_admin') }}" class="btn btn-light text-dark fw-semibold px-4">
+                    <i class="bi bi-speedometer2 me-1"></i> Ir para o Dashboard
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -34,7 +34,7 @@ def nova_instituicao():
         ), 400
 
     else:
-        return "Método não permitido", 405
+        return render_template("admin/errors/405.html"), 405
 
 
 # def lista_instituicoes():
@@ -69,12 +69,12 @@ def deletar_instituicao(cnpj):
     if instituicao:
         instituicao.delete()
         return redirect(url_for('lista_instituicoes'))
-    return "Instituição não encontrada", 404
+    return render_template("admin/errors/404.html"), 404
     
 def atualizar_instituicao(cnpj):
     instituicao = Instituicao.get_by_cnpj(cnpj)
     if not instituicao:
-        return "Instituição não encontrada", 404
+        return render_template("admin/errors/404.html"), 404
 
     if request.method == 'GET':
         return render_template(
@@ -103,7 +103,7 @@ def atualizar_instituicao(cnpj):
         ), 400
 
     else:
-        return "Método não permitido", 405
+        return render_template("admin/errors/405.html"), 405
     
 def instituicao_por_cnpj(cnpj):
     from models.usuario import Usuario
@@ -123,4 +123,4 @@ def instituicao_por_cnpj(cnpj):
             **context
         )
     else:
-        return "Instituição não encontrada", 404
+        return render_template("admin/errors/404.html"), 404
