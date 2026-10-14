@@ -155,14 +155,11 @@ Lista de Categorias
 
                     </td>
                     <td>
-
-                        <a href="{{ url_for('deletar_categoria', codigo=categoria.codigo) }}"
-                            class="btn btn-sm btn-outline-danger btn-delete" data-nome="{{ categoria.nome }}">
-
-                            <i class="bi bi-trash"></i>
-
-                        </a>
-
+                        <form action="{{ url_for('deletar_categoria', codigo=categoria.codigo) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir a categoria {{ categoria.nome }}?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
                     </td>
                     <td>
                         <a href="{{ url_for('view_categoria', codigo=categoria.codigo) }}"
