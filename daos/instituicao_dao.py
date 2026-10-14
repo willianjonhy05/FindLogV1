@@ -256,4 +256,17 @@ class InstituicaoDAO:
         # if response.data:
         #     return response.data[0]["nome"]
         # return None
+
+
+    def desativar_instituicao(self, instituicao):
+        from main import supabase
+
+        dados = {
+            "ativo": bool(instituicao.ativo)
+        }
+
+        response = supabase.table('instituicoes').update(dados). eq("cnpj", instituicao.cnpj).execute()
+
+        data_resposta = response.data if hasattr(response, 'data') else response
+        return data_resposta[0] if data_resposta else None
     
