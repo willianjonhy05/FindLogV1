@@ -165,8 +165,8 @@ Novo Usuário
                 </label>
                 <select id="tipo_usuario" name="tipo_usuario" 
                     class="form-select {{ 'is-invalid' if erros and 'tipo_usuario' in erros else '' }}" required>
-                    <option value="1" {{ 'selected' if usuario and usuario.data.get('tipo_usuario') == 1 else '' }}>Usuário Comum</option>
-                    <option value="2" {{ 'selected' if usuario and usuario.data.get('tipo_usuario') == 2 else '' }}>Administrador</option>
+                    <option value="2" {{ 'selected' if usuario and usuario.data.get('tipo_usuario') == 1 else '' }}>Usuário Comum</option>
+                    <option value="1" {{ 'selected' if usuario and usuario.data.get('tipo_usuario') == 2 else '' }}>Administrador</option>
                     <option value="3" {{ 'selected' if usuario and usuario.data.get('tipo_usuario') == 3 else '' }}>Servidor/Funcionário</option>
                 </select>
                 {% if erros and 'tipo_usuario' in erros %}
