@@ -70,11 +70,12 @@ Lista de Usuários
                             <i class="bi bi-pencil"></i>
                         </a>
                     </td>
-                    <td>
-                        <a href="{{ url_for('deletar_usuario', username=usuario.username) }}"
-                            class="btn btn-sm btn-outline-danger btn-delete" data-nome="{{ usuario.nome }}" title="Excluir">
-                            <i class="bi bi-trash"></i>
-                        </a>
+                   <td>
+                        <form action="{{ url_for('deletar_usuario', username=usuario.username) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir o usuário {{ usuario.nome }}?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
                     </td>
                     <td>
                         <a href="{{ url_for('visualizar_usuario', username=usuario.username) }}"
