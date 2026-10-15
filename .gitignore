@@ -150,7 +150,6 @@ __pycache__
 
 # mkdocs documentation
 /site
-/static
 
 # mypy
 .mypy_cache/
