@@ -89,7 +89,7 @@ def editar_usuario(username):
         instituicoes = Instituicao.listar_instituicoes_ativas()
         salas = Sala.get_all()
         return render_template(
-            'admin/usuario/editar.html',
+            'admin/usuario/atualizar.html',
             usuario=usuario,
             instituicoes=instituicoes,
             salas=salas

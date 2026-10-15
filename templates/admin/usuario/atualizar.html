@@ -1,11 +1,307 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+```html
+{% extends "base.html" %}
+
+{% block title %}
+Atualizar Usuário
+{% endblock %}
+
+{% block content %}
+
+<div class="welcome-card mb-4">
+    <h1 class="fw-bold">
+        <i class="bi bi-person-gear"></i>
+        Atualizar Usuário
+    </h1>
+    <p class="mb-0">
+        Atualize as informações do usuário preenchendo os campos abaixo.
+    </p>
+</div>
+
+<div class="card table-card p-4">
+    <form method="POST"
+          action="{{ url_for('editar_usuario', username=usuario.data.get('username')) }}"
+          enctype="multipart/form-data">
+
+        <!-- SEÇÃO 1: INFORMAÇÕES PESSOAIS -->
+        <h5 class="fw-bold text-primary mb-3">
+            <i class="bi bi-person-badge me-2"></i>
+            Informações Pessoais
+        </h5>
+
+        <div class="row g-3 mb-4">
+
+            <!-- Nome -->
+            <div class="col-md-8">
+                <label for="nome" class="form-label fw-semibold">
+                    Nome Completo <span class="text-danger">*</span>
+                </label>
+                <input type="text" id="nome" name="nome"
+                    class="form-control {{ 'is-invalid' if erros and 'nome' in erros else '' }}"
+                    placeholder="Ex: João da Silva"
+                    value="{{ usuario.data.get('nome', '') if usuario and usuario.data else '' }}"
+                    required>
+                {% if erros and 'nome' in erros %}
+                    <div class="invalid-feedback">{{ erros['nome'] }}</div>
+                {% endif %}
+            </div>
+
+            <!-- CPF -->
+            <div class="col-md-4">
+                <label for="cpf" class="form-label fw-semibold">
+                    CPF
+                </label>
+                <input type="text" id="cpf" name="cpf"
+                    class="form-control"
+                    value="{{ usuario.data.get('cpf', '') if usuario and usuario.data else '' }}"
+                    readonly>
+                <div class="form-text">
+                    O CPF não pode ser alterado.
+                </div>
+            </div>
+
+            <!-- Data de nascimento -->
+            <div class="col-md-6">
+                <label for="data_nascimento" class="form-label fw-semibold">
+                    Data de Nascimento <span class="text-danger">*</span>
+                </label>
+                <input type="date" id="data_nascimento" name="data_nascimento"
+                    class="form-control {{ 'is-invalid' if erros and 'data_nascimento' in erros else '' }}"
+                    value="{{ usuario.data.get('data_nascimento', '') if usuario and usuario.data else '' }}"
+                    required>
+                {% if erros and 'data_nascimento' in erros %}
+                    <div class="invalid-feedback">{{ erros['data_nascimento'] }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Telefone -->
+            <div class="col-md-6">
+                <label for="telefone" class="form-label fw-semibold">
+                    Telefone / Celular <span class="text-danger">*</span>
+                </label>
+                <input type="text" id="telefone" name="telefone"
+                    class="form-control {{ 'is-invalid' if erros and 'telefone' in erros else '' }}"
+                    placeholder="(00) 00000-0000"
+                    value="{{ usuario.data.get('telefone', '') if usuario and usuario.data else '' }}"
+                    required>
+                {% if erros and 'telefone' in erros %}
+                    <div class="invalid-feedback">{{ erros['telefone'] }}</div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <hr class="my-4 text-muted">
+
+        <!-- SEÇÃO 2: CREDENCIAIS DE ACESSO -->
+        <h5 class="fw-bold text-primary mb-3">
+            <i class="bi bi-shield-lock me-2"></i>
+            Credenciais de Acesso
+        </h5>
+
+        <div class="row g-3 mb-4">
+
+            <!-- E-mail -->
+            <div class="col-md-12">
+                <label for="email" class="form-label fw-semibold">
+                    E-mail (Login) <span class="text-danger">*</span>
+                </label>
+                <input type="email" id="email" name="email"
+                    class="form-control {{ 'is-invalid' if erros and 'email' in erros else '' }}"
+                    placeholder="exemplo@dominio.com"
+                    value="{{ usuario.data.get('email', '') if usuario and usuario.data else '' }}"
+                    required>
+                {% if erros and 'email' in erros %}
+                    <div class="invalid-feedback">{{ erros['email'] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="col-12">
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Para manter a senha atual, deixe os campos de senha em branco.
+                </div>
+            </div>
+
+            <!-- Nova senha -->
+            <div class="col-md-6">
+                <label for="senha" class="form-label fw-semibold">
+                    Nova Senha
+                </label>
+                <input type="password" id="senha" name="senha"
+                    class="form-control {{ 'is-invalid' if erros and 'senha' in erros else '' }}"
+                    placeholder="Digite somente se desejar alterar a senha">
+                {% if erros and 'senha' in erros %}
+                    <div class="invalid-feedback">{{ erros['senha'] }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Confirmar senha -->
+            <div class="col-md-6">
+                <label for="confirmar_senha" class="form-label fw-semibold">
+                    Confirmar Nova Senha
+                </label>
+                <input type="password" id="confirmar_senha" name="confirmar_senha"
+                    class="form-control {{ 'is-invalid' if erros and 'confirmar_senha' in erros else '' }}"
+                    placeholder="Digite a nova senha novamente">
+                {% if erros and 'confirmar_senha' in erros %}
+                    <div class="invalid-feedback">{{ erros['confirmar_senha'] }}</div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <hr class="my-4 text-muted">
+
+        <!-- SEÇÃO 3: VÍNCULO E PERMISSÕES -->
+        <h5 class="fw-bold text-primary mb-3">
+            <i class="bi bi-building me-2"></i>
+            Vínculo e Permissões
+        </h5>
+
+        <div class="row g-3 mb-4">
+
+            <!-- Instituição -->
+            <div class="col-md-6">
+                <label for="instituicao_cnpj" class="form-label fw-semibold">
+                    Instituição <span class="text-danger">*</span>
+                </label>
+
+                <select id="instituicao_cnpj" name="instituicao_cnpj"
+                    class="form-select {{ 'is-invalid' if erros and 'instituicao' in erros else '' }}"
+                    required>
+
+                    <option value="" disabled>
+                        Selecione a instituição...
+                    </option>
+
+                    {% for inst in instituicoes %}
+                        <option value="{{ inst.cnpj }}"
+                            {{ 'selected' if usuario and usuario.data.get('instituicao')|string == inst.cnpj|string else '' }}>
+                            {{ inst.nome }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+                {% if erros and 'instituicao' in erros %}
+                    <div class="invalid-feedback">{{ erros['instituicao'] }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Tipo de usuário -->
+            <div class="col-md-6">
+                <label for="tipo_usuario" class="form-label fw-semibold">
+                    Tipo de Usuário <span class="text-danger">*</span>
+                </label>
+
+                <select id="tipo_usuario" name="tipo_usuario"
+                    class="form-select {{ 'is-invalid' if erros and 'tipo_usuario' in erros else '' }}"
+                    required>
+
+                    <option value="2"
+                        {{ 'selected' if usuario and usuario.data.get('tipo_usuario')|string == '2' else '' }}>
+                        Usuário Comum
+                    </option>
+
+                    <option value="1"
+                        {{ 'selected' if usuario and usuario.data.get('tipo_usuario')|string == '1' else '' }}>
+                        Administrador
+                    </option>
+
+                    <option value="3"
+                        {{ 'selected' if usuario and usuario.data.get('tipo_usuario')|string == '3' else '' }}>
+                        Servidor/Funcionário
+                    </option>
+
+                </select>
+
+                {% if erros and 'tipo_usuario' in erros %}
+                    <div class="invalid-feedback">{{ erros['tipo_usuario'] }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Sala vinculada -->
+            <div class="col-md-12" id="bloco_sala" style="display: none;">
+                <label for="sala_codigo" class="form-label fw-semibold">
+                    Sala Vinculada <span class="text-danger">*</span>
+                </label>
+
+                <select id="sala_codigo" name="sala_codigo" class="form-select">
+                    <option value="">
+                        Selecione a sala de responsabilidade...
+                    </option>
+
+                    {% for sala in salas %}
+                        <option value="{{ sala.codigo }}"
+                            {{ 'selected' if usuario and usuario.data.get('sala')|string == sala.codigo|string else '' }}>
+                            Sala {{ sala.numero }} - Prédio {{ sala.predio }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+
+            <!-- Foto de perfil -->
+            <div class="col-md-12">
+                <label for="foto_perfil" class="form-label fw-semibold">
+                    Foto de Perfil
+                </label>
+
+                <input type="file" id="foto_perfil" name="foto_perfil"
+                    class="form-control" accept="image/*">
+
+                <div class="form-text">
+                    Formatos aceitos: JPG e PNG. Opcional.
+                    Se não enviar uma nova foto, o controller deverá preservar a atual.
+                </div>
+            </div>
+
+        </div>
+
+        <hr class="my-4">
+
+        <!-- BOTÕES -->
+        <div class="d-flex justify-content-end gap-3">
+            <a href="{{ url_for('lista_usuarios') }}"
+                class="btn btn-outline-secondary">
+                <i class="bi bi-x-circle"></i>
+                Cancelar
+            </a>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle"></i>
+                Salvar Alterações
+            </button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/mascara.js') }}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const selectTipo = document.getElementById('tipo_usuario');
+    const blocoSala = document.getElementById('bloco_sala');
+    const selectSala = document.getElementById('sala_codigo');
+
+    function verificarTipoUsuario() {
+        if (selectTipo.value === '3') {
+            blocoSala.style.display = 'block';
+            selectSala.setAttribute('required', 'required');
+        } else {
+            blocoSala.style.display = 'none';
+            selectSala.removeAttribute('required');
+            selectSala.value = '';
+        }
+    }
+
+    verificarTipoUsuario();
+    selectTipo.addEventListener('change', verificarTipoUsuario);
+});
+</script>
+{% endblock %}
+```
