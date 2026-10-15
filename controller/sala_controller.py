@@ -56,7 +56,7 @@ def editar_sala(codigo):
     if request.method == 'GET':
         instituicoes = Instituicao.listar_instituicoes_ativas()
         return render_template(
-            'admin/sala/editar.html',
+            'admin/sala/atualizar.html',
             sala=sala,
             instituicoes=instituicoes
         )
