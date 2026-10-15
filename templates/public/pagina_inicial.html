@@ -1,11 +1,628 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FindLog | Gestão Inteligente de Achados e Perdidos</title>
+  <style>
+    :root {
+      /* Azul e Laranja escolhidos anteriormente + Tons de Bege */
+      --azul-escuro: #1A2B45;
+      --azul-medio: #243B5E;
+      --laranja-destaque: #FF6200;
+      --bege-principal: #F7F3EB;
+      --bege-areia: #EAE2D3;
+      --bege-secao: #EFE9DC;
+      --bege-card: #FCFBF7;
+      --texto-escuro: #111827;
+      --texto-apoio: #4B5563;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Inter, system-ui, sans-serif;
+    }
+
+    body {
+      background-color: var(--bege-principal);
+      color: var(--texto-escuro);
+      line-height: 1.6;
+    }
+
+    /* Barra de Navegação Superior */
+    header {
+      background-color: var(--azul-escuro);
+      padding: 1.1rem 8%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 3px solid var(--bege-areia);
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--bege-principal);
+      letter-spacing: -0.5px;
+    }
+
+    .logo-icon {
+      width: 2rem;
+      height: 2rem;
+      flex: 0 0 auto;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-left: auto;
+    }
+
+    .menu-toggle,
+    .menu-toggle-label {
+      display: none;
+    }
+
+    nav a {
+      color: var(--bege-areia);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.98rem;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: #FFFFFF;
+    }
+
+    .header-login {
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-login {
+      background-color: var(--bege-areia);
+      color: var(--azul-escuro);
+      padding: 0.55rem 1.3rem;
+      border-radius: 6px;
+      font-weight: 700;
+      border: 2px solid transparent;
+    }
+
+    .btn-login:hover {
+      background-color: var(--laranja-destaque);
+      color: #FFFFFF;
+    }
+
+    /* Primeira Dobra (Hero - Página 1 do PDF) */
+    .hero {
+      padding: 5rem 8%;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 3.5rem;
+      align-items: center;
+      background-color: var(--bege-principal);
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      color: var(--azul-escuro);
+      line-height: 1.18;
+      margin-bottom: 1.25rem;
+      font-weight: 800;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--texto-apoio);
+      margin-bottom: 2rem;
+    }
+
+    .btn-demo {
+      display: inline-block;
+      background-color: var(--azul-escuro);
+      color: var(--bege-principal);
+      padding: 0.95rem 2.1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.05rem;
+      box-shadow: 0 4px 12px rgba(26, 43, 69, 0.2);
+      border-bottom: 3px solid var(--laranja-destaque);
+      transition: all 0.2s;
+    }
+
+    .btn-demo:hover {
+      background-color: var(--azul-medio);
+      transform: translateY(-2px);
+    }
+
+    .card-executivo {
+      background-color: var(--bege-areia);
+      padding: 2.4rem;
+      border-radius: 14px;
+      border-left: 6px solid var(--azul-escuro);
+      box-shadow: 0 10px 25px rgba(26, 43, 69, 0.08);
+    }
+
+    .card-executivo h3 {
+      font-size: 1.5rem;
+      color: var(--azul-escuro);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-executivo p {
+      font-size: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-executivo ul {
+      list-style: none;
+    }
+
+    .card-executivo li {
+      margin-bottom: 0.65rem;
+      font-weight: 600;
+      color: var(--azul-escuro);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .check-icon {
+      color: var(--laranja-destaque);
+      font-weight: 900;
+    }
+
+    /* Seção Vantagens (Página 2 do PDF) */
+    .vantagens {
+      padding: 4.5rem 8%;
+      background-color: var(--bege-secao);
+      text-align: center;
+    }
+
+    .titulo-secao {
+      font-size: 2.1rem;
+      color: var(--azul-escuro);
+      margin-bottom: 0.5rem;
+      font-weight: 800;
+    }
+
+    .subtitulo-secao {
+      color: var(--texto-apoio);
+      margin-bottom: 3rem;
+      font-size: 1.05rem;
+    }
+
+    .grid-vantagens {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    .card-vantagem {
+      background-color: var(--bege-card);
+      padding: 2rem 1.5rem;
+      border-radius: 12px;
+      border: 1px solid #DFD5C3;
+      border-top: 5px solid var(--azul-escuro);
+      text-align: left;
+      box-shadow: 0 4px 12px rgba(26, 43, 69, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card-vantagem h4 {
+      font-size: 1.2rem;
+      color: var(--azul-escuro);
+      margin-bottom: 0.7rem;
+    }
+
+    .card-vantagem p {
+      font-size: 0.95rem;
+      color: var(--texto-apoio);
+    }
+
+    /* Como Funciona (Página 2/3 do PDF) */
+    .como-funciona {
+      padding: 4.5rem 8%;
+      background-color: var(--bege-principal);
+      text-align: center;
+    }
+
+    .grid-passos {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+      margin-top: 2.8rem;
+    }
+
+    .passo-box {
+      background-color: var(--bege-card);
+      padding: 2rem;
+      border-radius: 12px;
+      border: 1px solid var(--bege-areia);
+      box-shadow: 0 4px 12px rgba(26, 43, 69, 0.04);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      .card-vantagem:hover,
+      .passo-box:hover,
+      .card-atuacao:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 24px rgba(26, 43, 69, 0.12);
+      }
+    }
+
+    .numero-circulo {
+      width: 48px;
+      height: 48px;
+      background-color: var(--azul-escuro);
+      color: var(--bege-principal);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin: 0 auto 1rem;
+      border: 2px solid var(--laranja-destaque);
+    }
+
+    /* Rodapé (Página 3 do PDF) */
+    footer {
+      background-color: var(--azul-escuro);
+      color: var(--bege-areia);
+      padding: 3.5rem 8%;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 2.5rem;
+    }
+
+    footer h4 {
+      color: var(--bege-principal);
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    footer ul {
+      list-style: none;
+    }
+
+    footer li {
+      margin-bottom: 0.55rem;
+    }
+
+    footer a {
+      color: var(--bege-areia);
+      text-decoration: none;
+    }
+
+    .footer-destaque {
+      padding-left: 1.5rem;
+      border-left: 3px solid var(--laranja-destaque);
+    }
+
+    .footer-destaque p {
+      margin-bottom: 0.9rem;
+    }
+
+    .footer-destaque a {
+      font-weight: 700;
+    }
+
+    .atuacao {
+      padding: 4.5rem 8%;
+      background-color: var(--bege-secao);
+      text-align: center;
+    }
+
+    .grid-atuacao {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+      text-align: left;
+    }
+
+    .card-atuacao {
+      padding: 2rem;
+      background-color: var(--bege-card);
+      border: 1px solid #DFD5C3;
+      border-top: 5px solid var(--laranja-destaque);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(26, 43, 69, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card-atuacao h3 {
+      margin-bottom: 0.75rem;
+      color: var(--azul-escuro);
+      font-size: 1.2rem;
+    }
+
+    .card-atuacao p {
+      color: var(--texto-apoio);
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-vantagens {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-passos {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-atuacao {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      header {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 0.65rem;
+        padding: 0.9rem 6%;
+      }
+
+      .logo {
+        margin-right: auto;
+      }
+
+      .menu-toggle-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.55rem 0.75rem;
+        border: 1px solid var(--bege-areia);
+        border-radius: 6px;
+        color: var(--bege-principal);
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .menu-toggle:focus-visible + .menu-toggle-label {
+        outline: 3px solid var(--laranja-destaque);
+        outline-offset: 3px;
+      }
+
+      .menu-toggle-icon,
+      .menu-toggle-icon::before,
+      .menu-toggle-icon::after {
+        display: block;
+        width: 1.1rem;
+        height: 2px;
+        background-color: currentColor;
+      }
+
+      .menu-toggle-icon {
+        position: relative;
+      }
+
+      .menu-toggle-icon::before,
+      .menu-toggle-icon::after {
+        position: absolute;
+        left: 0;
+        content: "";
+      }
+
+      .menu-toggle-icon::before {
+        top: -6px;
+      }
+
+      .menu-toggle-icon::after {
+        top: 6px;
+      }
+
+      .menu-toggle {
+        display: block;
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      header nav {
+        display: none;
+        order: 1;
+        flex: 0 0 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        margin-left: 0;
+        padding-top: 0.75rem;
+      }
+
+      .menu-toggle:checked ~ nav {
+        display: flex;
+      }
+
+      header nav a {
+        padding: 0.8rem 0;
+        border-top: 1px solid rgba(234, 226, 211, 0.2);
+      }
+
+      .header-login {
+        padding: 0.55rem 0.75rem;
+        font-size: 0.9rem;
+      }
+
+      .hero,
+      .vantagens,
+      .como-funciona,
+      .atuacao {
+        padding: 3rem 6%;
+      }
+
+      .card-executivo,
+      .card-vantagem,
+      .passo-box {
+        padding: 1.5rem;
+      }
+
+      .titulo-secao {
+        font-size: clamp(1.65rem, 6vw, 2.1rem);
+      }
+
+      .card-atuacao {
+        padding: 1.5rem;
+      }
+
+      footer {
+        grid-template-columns: 1fr;
+        gap: 1.75rem;
+        padding: 2.5rem 6%;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .grid-vantagens {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-    
+
+  <header>
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M7 6.5A2.5 2.5 0 0 1 9.5 4h15A2.5 2.5 0 0 1 27 6.5V13" stroke="#F7F3EB" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M11 10h10M11 15h7" stroke="#FF6200" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="24.5" cy="24.5" r="8.5" stroke="#F7F3EB" stroke-width="2.5"/>
+        <path d="m30.5 30.5 5 5" stroke="#FF6200" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <span>FindLog</span>
+    </div>
+    <input class="menu-toggle" type="checkbox" id="menu-toggle" aria-label="Abrir menu de navegação">
+    <label class="menu-toggle-label" for="menu-toggle">
+      <span class="menu-toggle-icon" aria-hidden="true"></span>
+      <span>Menu</span>
+    </label>
+    <nav>
+      <a href="#vantagens">Vantagens</a>
+      <a href="#como-funciona">Como Funciona</a>
+      <a href="mailto:contato@findlog.com.br">Contato</a>
+    </nav>
+    <a href="#login" class="btn-login header-login">Área de Login</a>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Transforme a gestão de achados e perdidos da sua instituição</h1>
+      <p>O FindLog é uma plataforma inteligente para escolas, universidades e empresas organizarem objetos encontrados, reduzirem extravios e oferecerem mais segurança para alunos, colaboradores e visitantes.</p>
+      <a href="#demo" class="btn-demo">Solicitar Demonstração</a>
+    </div>
+    <div class="card-executivo">
+      <h3>Gestão corporativa eficiente</h3>
+      <p>Centralize registros, acompanhe objetos encontrados e facilite a devolução para seus verdadeiros proprietários.</p>
+      <ul>
+        <li><span class="check-icon">✔</span> Controle completo dos itens</li>
+        <li><span class="check-icon">✔</span> Histórico e rastreabilidade</li>
+        <li><span class="check-icon">✔</span> Acesso seguro aos dados</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="vantagens" class="vantagens">
+    <h2 class="titulo-secao">Por que escolher o FindLog?</h2>
+    <p class="subtitulo-secao">Uma solução criada para tornar o processo de achados e perdidos simples, rápido e organizado.</p>
+    <div class="grid-vantagens">
+      <div class="card-vantagem">
+        <h4>Organização Automatizada</h4>
+        <p>Cadastre, categorize e acompanhe objetos encontrados em poucos cliques.</p>
+      </div>
+      <div class="card-vantagem">
+        <h4>Segurança de Dados</h4>
+        <p>Informações protegidas com controle de acesso e histórico completo.</p>
+      </div>
+      <div class="card-vantagem">
+        <h4>Economia de Tempo</h4>
+        <p>Reduza processos manuais e agilize a localização de objetos.</p>
+      </div>
+      <div class="card-vantagem">
+        <h4>Menos Extravio</h4>
+        <p>Aumente as chances de devolução dos pertences encontrados.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="como-funciona" class="como-funciona">
+    <h2 class="titulo-secao">Como funciona</h2>
+    <div class="grid-passos">
+      <div class="passo-box">
+        <div class="numero-circulo">1</div>
+        <p>A instituição registra o objeto encontrado na plataforma.</p>
+      </div>
+      <div class="passo-box">
+        <div class="numero-circulo">2</div>
+        <p>O sistema mantém todos os dados centralizados e acessíveis.</p>
+      </div>
+      <div class="passo-box">
+        <div class="numero-circulo">3</div>
+        <p>O proprietário é identificado e o item retorna com segurança.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="atuacao">
+    <h2 class="titulo-secao">Uma solução para cada ambiente</h2>
+    <p class="subtitulo-secao">O FindLog organiza achados e perdidos respeitando a rotina e os tipos de item de cada instituição.</p>
+    <div class="grid-atuacao">
+      <article class="card-atuacao">
+        <h3>Escolas e universidades</h3>
+        <p>Ajude a reunir materiais escolares, garrafas, roupas e eletrônicos em um só lugar, facilitando a consulta por estudantes e equipes.</p>
+      </article>
+      <article class="card-atuacao">
+        <h3>Empresas e escritórios</h3>
+        <p>Mantenha organizados itens como crachás, chaves e acessórios de trabalho, com registros centralizados para apoiar a rotina das equipes.</p>
+      </article>
+      <article class="card-atuacao">
+        <h3>Espaços de grande circulação</h3>
+        <p>Em centros esportivos, eventos e espaços compartilhados, padronize os registros e facilite o acompanhamento de objetos encontrados em diferentes áreas.</p>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <h4>FindLog</h4>
+      <p>Sistema inteligente de gerenciamento de achados e perdidos para instituições.</p>
+    </div>
+    <div>
+      <h4>Links rápidos</h4>
+      <ul>
+        <li><a href="#vantagens">Vantagens</a></li>
+        <li><a href="#como-funciona">Como Funciona</a></li>
+        <li><a href="mailto:contato@findlog.com.br">Contato</a></li>
+      </ul>
+    </div>
+    <div class="footer-destaque">
+      <h4>Todo objeto merece voltar para casa</h4>
+      <p>Com processos organizados, sua instituição ajuda mais pessoas a reencontrarem o que perderam.</p>
+      <a href="#como-funciona">Descubra como funciona →</a>
+    </div>
+  </footer>
+
 </body>
 </html>
