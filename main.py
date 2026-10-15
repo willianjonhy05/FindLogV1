@@ -6,6 +6,8 @@ from routes.sala_routes import sala_rotas
 from routes.categoria_routes import categoria_routes
 from routes.usuario_routes import usuario_routes
 from routes.item_routes import item_rotas
+from routes.contato_routes import registrar_rotas_contato
+
 import os
 from supabase import create_client, Client
 from dotenv import load_dotenv
@@ -34,6 +36,7 @@ categoria_routes(app)
 item_rotas(app)
 usuario_routes(app)
 sala_rotas(app)
+registrar_rotas_contato(app)
 
 if __name__ == "__main__":
     app.run()

@@ -141,6 +141,16 @@
 
         </a>
 
+        
+        <a href="{{ url_for('lista_contatos') }}" class="{{ 'active' if request.endpoint in ['lista_contatos', 'novo_contato', 'detalhes_contato', 'atualizar_contato'] else '' }}">
+
+            <i class="bi bi-envelope"></i>
+
+            Contatos
+
+        </a>
+
+
 
         <!-- <a href="#">
 

@@ -328,21 +328,46 @@
                     </h2>
 
                     <p>
-                        Cadastre seu e-mail e acompanhe atualizações, melhorias e novidades da plataforma.
+                        Fale com nossa equipe para conhecer a plataforma e tirar suas dúvidas.
                     </p>
 
+                    {% with mensagens = get_flashed_messages(with_categories=true) %}
+                        {% if mensagens %}
+                            {% for categoria, mensagem in mensagens %}
+                                <div class="alert alert-{{ categoria }}" role="alert">
+                                    {{ mensagem }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
 
-                    <form class="mt-4">
-
-                        <div class="input-group">
-
-                            <input type="email" class="form-control" placeholder="Digite seu melhor e-mail">
-
-                            <button class="btn btn-primary-custom px-4">
-                                Inscrever
-                            </button>
-
+                    <form class="mt-4 text-start" method="POST" action="{{ url_for('contato') }}">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="nome" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="nome" name="nome" maxlength="100" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">E-mail</label>
+                                <input type="email" class="form-control" id="email" name="email" maxlength="150" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="telefone" class="form-label">Telefone</label>
+                                <input type="tel" class="form-control" id="telefone" name="telefone" maxlength="20" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="assunto" class="form-label">Assunto</label>
+                                <input type="text" class="form-control" id="assunto" name="assunto" maxlength="150" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="mensagem" class="form-label">Mensagem</label>
+                                <textarea class="form-control" id="mensagem" name="mensagem" rows="10" maxlength="2000" required></textarea>
+                            </div>
                         </div>
+
+                        <button type="submit" class="btn btn-primary-custom px-4">
+                            Enviar mensagem
+                        </button>
 
                     </form>
 
