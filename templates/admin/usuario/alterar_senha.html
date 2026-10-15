@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}
+Alterar Senha
+{% endblock %}
+
+{% block content %}
+
+<div class="welcome-card mb-4">
+    <h1 class="fw-bold">
+        <i class="bi bi-key"></i>
+        Alterar Senha
+    </h1>
+    <p class="mb-0">
+        Atualize sua senha de acesso ao sistema FindLog de forma segura.
+    </p>
+</div>
+
+<!-- Alerta de Erro Geral, se houver -->
+{% if erros and erros.get('geral') %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ erros['geral'] }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card table-card p-4">
+            <form method="POST" action="{{ url_for('alterar_senha') }}">
+
+                <div class="row g-4">
+
+                    <!-- Senha Atual -->
+                    <div class="col-12">
+                        <label for="senha_atual" class="form-label fw-semibold">
+                            Senha Atual <span class="text-danger">*</span>
+                        </label>
+                        <input type="password" id="senha_atual" name="senha_atual" 
+                            class="form-control {{ 'is-invalid' if erros and 'senha_atual' in erros else '' }}"
+                            placeholder="Digite sua senha atual" required>
+                        {% if erros and 'senha_atual' in erros %}
+                            <div class="invalid-feedback">{{ erros['senha_atual'] }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Nova Senha -->
+                    <div class="col-md-6">
+                        <label for="nova_senha" class="form-label fw-semibold">
+                            Nova Senha <span class="text-danger">*</span>
+                        </label>
+                        <input type="password" id="nova_senha" name="nova_senha" 
+                            class="form-control {{ 'is-invalid' if erros and 'nova_senha' in erros else '' }}"
+                            placeholder="Digite a nova senha" required>
+                        {% if erros and 'nova_senha' in erros %}
+                            <div class="invalid-feedback">{{ erros['nova_senha'] }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Confirmar Nova Senha -->
+                    <div class="col-md-6">
+                        <label for="confirmar_senha" class="form-label fw-semibold">
+                            Confirmar Nova Senha <span class="text-danger">*</span>
+                        </label>
+                        <input type="password" id="confirmar_senha" name="confirmar_senha" 
+                            class="form-control {{ 'is-invalid' if erros and 'confirmar_senha' in erros else '' }}"
+                            placeholder="Repita a nova senha" required>
+                        {% if erros and 'confirmar_senha' in erros %}
+                            <div class="invalid-feedback">{{ erros['confirmar_senha'] }}</div>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <hr class="my-4">
+
+                <div class="d-flex justify-content-end gap-3">
+                    <a href="{{ url_for('meu_perfil') }}" class="btn btn-outline-secondary">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i>
+                        Atualizar Senha
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

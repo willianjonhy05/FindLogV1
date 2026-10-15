@@ -1,8 +1,8 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, session
 from models.usuario import Usuario
 from models.instituicao import Instituicao
 from models.sala import Sala
-from utils.upload import salvar_foto_perfil
+from utils.upload import salvar_foto_perfil, allowed_file
 
 def novo_usuario():
     if request.method == 'GET':
@@ -188,3 +188,107 @@ def visualizar_usuario(username):
         )
     else:
         return render_template("admin/errors/404.html"), 404
+    
+
+def alterar_senha():
+    username_logado = session.get('usuario_username')
+    if not username_logado:
+        return redirect(url_for('login'))
+        
+    usuario = Usuario.get_by_username(username_logado)
+    if not usuario:
+        return render_template("admin/errors/404.html"), 404
+        
+    if request.method == 'GET':
+        return render_template('admin/usuario/alterar_senha.html', usuario=usuario)
+        
+    elif request.method == 'POST':
+        senha_atual = request.form.get('senha_atual')
+        nova_senha = request.form.get('nova_senha')
+        confirmar_senha = request.form.get('confirmar_senha')
+        
+        erros = {}
+        
+        # Validações iniciais
+        if not senha_atual or not nova_senha or not confirmar_senha:
+            erros['geral'] = "Todos os campos são obrigatórios."
+        elif nova_senha != confirmar_senha:
+            erros['confirmar_senha'] = "As senhas novas não coincidem."
+            
+        if not erros:
+            sucesso, mensagem = usuario.alterar_senha(senha_atual, nova_senha)
+            if sucesso:
+                # Opcional: você pode adicionar uma mensagem flash aqui se utilizar no projeto
+                return redirect(url_for('perfil_usuario'))
+            else:
+                erros['senha_atual'] = mensagem
+                
+        return render_template(
+            'admin/usuario/alterar_senha.html',
+            usuario=usuario,
+            erros=erros
+        ), 400
+        
+    else:
+        return render_template("admin/errors/405.html"), 405
+
+
+def editar_perfil():
+    username_logado = session.get('usuario_username')
+    if not username_logado:
+        return redirect(url_for('login'))
+        
+    usuario = Usuario.get_by_username(username_logado)
+    if not usuario:
+        return render_template("admin/errors/404.html"), 404
+        
+    if request.method == 'GET':
+        return render_template('admin/usuario/editar_perfil.html', usuario=usuario)
+        
+    elif request.method == 'POST':
+        nome = request.form.get('nome')
+        email = request.form.get('email')
+        telefone = request.form.get('telefone')
+        data_nascimento = request.form.get('data_nascimento')
+        
+        erros = {}
+        if not nome or not email:
+            erros['geral'] = "Nome e e-mail são obrigatórios."
+            
+        # Processamento da Foto de Perfil utilizando a sua função utilitária
+        file = request.files.get('foto_perfil')
+        foto_path = None
+        
+        if file and file.filename != '':
+            # Chama a função do seu upload.py
+            foto_path = salvar_foto_perfil(file, username_logado)
+            if not foto_path:
+                erros['foto'] = "Formato de imagem inválido. Utilize PNG, JPG, JPEG ou WEBP."
+
+        if not erros:
+            dados_atualizados = {
+                "nome": nome,
+                "email": email,
+                "telefone": telefone,
+                "data_nascimento": data_nascimento
+            }
+            
+            # Se a foto foi salva com sucesso, adiciona o caminho relativo aos dados
+            if foto_path:
+                dados_atualizados["foto_perfil"] = foto_path
+                
+            sucesso, mensagem = usuario.atualizar_perfil(dados_atualizados)
+            if sucesso:
+                session['usuario_nome'] = nome
+                return redirect(url_for('perfil_usuario'))
+            else:
+                erros['geral'] = mensagem
+                
+        return render_template(
+            'admin/usuario/editar_perfil.html',
+            usuario=usuario,
+            erros=erros
+        ), 400
+        
+    else:
+        return render_template("admin/errors/405.html"), 405

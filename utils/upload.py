@@ -56,3 +56,6 @@ def salvar_foto_item(file_storage, codigo_item):
         return f"upload/itens/{nome_arquivo}"
         
     return None
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in EXTENSOES_PERMITIDAS

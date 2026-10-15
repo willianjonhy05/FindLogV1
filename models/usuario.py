@@ -140,11 +140,22 @@ class Usuario:
         dao = UsuarioDAO()
         return dao.atualizar_usuario(self)
 
+
+    def atualizar_perfil(self, dados):
+        from daos.usuario_dao import UsuarioDAO
+        dao = UsuarioDAO()
+        return dao.atualizar_dados_perfil(self.username, dados)
+
     def delete(self):
         from daos.usuario_dao import UsuarioDAO
         dao = UsuarioDAO()
         return dao.deletar_usuario(self.username)
 
+
+    def alterar_senha(self, senha_atual, nova_senha):
+        from daos.usuario_dao import UsuarioDAO
+        dao = UsuarioDAO()
+        return dao.atualizar_senha(self.username, senha_atual, nova_senha)
 
     def verificar_senha(self, senha_digitada):
         """Compara a senha em texto plano com o hash armazenado no banco."""

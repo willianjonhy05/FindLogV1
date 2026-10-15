@@ -1,12 +1,16 @@
 from controller.main_controller import index, dashboard_admin
+from controller.usuario_controller import alterar_senha, editar_perfil
 from controller.auth_controller import login, logout
 from utils.auth import roles_required
-from controller.main_controller import visualizar_rotas, nao_autorizado, nao_encontrado, metodo_nao_suportado, erro_interno
+from controller.main_controller import visualizar_rotas, nao_autorizado, nao_encontrado, metodo_nao_suportado, erro_interno, perfil_usuario
 
 def adicionar_rotas(app):
     app.add_url_rule('/', view_func=index, methods=['GET'])
     app.add_url_rule('/login', endpoint='login', view_func=login, methods=['GET', 'POST'])
     app.add_url_rule('/logout', endpoint='logout', view_func=logout, methods=['GET'])
+    app.add_url_rule('/perfil', endpoint='meu_perfil', view_func=roles_required(1, 2, 3)(perfil_usuario), methods=['GET'])
+    app.add_url_rule('/perfil/alterar-senha', endpoint='alterar_senha', view_func=roles_required(1, 2, 3)(alterar_senha), methods=['GET', 'POST'])
+    app.add_url_rule('/perfil/editar-perfil', endpoint='editar_perfil', view_func=roles_required(1, 2, 3)(editar_perfil), methods=['GET', 'POST'])
     app.add_url_rule('/dashboard', endpoint='dashboard_admin', view_func=roles_required(1)(dashboard_admin), methods=['GET'])
     app.add_url_rule('/admin/rotas', view_func=visualizar_rotas)
     app.register_error_handler(403, nao_autorizado)

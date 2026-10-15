@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}
+Meu Perfil
+{% endblock %}
+
+{% block content %}
+
+<div class="welcome-card mb-4">
+    <h1 class="fw-bold">
+        <i class="bi bi-person-circle"></i>
+        Meu Perfil
+    </h1>
+    <p class="mb-0">
+        Gerencie e visualize suas informações pessoais cadastradas no FindLog.
+    </p>
+</div>
+
+<div class="row g-4">
+
+    <!-- Informações principais do Perfil -->
+    <div class="col-lg-8">
+        <div class="card table-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Foto de Perfil ou Ícone Padrão -->
+                    {% if usuario.foto_perfil %}
+                        <img src="{{ url_for('static', filename=usuario.foto_perfil) }}" alt="Foto de Perfil" 
+                            class="rounded-circle border" style="width: 65px; height: 65px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center" style="width: 65px; height: 65px; font-size: 28px;">
+                            <i class="bi bi-person"></i>
+                        </div>
+                    {% endif %}
+                    <div>
+                        <h4 class="fw-bold mb-0">
+                            {{ usuario.nome }}
+                        </h4>
+                        <span class="text-muted small">Username: <strong>{{ usuario.username }}</strong></span>
+                    </div>
+                </div>
+
+                <div>
+                    {% if usuario.tipo_usuario == 1 %}
+                        <span class="badge bg-danger px-3 py-2">Administrador</span>
+                    {% elif usuario.tipo_usuario == 3 %}
+                        <span class="badge bg-info text-dark px-3 py-2">Gestor de Sala</span>
+                    {% else %}
+                        <span class="badge bg-secondary px-3 py-2">Usuário Comum</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <label class="text-muted small">
+                        E-mail (Login)
+                    </label>
+                    <div class="fw-semibold">
+                        <i class="bi bi-envelope text-info me-1"></i>
+                        {{ usuario.email }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="text-muted small">
+                        CPF
+                    </label>
+                    <div class="fw-semibold cpf-format">
+                        {{ usuario.cpf }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="text-muted small">
+                        Data de Nascimento
+                    </label>
+                    <div class="fw-semibold data">
+                        {{ usuario.data_nascimento or 'Não informada' }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="text-muted small">
+                        Telefone
+                    </label>
+                    <div class="fw-semibold telefone-format">
+                        <i class="bi bi-telephone text-info me-1"></i>
+                        {{ usuario.telefone or 'Não informado' }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="text-muted small">
+                        Instituição Vinculada
+                    </label>
+                    <div class="fw-semibold">
+                        <i class="bi bi-building text-info me-1"></i>
+                        {{ usuario.nome_instituicao or 'Não vinculada' }}
+                    </div>
+                </div>
+
+                {% if usuario.tipo_usuario == 3 %}
+                <div class="col-md-6">
+                    <label class="text-muted small">
+                        Sala de Responsabilidade
+                    </label>
+                    <div class="fw-semibold">
+                        <i class="bi bi-door-closed text-info me-1"></i>
+                        {{ usuario.sala or 'Nenhuma sala atribuída' }}
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Card lateral de Ações e Resumo -->
+   <!-- Card lateral de Ações e Resumo -->
+    <div class="col-lg-4">
+
+        <div class="card table-card p-4">
+            <h5 class="fw-bold mb-4">
+                Ações
+            </h5>
+
+            <div class="d-grid gap-3">
+                <!-- Botão para editar o próprio perfil -->
+                <a href="{{ url_for('editar_perfil') }}" class="btn btn-outline-primary" >
+                    <i class="bi bi-pencil"></i>
+                    Editar Meus Dados
+                </a>
+
+                <!-- Novo Botão para Trocar Senha -->
+                <a href="{{ url_for('alterar_senha') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-key"></i>
+                    Trocar Senha
+                </a>
+
+                <a href="{{ url_for('dashboard_admin') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-speedometer2"></i>
+                    Voltar ao Dashboard
+                </a>
+            </div>
+        </div>
+
+        <div class="card table-card p-4 mt-4">
+            <h6 class="fw-bold">
+                Segurança da Conta
+            </h6>
+            <p class="mb-0 text-muted small">
+                Mantenha suas credenciais atualizadas. Caso precise alterar sua senha ou dados sensíveis, utilize as opções acima.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/formatar_dados.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mascara.js') }}"></script>
+{% endblock %}

@@ -1,10 +1,12 @@
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for, session
 from models.instituicao import Instituicao
 from models.categoria import Categoria
 from models.usuario import Usuario
 from models.sala import Sala
 from models.item import Item
 from flask import render_template_string
+
+
 
 
 
@@ -70,6 +72,23 @@ def visualizar_rotas():
 #         return "Login realizado com sucesso!"
 #     else:
 #         return "Método não permitido", 405
+
+
+def perfil_usuario():
+    username_logado = session.get('usuario_username')
+    
+    if not username_logado:
+        return redirect(url_for('login'))
+    
+    usuario = Usuario.get_by_username(username_logado)
+    
+    if not usuario:
+        return render_template("admin/errors/404.html"), 404
+        
+    return render_template(
+        'admin/usuario/perfil.html',
+        usuario=usuario
+    )
 
 
 def nao_autorizado(e):
