@@ -15,12 +15,13 @@ class Instituicao:
         return self.data.get("nome", "Nome não definido")
     
     def validate(self):
+        
         self.errors = []
         if not self.data.get("nome") or not self.data.get("nome").strip():
             self.errors.append("O nome da instituição não pode ser vazio.")
 
         # Validação do CNPJ
-        cnpj = self.data.get("cnpj")
+        cnpj = self.data.get("cnpj")        
         if not cnpj:
             self.errors.append("O CNPJ não pode ser vazio.")
         else:

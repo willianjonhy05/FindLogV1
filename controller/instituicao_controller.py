@@ -1,5 +1,6 @@
 from flask import render_template, request, redirect, url_for
 from models.instituicao import Instituicao
+from utils.formata import limpar_string
 
 
 def nova_instituicao():
@@ -7,12 +8,12 @@ def nova_instituicao():
         return render_template('admin/instituicao/nova.html')
 
     elif request.method == 'POST':
-        # Recolhe os dados enviados pelo formulário em um dicionário
+        
         dados = {
-            "cnpj": request.form.get('cnpj'),
+            "cnpj": limpar_string(request.form.get('cnpj')),
             "nome": request.form.get('nome'),
             "endereco": request.form.get('endereco'),
-            "telefone": request.form.get('telefone'),
+            "telefone": limpar_string(request.form.get('telefone')),
             "email": request.form.get('email'),
             "ativo": True # Padrão para nova instituição
         }

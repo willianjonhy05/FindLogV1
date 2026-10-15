@@ -71,10 +71,11 @@ Lista de Salas
                         </a>
                     </td>
                     <td>
-                        <a href="{{ url_for('deletar_sala', codigo=sala.codigo) }}"
-                            class="btn btn-sm btn-outline-danger btn-delete" data-nome="Sala {{ sala.numero }} - {{ sala.predio }}" title="Excluir">
-                            <i class="bi bi-trash"></i>
-                        </a>
+                        <form action="{{ url_for('deletar_sala', codigo=sala.codigo) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir a sala {{ sala.codigo }}?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
                     </td>
                     <td>
                         <a href="{{ url_for('detalhes_sala', codigo=sala.codigo) }}"
