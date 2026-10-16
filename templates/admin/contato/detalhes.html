@@ -21,7 +21,7 @@
         <div class="row g-4">
             <div class="col-md-6">
                 <label class="form-label text-muted">Código da mensagem</label>
-                <p class="fw-semibold">{{ contato.get('id', '-') }}</p>
+                <p class="fw-semibold">{{ contato.get('codigo', '-') }}</p>
             </div>
 
             <div class="col-md-6">
@@ -55,11 +55,7 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-end gap-2 mt-4">
-            <a href="{{ url_for('atualizar_contato', id=contato.get('id')) }}"
-               class="btn btn-warning">
-                <i class="bi bi-pencil-square"></i> Editar
-            </a>
+        <div class="d-flex justify-content-end mt-4">
             <a href="{{ url_for('lista_contatos') }}" class="btn btn-secondary">
                 Voltar
             </a>

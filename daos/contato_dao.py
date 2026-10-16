@@ -1,79 +1,89 @@
-from database import supabase
-
 
 class ContatoDAO:
 
+
     def inserir(self, contato):
-        resposta = (
-            supabase.table("contatos")
-            .insert({
-                "nome": contato.nome,
-                "email": contato.email,
-                "telefone": contato.telefone,
-                "assunto": contato.assunto,
-                "mensagem": contato.mensagem
-            })
-            .select("*")
-            .execute()
-        )
+        from main import supabase
 
-        if resposta.data:
-            return resposta.data[0]
+        dados = {
+            "codigo": contato.codigo,
+            "nome": contato.nome,
+            "email": contato.email,
+            "telefone": contato.telefone,
+            "assunto": contato.assunto,
+            "mensagem": contato.mensagem
+        }
 
-        return None
+        try:
+            print("Dados enviados ao Supabase:", dados)
+
+            resposta = (
+                supabase.table("contatos")
+                .insert(dados)
+                .select("*")
+                .execute()
+            )
+
+            print("Resposta do Supabase:", resposta.data)
+
+            if resposta.data:
+                return resposta.data[0]
+
+            print("O Supabase não retornou o registro inserido.")
+            return None
+
+        except Exception as erro:
+            print("ERRO AO SALVAR CONTATO:", repr(erro))
+            raise
+
 
     def listar_todos(self):
-        resposta = (
-            supabase.table("contatos")
-            .select("*")
-            .order("data_envio", desc=True)
-            .execute()
-        )
+        from main import supabase
 
-        return resposta.data or []
+        try:
+            resposta = (
+                supabase.table("contatos")
+                .select("*")
+                .order("data_envio", desc=True)
+                .execute()
+            )
 
-    def buscar_por_id(self, id):
-        resposta = (
-            supabase.table("contatos")
-            .select("*")
-            .eq("id", id)
-            .execute()
-        )
+            return resposta.data or []
 
-        if resposta.data:
-            return resposta.data[0]
+        except Exception as erro:
+            print(f"Erro ao listar mensagens: {erro}")
+            return []
 
-        return None
+    def buscar_por_codigo(self, codigo):
+        from main import supabase
 
-    def deletar(self, id):
-        resposta = (
-            supabase.table("contatos")
-            .delete()
-            .eq("id", id)
-            .execute()
-        )
+        try:
+            resposta = (
+                supabase.table("contatos")
+                .select("*")
+                .eq("codigo", codigo)
+                .execute()
+            )
 
-        if resposta.data:
-            return resposta.data[0]
+            return resposta.data[0] if resposta.data else None
 
-        return None
+        except Exception as erro:
+            print(f"Erro ao buscar mensagem: {erro}")
+            return None
 
-    
-    def atualizar(self, id, contato):
-        resposta = (
-            supabase.table("contatos")
-            .update({
-                "nome": contato.nome,
-                "email": contato.email,
-                "telefone": contato.telefone,
-                "assunto": contato.assunto,
-                "mensagem": contato.mensagem
-            })
-            .eq("id", id)
-            .execute()
-        )
+    def deletar(self, codigo):
+        from main import supabase
 
-        if resposta.data:
-            return resposta.data[0]
+        try:
+            resposta = (
+                supabase.table("contatos")
+                .delete()
+                .eq("codigo", codigo)
+                .execute()
+            )
 
-        return None
+            return resposta.data[0] if resposta.data else None
+
+        except Exception as erro:
+            print(f"Erro ao excluir mensagem: {erro}")
+            return None

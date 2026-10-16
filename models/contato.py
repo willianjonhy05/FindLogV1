@@ -1,7 +1,9 @@
 from datetime import datetime
+
 from utils.formata import formatar
 from utils.email import validar_email
 from utils.codigo import gerar_codigo
+
 
 class Contato:
     ASSUNTOS = {
@@ -13,13 +15,16 @@ class Contato:
     }
 
     def __init__(self, data):
-
         self.data = data
         self.errors = []
 
+        # Data de envio
         if not self.data.get("data_envio"):
-            self.data["data_envio"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")        
+            self.data["data_envio"] = datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
 
+        # Código único para o contato
         if not self.data.get("codigo"):
             while True:
                 codigo = gerar_codigo()
@@ -28,123 +33,150 @@ class Contato:
                     self.data["codigo"] = codigo
                     break
 
-                
-        def contato_by_codigo(codigo):
-            pass
-
-
-        # self.nome = nome
-        # self.email = email
-        # self.telefone = telefone
-        # self.assunto = assunto
-        # self.mensagem = mensagem
+    def __str__(self):
+        return self.nome or "Contato sem nome"
 
     def validate(self, is_new=True):
         self.errors = []
 
-        # Nome (Obrigatório)
+        # Validação do nome
         nome = self.data.get("nome")
         if not nome or not str(nome).strip():
-            self.errors.append("O nome do usuário não pode ser vazio.")
+            self.errors.append("O nome não pode ser vazio.")
+        elif len(str(nome).strip()) > 100:
+            self.errors.append("O nome deve ter no máximo 100 caracteres.")
 
-            # Validação do telefone
+        # Validação do telefone
         telefone = self.data.get("telefone")
-        if not telefone:
+        if not telefone or not str(telefone).strip():
             self.errors.append("O telefone não pode ser vazio.")
         else:
             telefone_formatado = formatar(telefone)
             if len(telefone_formatado) < 10:
-                self.errors.append("O telefone deve possuir pelo menos 10 dígitos.")
+                self.errors.append(
+                    "O telefone deve possuir pelo menos 10 dígitos."
+                )
+            if len(str(telefone).strip()) > 20:
+                self.errors.append(
+                    "O telefone deve ter no máximo 20 caracteres."
+                )
 
         # Validação do e-mail
         email = self.data.get("email")
-        if not email:
+        if not email or not str(email).strip():
             self.errors.append("O e-mail não pode ser vazio.")
         else:
             email_valido = validar_email(email)
             if isinstance(email_valido, str):
                 self.errors.append(email_valido)
 
+
+        # Validação do assunto
+        assunto = self.data.get("assunto")
+
+        if assunto is None or not str(assunto).strip():
+            self.errors.append("O assunto não pode ser vazio.")
+        else:
+            assunto = str(assunto).strip()
+
+            assuntos_validos = {
+                str(codigo) for codigo in self.ASSUNTOS
+            } | set(self.ASSUNTOS.values())
+
+            if assunto not in assuntos_validos:
+                self.errors.append(
+                    "Selecione um assunto válido dentre as opções disponíveis."
+                )
+            else:
+                # Se foi enviado o código numérico, converte para o texto.
+                for codigo, descricao in self.ASSUNTOS.items():
+                    if assunto == str(codigo):
+                        self.data["assunto"] = descricao
+                        break
+
+
+        # Validação da mensagem
         mensagem = self.data.get("mensagem")
-
-        
-
-        if len(mensagem) < 20:
-            self.errors.append("Mensagem de tamanho insuficiente")
+        if not mensagem or not str(mensagem).strip():
+            self.errors.append("A mensagem não pode ser vazia.")
+        elif len(str(mensagem).strip()) < 20:
+            self.errors.append(
+                "A mensagem deve possuir pelo menos 20 caracteres."
+            )
+        elif len(str(mensagem).strip()) > 2000:
+            self.errors.append(
+                "A mensagem deve ter no máximo 2000 caracteres."
+            )
 
         return len(self.errors) == 0
-    
-    
+
+    def save(self):
+        from daos.contato_dao import ContatoDAO
+        dao = ContatoDAO()
+        return dao.inserir(self)
+
+    def delete(self):
+        from daos.contato_dao import ContatoDAO
+        dao = ContatoDAO()
+        return dao.deletar(self.codigo)
+
+    def update(self):
+        from daos.contato_dao import ContatoDAO
+        dao = ContatoDAO()
+        return dao.atualizar(self.codigo, self)
+
+    @staticmethod
+    def contato_by_codigo(codigo):
+        from daos.contato_dao import ContatoDAO
+        dao = ContatoDAO()
+        return dao.buscar_por_codigo(codigo)
+
+    @staticmethod
+    def get_all():
+        from daos.contato_dao import ContatoDAO
+        dao = ContatoDAO()
+        return dao.listar_todos()
+
+    @staticmethod
+    def get_by_codigo(codigo):
+        from daos.contato_dao import ContatoDAO
+        dao = ContatoDAO()
+        return dao.buscar_por_codigo(codigo)
+
+    @staticmethod
+    def get_by_id(id):
+        from daos.contato_dao import ContatoDAO
+        dao = ContatoDAO()
+        return dao.buscar_por_id(id)
+
+    @property
+    def codigo(self):
+        return self.data.get("codigo")
+
     @property
     def id(self):
-        return self._id
-
-    
+        return self.data.get("id")
 
     @property
     def data_envio(self):
-        return self._data_envio
+        return self.data.get("data_envio")
 
     @property
     def nome(self):
-        return self._nome
-
-    @nome.setter
-    def nome(self, valor):
-        if not valor or not valor.strip():
-            raise ValueError("O nome é obrigatório.")
-        if len(valor.strip()) > 100:
-            raise ValueError("O nome deve ter no máximo 100 caracteres.")
-        self._nome = valor.strip()
+        return self.data.get("nome")
 
     @property
     def email(self):
-        return self._email
-
-    @email.setter
-    def email(self, valor):
-        if not valor or not valor.strip():
-            raise ValueError("O e-mail é obrigatório.")
-
-        valor = valor.strip()
-
-        if "@" not in valor or "." not in valor.split("@")[-1]:
-            raise ValueError("Informe um e-mail válido.")
-
-        self._email = valor
+        return self.data.get("email")
 
     @property
     def telefone(self):
-        return self._telefone
-
-    @telefone.setter
-    def telefone(self, valor):
-        if not valor or not valor.strip():
-            raise ValueError("O telefone é obrigatório.")
-        if len(valor.strip()) > 20:
-            raise ValueError("O telefone deve ter no máximo 20 caracteres.")
-        self._telefone = valor.strip()
+        return self.data.get("telefone")
 
     @property
     def assunto(self):
-        return self._assunto
-
-    @assunto.setter
-    def assunto(self, valor):
-        if not valor or not valor.strip():
-            raise ValueError("O assunto é obrigatório.")
-        if len(valor.strip()) > 150:
-            raise ValueError("O assunto deve ter no máximo 150 caracteres.")
-        self._assunto = valor.strip()
+        return self.data.get("assunto")
 
     @property
     def mensagem(self):
-        return self._mensagem
-
-    @mensagem.setter
-    def mensagem(self, valor):
-        if not valor or not valor.strip():
-            raise ValueError("A mensagem é obrigatória.")
-        if len(valor.strip()) > 2000:
-            raise ValueError("A mensagem deve ter no máximo 2000 caracteres.")
-        self._mensagem = valor.strip()
+        return self.data.get("mensagem")

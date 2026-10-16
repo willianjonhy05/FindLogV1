@@ -324,7 +324,7 @@
                 <div class="col-lg-7 text-center">
 
                     <h2 class="section-title">
-                        Receba novidades do FindLog
+                        Entre em contato com o FindLog
                     </h2>
 
                     <p>
@@ -357,7 +357,14 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="assunto" class="form-label">Assunto</label>
-                                <input type="text" class="form-control" id="assunto" name="assunto" maxlength="150" required>
+                                <select class="form-select" id="assunto" name="assunto" required>
+                                    <option value="" selected disabled>Selecione um assunto</option>
+                                    <option value="1">Dúvidas e orientações</option>
+                                    <option value="2">Sugestões de melhorias</option>
+                                    <option value="3">Reclamações</option>
+                                    <option value="4">Problemas técnicos</option>
+                                    <option value="5">Outro assunto</option>
+                                </select>
                             </div>
                             <div class="col-12">
                                 <label for="mensagem" class="form-label">Mensagem</label>
