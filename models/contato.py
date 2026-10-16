@@ -126,19 +126,16 @@ class Contato:
         return dao.buscar_por_codigo(codigo)
 
     @staticmethod
-    def get_by_id(id):
+    def get_by_codigo(codigo):
         from daos.contato_dao import ContatoDAO
         dao = ContatoDAO()
-        return dao.buscar_por_id(id)
+        return dao.buscar_por_codigo(codigo)
 
     # Propriedades (Imutáveis externamente por não possuírem @setter)
     @property
     def codigo(self):
         return self.data.get("codigo")
 
-    @property
-    def id(self):
-        return self.data.get("id")
 
     @property
     def data_envio(self):
