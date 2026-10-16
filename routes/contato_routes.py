@@ -12,13 +12,13 @@ def registrar_rotas_contato(app):
     app.add_url_rule(
         "/contato",
         view_func=nova_mensagem,
-        methods=["POST"],
+        methods=["POST", "GET"],
         endpoint="contato"
     )
 
     # Listar mensagens na área administrativa
     app.add_url_rule(
-        "/admin/contatos",
+        "/contatos/listar",
         view_func=lista_contatos,
         methods=["GET"],
         endpoint="lista_contatos"
@@ -26,7 +26,7 @@ def registrar_rotas_contato(app):
 
     # Visualizar uma mensagem específica
     app.add_url_rule(
-        "/admin/contatos/<string:codigo>",
+        "/contatos/<string:codigo>",
         view_func=contato_por_codigo,
         methods=["GET"],
         endpoint="contato_por_codigo"
@@ -34,7 +34,7 @@ def registrar_rotas_contato(app):
 
     # Excluir uma mensagem na área administrativa
     app.add_url_rule(
-        "/admin/contatos/<string:codigo>/deletar",
+        "/contatos/<string:codigo>/deletar",
         view_func=deletar_contato,
         methods=["POST"],
         endpoint="deletar_contato"

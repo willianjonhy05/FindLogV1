@@ -1,6 +1,7 @@
+
 {% extends "base.html" %}
 
-{% block title %}Lista de contatos{% endblock %}
+{% block title %}Mensagens recebidas{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -17,11 +18,6 @@
                     Consulte e gerencie as mensagens enviadas.
                 </p>
             </div>
-
-            <a href="{{ url_for('index', _anchor='contato') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i>
-                Nova mensagem
-            </a>
         </div>
     </div>
 
@@ -32,7 +28,6 @@
                 <div class="alert alert-{{ categoria }} alert-dismissible fade show"
                      role="alert">
                     {{ mensagem }}
-
                     <button type="button"
                             class="btn-close"
                             data-bs-dismiss="alert"
@@ -45,6 +40,14 @@
 
     <!-- Tabela de contatos -->
     <div class="table-card p-3">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+            <h5 class="mb-0">Lista de mensagens</h5>
+            <span class="text-muted">
+                Total de mensagens: {{ contatos|length }}
+            </span>
+        </div>
+
         <div class="table-responsive">
             <table class="table table-hover align-middle">
 
@@ -52,6 +55,7 @@
                     <tr>
                         <th>Nome</th>
                         <th>E-mail</th>
+                        <th>Telefone</th>
                         <th>Assunto</th>
                         <th>Data de envio</th>
                         <th class="text-center">Ações</th>
@@ -62,15 +66,19 @@
                     {% for contato in contatos %}
                     <tr>
                         <td>
-                            {{ contato.get('nome', '-') }}
+                            {{ contato.get('nome') or '-' }}
                         </td>
 
                         <td>
-                            {{ contato.get('email', '-') }}
+                            {{ contato.get('email') or '-' }}
                         </td>
 
                         <td>
-                            {{ contato.get('assunto', '-') }}
+                            {{ contato.get('telefone') or '-' }}
+                        </td>
+
+                        <td>
+                            {{ contato.get('assunto') or '-' }}
                         </td>
 
                         <td>
@@ -81,21 +89,26 @@
                             {% endif %}
                         </td>
 
-                        <!-- Botões de ações -->
+                        <!-- Ações -->
                         <td class="text-center text-nowrap">
 
-                            <!-- Visualizar -->
-                            <a href="{{ url_for('contato_por_codigo', codigo=contato.get('codigo')) }}"
+                            <!-- Visualizar mensagem -->
+                            <a href="{{ url_for(
+                                'contato_por_codigo',
+                                codigo=contato.get('codigo')
+                            ) }}"
                                class="btn btn-sm btn-outline-info"
                                title="Visualizar"
                                aria-label="Visualizar mensagem">
                                 <i class="bi bi-eye"></i>
                             </a>
 
-                            <!-- Editar -->
-                            <!-- Excluir -->
+                            <!-- Excluir mensagem -->
                             <form method="POST"
-                                  action="{{ url_for('deletar_contato', codigo=contato.get('codigo')) }}"
+                                  action="{{ url_for(
+                                      'deletar_contato',
+                                      codigo=contato.get('codigo')
+                                  ) }}"
                                   class="d-inline"
                                   onsubmit="return confirm('Deseja realmente excluir esta mensagem?');">
 
@@ -105,16 +118,20 @@
                                         aria-label="Excluir mensagem">
                                     <i class="bi bi-trash"></i>
                                 </button>
-
                             </form>
+
                         </td>
                     </tr>
 
                     {% else %}
                     <tr>
-                        <td colspan="5" class="text-center py-4">
+                        <td colspan="6" class="text-center py-4">
                             <i class="bi bi-inbox fs-3 d-block mb-2"></i>
-                            Nenhuma mensagem encontrada.
+                            <p class="mb-1">Nenhuma mensagem encontrada.</p>
+                            <small class="text-muted">
+                                As mensagens enviadas pelo formulário aparecerão aqui
+                                quando forem recuperadas do banco de dados.
+                            </small>
                         </td>
                     </tr>
                     {% endfor %}

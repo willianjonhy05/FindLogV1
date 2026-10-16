@@ -5,10 +5,11 @@ from utils.codigo import gerar_codigo
 
 class Contato:
     ASSUNTOS = {
-        1: "Dúvidas",
-        2: "Sugestões",
-        3: "Orçamento",
-        4: "Outro"
+        1: "Dúvidas e orientações",
+        2: "Sugestões de melhorias",
+        3: "Reclamações",
+        4: "Problemas técnicos",
+        5: "Outro assunto"
     }
 
     def __init__(self, data):
@@ -118,12 +119,6 @@ class Contato:
         from daos.contato_dao import ContatoDAO
         dao = ContatoDAO()
         return dao.listar_todos()
-
-    @staticmethod
-    def get_by_codigo(codigo):
-        from daos.contato_dao import ContatoDAO
-        dao = ContatoDAO()
-        return dao.buscar_por_codigo(codigo)
 
     @staticmethod
     def get_by_codigo(codigo):

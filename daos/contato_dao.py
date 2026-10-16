@@ -11,7 +11,8 @@ class ContatoDAO:
             "email": contato.email,
             "telefone": contato.telefone,
             "assunto": contato.assunto,
-            "mensagem": contato.mensagem
+            "mensagem": contato.mensagem,
+            "data_envio": contato.data_envio
         }
 
         try:
