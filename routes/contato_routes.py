@@ -12,7 +12,7 @@ def registrar_rotas_contato(app):
     app.add_url_rule(
         "/contato",
         view_func=nova_mensagem,
-        methods=["POST", "GET"],
+        methods=["POST"],
         endpoint="contato"
     )
 

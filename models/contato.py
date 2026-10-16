@@ -86,8 +86,8 @@ class Contato:
         mensagem = self.data.get("mensagem")
         if not mensagem or not str(mensagem).strip():
             self.errors.append("A mensagem não pode ser vazia.")
-        elif len(str(mensagem).strip()) < 20:
-            self.errors.append("A mensagem deve possuir pelo menos 20 caracteres.")
+        elif len(str(mensagem).strip()) < 5:
+            self.errors.append("A mensagem deve possuir pelo menos 5 caracteres.")
         elif len(str(mensagem).strip()) > 2000:
             self.errors.append("A mensagem deve ter no máximo 2000 caracteres.")
 
@@ -96,6 +96,7 @@ class Contato:
     def save(self):
         from daos.contato_dao import ContatoDAO
         dao = ContatoDAO()
+        print("Deu certo")
         return dao.inserir(self)
 
     def delete(self):

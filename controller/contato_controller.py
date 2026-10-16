@@ -7,32 +7,41 @@ from models.contato import Contato
 def nova_mensagem():
     if request.method == "POST":
         dados = {
-            "nome": request.form.get("nome", "").strip(),
-            "email": request.form.get("email", "").strip(),
-            "telefone": request.form.get("telefone", "").strip(),
-            "assunto": request.form.get("assunto", "").strip(),
-            "mensagem": request.form.get("mensagem", "").strip()
+            "nome": request.form.get("nome"),
+            "email": request.form.get("email"),
+            "telefone": request.form.get("telefone"),
+            "assunto": request.form.get("assunto"),
+            "mensagem": request.form.get("mensagem")
         }
 
         contato = Contato(data=dados)
 
-        if not contato.validate():
-            for erro in contato.errors:
-                flash(erro, "danger")
+        if contato.validate():
+            print("Validou")
+            contato.save()
+            print("Salvou")
             return redirect(url_for("index"))
 
-        try:
-            resultado = contato.save()
+        else:
+            return render_template("admin/errors/404.html"), 404
 
-            if resultado:
-                flash("Mensagem enviada com sucesso!", "success")
-            else:
-                flash("Não foi possível salvar a mensagem.", "danger")
+        # if not contato.validate():
+        #     for erro in contato.errors:
+        #         flash(erro, "danger")
+        #     return redirect(url_for("index"))
 
-        except Exception:
-            flash("Ocorreu um erro ao enviar a mensagem.", "danger")
+        # try:
+        #     resultado = contato.save()
 
-        return redirect(url_for("index"))
+        #     if resultado:
+        #         flash("Mensagem enviada com sucesso!", "success")
+        #     else:
+        #         flash("Não foi possível salvar a mensagem.", "danger")
+
+        # except Exception:
+        #     flash("Ocorreu um erro ao enviar a mensagem.", "danger")
+
+        # return redirect(url_for("index"))
 
 
 # Lista de mensagens na área administrativa
