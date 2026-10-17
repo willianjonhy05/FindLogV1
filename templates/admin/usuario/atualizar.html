@@ -115,39 +115,7 @@ Atualizar Usuário
                 {% endif %}
             </div>
 
-            <div class="col-12">
-                <div class="alert alert-info mb-0">
-                    <i class="bi bi-info-circle me-2"></i>
-                    Para manter a senha atual, deixe os campos de senha em branco.
-                </div>
-            </div>
-
-            <!-- Nova senha -->
-            <div class="col-md-6">
-                <label for="senha" class="form-label fw-semibold">
-                    Nova Senha
-                </label>
-                <input type="password" id="senha" name="senha"
-                    class="form-control {{ 'is-invalid' if erros and 'senha' in erros else '' }}"
-                    placeholder="Digite somente se desejar alterar a senha">
-                {% if erros and 'senha' in erros %}
-                    <div class="invalid-feedback">{{ erros['senha'] }}</div>
-                {% endif %}
-            </div>
-
-            <!-- Confirmar senha -->
-            <div class="col-md-6">
-                <label for="confirmar_senha" class="form-label fw-semibold">
-                    Confirmar Nova Senha
-                </label>
-                <input type="password" id="confirmar_senha" name="confirmar_senha"
-                    class="form-control {{ 'is-invalid' if erros and 'confirmar_senha' in erros else '' }}"
-                    placeholder="Digite a nova senha novamente">
-                {% if erros and 'confirmar_senha' in erros %}
-                    <div class="invalid-feedback">{{ erros['confirmar_senha'] }}</div>
-                {% endif %}
-            </div>
-
+           
         </div>
 
         <hr class="my-4 text-muted">
