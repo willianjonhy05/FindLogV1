@@ -133,9 +133,36 @@ class Contato:
         return self.data.get("codigo")
 
 
+    @staticmethod
+    def contar_total():
+        from daos.contato_dao import ContatoDAO
+        dao = ContatoDAO()
+        return dao.contar_total()
+
     @property
     def data_envio(self):
         return self.data.get("data_envio")
+    
+    @property
+    def data_envio_formatada(self):
+        data_str = self.data.get("data_envio")
+        if not data_str:
+            return None
+            
+        try:
+            # Substitui "T" por espaço e remove "Z" ou milissegundos excessivos
+            # para garantir compatibilidade máxima com o fromisoformat ou strptime
+            data_limpa = str(data_str).replace("T", " ").split(".")[0].replace("Z", "")
+            
+            # Lê a string limpa
+            data_obj = datetime.strptime(data_limpa, "%Y-%m-%d %H:%M:%S")
+            
+            # Formata para o padrão brasileiro
+            return data_obj.strftime("%d/%m/%Y às %H:%M:%S")
+        except Exception as e:
+            # Imprime o erro no console para ajudar a debugar se houver outro formato estranho
+            print(f"Erro ao formatar data '{data_str}': {e}")
+            return data_str
 
     @property
     def nome(self):

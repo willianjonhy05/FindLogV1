@@ -40,6 +40,7 @@ class ContatoDAO:
 
     def listar_todos(self):
         from main import supabase
+        from models.contato import Contato
 
         try:
             resposta = (
@@ -49,7 +50,15 @@ class ContatoDAO:
                 .execute()
             )
 
-            return resposta.data or []
+            data_rows = resposta.data if hasattr(resposta, 'data') else resposta
+
+            contatos = []
+
+            for row in data_rows:
+                contato = Contato(data=row)
+                contatos.append(contato)
+
+            return contatos
 
         except Exception as erro:
             print(f"Erro ao listar mensagens: {erro}")
@@ -57,6 +66,7 @@ class ContatoDAO:
 
     def buscar_por_codigo(self, codigo):
         from main import supabase
+        from models.contato import Contato
 
         try:
             resposta = (
@@ -65,8 +75,9 @@ class ContatoDAO:
                 .eq("codigo", codigo)
                 .execute()
             )
-
-            return resposta.data[0] if resposta.data else None
+            data_rows = resposta.data if hasattr(resposta, 'data') else resposta
+            if data_rows and len(data_rows) > 0:
+                return Contato(data=data_rows[0])
 
         except Exception as erro:
             print(f"Erro ao buscar mensagem: {erro}")
@@ -88,3 +99,13 @@ class ContatoDAO:
         except Exception as erro:
             print(f"Erro ao excluir mensagem: {erro}")
             return None
+
+
+    def contar_total(self):
+        from main import supabase
+        try:
+            resposta = supabase.table("contatos").select("*", count="exact", head=True).execute()
+            return resposta.count if resposta.count is not None else 0
+        except Exception as e:
+            print(f"Erro ao contar total de contatos: {e}")
+            return 0

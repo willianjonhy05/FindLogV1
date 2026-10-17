@@ -1,145 +1,119 @@
-
 {% extends "base.html" %}
 
-{% block title %}Mensagens recebidas{% endblock %}
+{% block title %}
+Mensagens recebidas
+{% endblock %}
 
 {% block content %}
-<div class="container py-4">
 
-    <!-- Cabeçalho -->
-    <div class="welcome-card mb-4">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div>
-                <h2>
-                    <i class="bi bi-envelope"></i>
-                    Mensagens recebidas
-                </h2>
-                <p class="mb-0">
-                    Consulte e gerencie as mensagens enviadas.
-                </p>
+<div class="welcome-card mb-4">
+
+    <h1 class="fw-bold">
+        <i class="bi bi-envelope"></i>
+        Mensagens recebidas
+    </h1>
+
+    <p class="mb-0">
+        Consulte e gerencie as mensagens enviadas.
+    </p>
+
+</div>
+
+<!-- Mensagens de sucesso e erro -->
+{% with mensagens = get_flashed_messages(with_categories=true) %}
+    {% if mensagens %}
+        {% for categoria, mensagem in mensagens %}
+            <div class="alert alert-{{ categoria }} alert-dismissible fade show" role="alert">
+                {{ mensagem }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
             </div>
-        </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="card table-card p-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">
+            Lista de mensagens
+        </h4>
+        
+        <span class="text-muted fw-bold">
+            Total de mensagens: {{ contatos|length }}
+        </span>
     </div>
 
-    <!-- Mensagens de sucesso e erro -->
-    {% with mensagens = get_flashed_messages(with_categories=true) %}
-        {% if mensagens %}
-            {% for categoria, mensagem in mensagens %}
-                <div class="alert alert-{{ categoria }} alert-dismissible fade show"
-                     role="alert">
-                    {{ mensagem }}
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert"
-                            aria-label="Fechar">
-                    </button>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+    <div class="table-responsive">
 
-    <!-- Tabela de contatos -->
-    <div class="table-card p-3">
+        <table class="table align-middle">
 
-        <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
-            <h5 class="mb-0">Lista de mensagens</h5>
-            <span class="text-muted">
-                Total de mensagens: {{ contatos|length }}
-            </span>
-        </div>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Assunto</th>
+                    <th>Data de envio</th>
+                    <th colspan="2">Ações</th>
+                </tr>
+            </thead>
 
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
+            <tbody>
 
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Telefone</th>
-                        <th>Assunto</th>
-                        <th>Data de envio</th>
-                        <th class="text-center">Ações</th>
-                    </tr>
-                </thead>
+                {% for contato in contatos %}
+                <tr>
+                    <td>
+                        {{ contato.nome or '-' }}
+                    </td>
 
-                <tbody>
-                    {% for contato in contatos %}
-                    <tr>
-                        <td>
-                            {{ contato.get('nome') or '-' }}
-                        </td>
+                    <td>
+                        {{ contato.email or '-' }}
+                    </td>
 
-                        <td>
-                            {{ contato.get('email') or '-' }}
-                        </td>
+                    <td>
+                        {{ contato.assunto or '-' }}
+                    </td>
 
-                        <td>
-                            {{ contato.get('telefone') or '-' }}
-                        </td>
+                    <td>
+                        {{ contato.data_envio_formatada }}
+                    </td>
 
-                        <td>
-                            {{ contato.get('assunto') or '-' }}
-                        </td>
+                    <!-- Ação Visualizar -->
+                    <td>
+                        <a href="{{ url_for('contato_por_codigo', codigo=contato.codigo) }}"
+                           class="btn btn-sm btn-outline-info" title="Visualizar">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                    </td>
+                    
+                    <!-- Ação Excluir -->
+                    <td>
+                        <form action="{{ url_for('deletar_contato', codigo=contato.codigo) }}" method="POST" style="display:inline;" onsubmit="return confirm('Deseja realmente excluir esta mensagem?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
 
-                        <td>
-                            {% if contato.get('data_envio') %}
-                                {{ contato.get('data_envio') }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center py-4">
+                        <i class="bi bi-inbox fs-3 d-block mb-2 text-muted"></i>
+                        <p class="mb-1">Nenhuma mensagem encontrada.</p>
+                        <small class="text-muted">
+                            As mensagens enviadas pelo formulário aparecerão aqui
+                            quando forem recuperadas do banco de dados.
+                        </small>
+                    </td>
+                </tr>
+                {% endfor %}
 
-                        <!-- Ações -->
-                        <td class="text-center text-nowrap">
+            </tbody>
 
-                            <!-- Visualizar mensagem -->
-                            <a href="{{ url_for(
-                                'contato_por_codigo',
-                                codigo=contato.get('codigo')
-                            ) }}"
-                               class="btn btn-sm btn-outline-info"
-                               title="Visualizar"
-                               aria-label="Visualizar mensagem">
-                                <i class="bi bi-eye"></i>
-                            </a>
+        </table>
 
-                            <!-- Excluir mensagem -->
-                            <form method="POST"
-                                  action="{{ url_for(
-                                      'deletar_contato',
-                                      codigo=contato.get('codigo')
-                                  ) }}"
-                                  class="d-inline"
-                                  onsubmit="return confirm('Deseja realmente excluir esta mensagem?');">
-
-                                <button type="submit"
-                                        class="btn btn-sm btn-outline-danger"
-                                        title="Excluir"
-                                        aria-label="Excluir mensagem">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-
-                        </td>
-                    </tr>
-
-                    {% else %}
-                    <tr>
-                        <td colspan="6" class="text-center py-4">
-                            <i class="bi bi-inbox fs-3 d-block mb-2"></i>
-                            <p class="mb-1">Nenhuma mensagem encontrada.</p>
-                            <small class="text-muted">
-                                As mensagens enviadas pelo formulário aparecerão aqui
-                                quando forem recuperadas do banco de dados.
-                            </small>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-
-            </table>
-        </div>
     </div>
 
 </div>
+
 {% endblock %}

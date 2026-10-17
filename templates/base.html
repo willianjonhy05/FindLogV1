@@ -45,10 +45,17 @@
             <!-- (Resto do seu código do perfil e dropdown...) -->
             <div class="dropdown">
                 <div class="profile d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+                    {% if session.get('usuario_foto') %}
+                    <!-- Exibe a foto do usuário -->
+                    <img src="{{ url_for('static', filename=session.get('usuario_foto')) }}" alt="Perfil"
+                        class="rounded-circle border object-fit-cover" style="width: 40px; height: 40px;">
+                    {% else %}
+                    <!-- Ícone padrão caso não tenha foto -->
                     <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center"
-                        style="width:40px;height:40px">
-                        <i class="bi bi-person"></i>
+                        style="width: 40px; height: 40px;">
+                        <i class="bi bi-person fs-5"></i>
                     </div>
+                    {% endif %}
                     <div class="d-none d-md-block">
                         {% if session.usuario_email %}
                         <strong>{{ session.usuario_nome }}</strong>
@@ -58,7 +65,8 @@
                     </div>
                 </div>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="{{ url_for('meu_perfil') }}"><i class="bi bi-person"></i> Perfil</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('meu_perfil') }}"><i class="bi bi-person"></i>
+                            Perfil</a></li>
                     <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Configurações</a></li>
                     <li>
                         <hr class="dropdown-divider">
@@ -141,8 +149,9 @@
 
         </a>
 
-        
-        <a href="{{ url_for('lista_contatos') }}" class="{{ 'active' if request.endpoint in ['lista_contatos', 'novo_contato', 'detalhes_contato', 'atualizar_contato'] else '' }}">
+
+        <a href="{{ url_for('lista_contatos') }}"
+            class="{{ 'active' if request.endpoint in ['lista_contatos', 'novo_contato', 'detalhes_contato', 'atualizar_contato'] else '' }}">
 
             <i class="bi bi-envelope"></i>
 

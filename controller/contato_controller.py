@@ -17,31 +17,11 @@ def nova_mensagem():
         contato = Contato(data=dados)
 
         if contato.validate():
-            print("Validou")
             contato.save()
-            print("Salvou")
             return redirect(url_for("index"))
 
         else:
             return render_template("admin/errors/404.html"), 404
-
-        # if not contato.validate():
-        #     for erro in contato.errors:
-        #         flash(erro, "danger")
-        #     return redirect(url_for("index"))
-
-        # try:
-        #     resultado = contato.save()
-
-        #     if resultado:
-        #         flash("Mensagem enviada com sucesso!", "success")
-        #     else:
-        #         flash("Não foi possível salvar a mensagem.", "danger")
-
-        # except Exception:
-        #     flash("Ocorreu um erro ao enviar a mensagem.", "danger")
-
-        # return redirect(url_for("index"))
 
 
 # Lista de mensagens na área administrativa

@@ -25,9 +25,9 @@ def login():
             session['usuario_username'] = usuario.username
             session['usuario_nome'] = usuario.primeiro_nome
             session['usuario_tipo'] = int(usuario.tipo_usuario)
+            session['usuario_foto'] = usuario.foto_perfil
             
-            # Redireciona dinamicamente conforme o tipo de usuário
-            print(f"Usuário {usuario.email} e {usuario.tipo_usuario}")
+
             return _redirecionar_por_tipo(usuario.tipo_usuario)
 
         return render_template('login.html', erro="Usuário ou senha inválidos."), 401

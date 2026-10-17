@@ -4,6 +4,7 @@ from models.categoria import Categoria
 from models.usuario import Usuario
 from models.sala import Sala
 from models.item import Item
+from models.contato import Contato
 from flask import render_template_string
 
 
@@ -21,7 +22,8 @@ def dashboard_admin():
         "total_categorias": Categoria.contar_total(),
         "total_usuarios": Usuario.contar_total(),
         "total_salas": Sala.contar_total(),  # Incluído para a template não quebrar
-        "total_itens": Item.contar_total()    # Incluído para a template não quebrar
+        "total_itens": Item.contar_total(),
+        "total_contatos": Contato.contar_total()    # Incluído para a template não quebrar
     }
     
     # O operador ** desempacota o dicionário como variáveis nomeadas (kwarg)
