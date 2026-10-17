@@ -219,7 +219,7 @@ def alterar_senha():
             sucesso, mensagem = usuario.alterar_senha(senha_atual, nova_senha)
             if sucesso:
                 # Opcional: você pode adicionar uma mensagem flash aqui se utilizar no projeto
-                return redirect(url_for('meu_perfil'))
+                return redirect(url_for('perfil_usuario'))
             else:
                 erros['senha_atual'] = mensagem
                 
@@ -279,7 +279,8 @@ def editar_perfil():
                 
             sucesso, mensagem = usuario.atualizar_perfil(dados_atualizados)
             if sucesso:
-                return redirect(url_for('meu_perfil'))
+                session['usuario_nome'] = nome
+                return redirect(url_for('perfil_usuario'))
             else:
                 erros['geral'] = mensagem
                 

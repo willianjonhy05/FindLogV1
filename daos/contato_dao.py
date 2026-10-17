@@ -64,8 +64,10 @@ class ContatoDAO:
             print(f"Erro ao listar mensagens: {erro}")
             return []
 
+
     def buscar_por_codigo(self, codigo):
         from main import supabase
+        from models.contato import Contato
         from models.contato import Contato
 
         try:
@@ -94,7 +96,7 @@ class ContatoDAO:
                 .execute()
             )
 
-            return resposta.data[0] if resposta.data else None
+            return bool(resposta.data)
 
         except Exception as erro:
             print(f"Erro ao excluir mensagem: {erro}")

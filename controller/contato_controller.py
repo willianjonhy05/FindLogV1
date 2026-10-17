@@ -50,9 +50,7 @@ def contato_por_codigo(codigo):
 # Apaga uma mensagem na área administrativa
 def deletar_contato(codigo):
     contato = Contato.get_by_codigo(codigo)
-
     if contato:
         contato.delete()
         return redirect(url_for("lista_contatos"))
-
     return render_template("admin/errors/404.html"), 404
