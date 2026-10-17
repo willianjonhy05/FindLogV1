@@ -1,210 +1,110 @@
 {% extends "base.html" %}
-
-{% block title %}
-Detalhes da Instituição
-{% endblock %}
+{% block title %}Detalhes da Instituição{% endblock %}
 
 {% block content %}
+<div class="container-fluid px-0">
 
-<div class="welcome-card mb-4">
-    <h1 class="fw-bold">
-        <i class="bi bi-building"></i>
-        Detalhes da Instituição
-    </h1>
-    <p class="mb-0">
-        Visualização completa das informações cadastradas no FindLog.
-    </p>
-</div>
-
-<div class="row g-4">
-
-    <!-- Informações principais -->
-    <div class="col-lg-8">
-        <div class="card table-card p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="fw-bold mb-0">
-                    Dados da Instituição
-                </h4>
-
-                <span class="badge {% if instituicao.ativo %}bg-success{% else %}bg-danger{% endif %}">
-                    {% if instituicao.ativo %}
-                    Ativo
-                    {% else %}
-                    Inativo
-                    {% endif %}
-                </span>
-            </div>
-
-            <div class="row g-4">
-
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        Nome
-                    </label>
-                    <div class="fw-semibold">
-                        {{ instituicao.nome }}
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        CNPJ
-                    </label>
-                    <div class="fw-semibold cnpj-format">
-                        {{ instituicao.cnpj }}
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        Endereço
-                    </label>
-                    <div class="fw-semibold">
-                        {{ instituicao.endereco }}
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        Quantidade de usuários
-                    </label>
-                    <div class="fw-semibold">
-                        {{ qtde_usuarios }}
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        Telefone
-                    </label>
-                    <div class="fw-semibold telefone-format">
-                        <i class="bi bi-telephone text-info"></i>
-                        {{ instituicao.telefone }}
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        E-mail
-                    </label>
-                    <div class="fw-semibold">
-                        <i class="bi bi-envelope text-info"></i>
-                        {{ instituicao.email }}
-                    </div>
-                </div>
-
-            </div>
+    <!-- CABEÇALHO -->
+    <div class="welcome-card mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <h1 class="welcome-title"><i class="bi bi-building me-2"></i>{{ instituicao.nome }}</h1>
+            <p class="welcome-subtitle">Visão geral dos dados cadastrais e vínculos desta instituição.</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ url_for('lista_instituicoes') }}" class="btn btn-secondary-custom">
+                <i class="bi bi-arrow-left me-1"></i> Voltar
+            </a>
+            <a href="{{ url_for('atualizar_instituicao', cnpj=instituicao.cnpj) }}" class="btn btn-action-btn-primary">
+                <i class="bi bi-pencil-fill me-1"></i> Editar
+            </a>
+            <a href="{{ url_for('deletar_instituicao', cnpj=instituicao.cnpj) }}" class="btn btn-danger-custom btn-delete" data-nome="{{ instituicao.nome }}">
+                <i class="bi bi-trash-fill me-1"></i> Excluir
+            </a>
         </div>
     </div>
 
-    <!-- Card lateral -->
-    <div class="col-lg-4">
-        <div class="card table-card p-4">
-            <h5 class="fw-bold mb-4">
-                Ações
-            </h5>
+    <!-- PAINEL DE DADOS -->
+    <div class="row g-4">
+        <div class="col-12 col-lg-8">
+            <div class="card table-card p-4 h-100">
+                <h5 class="card-section-title pb-2 mb-3 border-bottom">Informações Principais</h5>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4 text-muted form-label-custom">Nome Fantasia / Razão</dt>
+                    <dd class="col-sm-8 fw-semibold text-dark">{{ instituicao.nome }}</dd>
 
-            <div class="d-grid gap-3">
-                <a href="{{ url_for('atualizar_instituicao', cnpj=instituicao.cnpj) }}" class="btn btn-primary-custom">
-                    <i class="bi bi-pencil"></i>
-                    Editar Instituição
-                </a>
+                    <dt class="col-sm-4 text-muted form-label-custom">CNPJ</dt>
+                    <dd class="col-sm-8 fw-semibold text-secondary cnpj-format">{{ instituicao.cnpj }}</dd>
 
-                <a href="{{ url_for('lista_instituicoes') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left"></i>
-                    Voltar para Lista
-                </a>
+                    <dt class="col-sm-4 text-muted form-label-custom">Endereço</dt>
+                    <dd class="col-sm-8 text-dark">{{ instituicao.endereco if instituicao.endereco else 'Não informado' }}</dd>
+
+                    <dt class="col-sm-4 text-muted form-label-custom">Telefone</dt>
+                    <dd class="col-sm-8 text-dark">{{ instituicao.telefone if instituicao.telefone else 'Não informado' }}</dd>
+
+                    <dt class="col-sm-4 text-muted form-label-custom">E-mail</dt>
+                    <dd class="col-sm-8 text-dark">{{ instituicao.email if instituicao.email else 'Não informado' }}</dd>
+                </dl>
             </div>
         </div>
 
-        <div class="card table-card p-4 mt-4">
-            <h6 class="fw-bold">
-                Status do Cadastro
-            </h6>
-            <p class="mb-0 text-muted">
-                {% if instituicao.ativo %}
-                Esta instituição está habilitada para utilização do sistema.
-                {% else %}
-                Esta instituição está desativada.
-                {% endif %}
-            </p>
-        </div>
-    </div>
-
-</div>
-
-<!-- SEÇÃO DE USUÁRIOS VINCULADOS -->
-<div class="card table-card p-4 mt-4">
-    <h4 class="fw-bold mb-4">
-        <i class="bi bi-people me-2"></i>Usuários Vinculados à Instituição
-    </h4>
-
-    <div class="table-responsive">
-        <table class="table align-middle">
-            <thead>
-                <tr>
-                    <th>Primeiro Nome</th>
-                    <th>E-mail</th>
-                    <th>CPF</th>
-                    <th>Tipo</th>
-                    <th colspan="3">Ações</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for usuario in usuarios %}
-                <tr>
-                    <td>
-                        <strong>{{ usuario.nome.split()[0] if usuario.nome else 'N/D' }}</strong>
-                    </td>
-                    <td>
-                        {{ usuario.email }}
-                    </td>
-                    <td class="cpf-format">
-                        {{ usuario.cpf }}
-                    </td>
-                    <td>
-                        {% if usuario.tipo_usuario == 1 %}
-                            <span class="badge bg-danger">Administrador</span>
-                        {% elif usuario.tipo_usuario == 3 %}
-                            <span class="badge bg-info text-dark">Gestor de Sala</span>
+        <div class="col-12 col-lg-4">
+            <div class="card table-card p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <h5 class="card-section-title pb-2 mb-3 border-bottom">Situação Cadastral</h5>
+                    <div class="text-center py-3">
+                        {% if instituicao.ativo %}
+                        <div class="status-indicator-badge status-indicator-active mb-2">
+                            <i class="bi bi-check-circle-fill fs-2"></i>
+                            <span class="d-block fw-bold mt-1">Instituição Ativa</span>
+                        </div>
+                        <p class="text-muted small">Esta instituição pode cadastrar salas, administradores e movimentar achados e perdidos.</p>
                         {% else %}
-                            <span class="badge bg-secondary">Comum</span>
+                        <div class="status-indicator-badge status-indicator-inactive mb-2">
+                            <i class="bi bi-slash-circle-fill fs-2"></i>
+                            <span class="d-block fw-bold mt-1">Instituição Inativa</span>
+                        </div>
+                        <p class="text-muted small">Os acessos e recursos desta instituição encontram-se temporariamente bloqueados.</p>
                         {% endif %}
-                    </td>
-
-                    <!-- Ações -->
-                    <td>
-                        <a href="{{ url_for('editar_usuario', username=usuario.username) }}"
-                            class="btn btn-sm btn-outline-primary" title="Editar">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{{ url_for('deletar_usuario', username=usuario.username) }}"
-                            class="btn btn-sm btn-outline-danger btn-delete" data-nome="{{ usuario.nome }}" title="Excluir">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{{ url_for('visualizar_usuario', username=usuario.username) }}"
-                            class="btn btn-sm btn-outline-info" title="Visualizar">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="7" class="text-center text-muted py-4">
-                        Nenhum usuário vinculado a esta instituição no momento.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    </div>
+                </div>
+                <div class="p-3 rounded bg-light border text-center">
+                    <small class="text-secondary d-block">Identificador Fiscal Único</small>
+                    <span class="fw-bold fs-6 text-dark cnpj-format">{{ instituicao.cnpj }}</span>
+                </div>
+            </div>
+        </div>
     </div>
+
 </div>
 
+<!-- MODAL DE EXCLUSÃO -->
+<div class="modal fade" id="modalConfirmarExclusao" tabindex="-1" aria-labelledby="modalConfirmarExclusaoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content custom-modal-content">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title d-flex align-items-center gap-2 text-danger fw-bold" id="modalConfirmarExclusaoLabel">
+                    <i class="bi bi-exclamation-triangle-fill fs-5"></i> Confirmar Exclusão
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body py-4">
+                <p class="text-secondary mb-2">Tem certeza de que deseja excluir a instituição?</p>
+                <div class="modal-highlight-box p-3 rounded">
+                    <strong class="d-block text-dark" id="modalItemNome">{{ instituicao.nome }}</strong>
+                </div>
+                <small class="text-danger mt-2 d-inline-block">
+                    <i class="bi bi-info-circle me-1"></i> Todos os dados vinculados serão excluídos permanentemente.
+                </small>
+            </div>
+            <div class="modal-footer border-top-0 pt-0">
+                <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Cancelar</button>
+                <a href="#" id="modalBtnConfirmar" class="btn btn-danger-custom">
+                    <i class="bi bi-trash-fill me-1"></i> Sim, excluir
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

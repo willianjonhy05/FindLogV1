@@ -1,137 +1,134 @@
 {% extends "base.html" %}
-
-{% block title %}
-Detalhes da Sala
-{% endblock %}
+{% block title %}Detalhes da Sala{% endblock %}
 
 {% block content %}
+<div class="container-fluid px-0">
 
-<div class="welcome-card mb-4">
-    <h1 class="fw-bold">
-        <i class="bi bi-door-closed"></i>
-        Detalhes da Sala
-    </h1>
-    <p class="mb-0">
-        Visualização completa das informações da sala ou laboratório no FindLog.
-    </p>
-</div>
-
-<div class="row g-4">
-
-    <!-- Informações principais -->
-    <div class="col-lg-8">
-        <div class="card table-card p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="fw-bold mb-0">
-                    Dados da Sala
-                </h4>
-
-                <div>
-                    {% if sala.laboratorio %}
-                        <span class="badge bg-info text-dark">Laboratório</span>
-                    {% endif %}
-                    {% if sala.sala_de_aula %}
-                        <span class="badge bg-secondary">Sala de Aula</span>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="row g-4">
-
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        Número da Sala
-                    </label>
-                    <div class="fw-semibold">
-                        {{ sala.numero }}
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        Prédio
-                    </label>
-                    <div class="fw-semibold">
-                        {{ sala.predio }}
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        Andar
-                    </label>
-                    <div class="fw-semibold">
-                        {{ sala.andar or 'Não informado' }}
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        Telefone
-                    </label>
-                    <div class="fw-semibold">
-                        <i class="bi bi-telephone text-info me-1"></i>
-                        {{ sala.telefone or 'Não informado' }}
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <label class="text-muted small">
-                        Instituição (CNPJ)
-                    </label>
-                    <div class="fw-semibold">
-                        <i class="bi bi-building text-info me-1"></i>
-                        {{ sala.instituicao }}
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <label class="text-muted small">
-                        Descrição
-                    </label>
-                    <div class="fw-semibold">
-                        {{ sala.descricao or 'Nenhuma descrição informada para esta sala.' }}
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Card lateral de Ações e Resumo -->
-    <div class="col-lg-4">
-
-        <div class="card table-card p-4">
-            <h5 class="fw-bold mb-4">
-                Ações
-            </h5>
-
-            <div class="d-grid gap-3">
-                <a href="{{ url_for('editar_sala', codigo=sala.codigo) }}" class="btn btn-primary-custom">
-                    <i class="bi bi-pencil"></i>
-                    Editar Sala
-                </a>
-
-                <a href="{{ url_for('lista_salas') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left"></i>
-                    Voltar para Lista
-                </a>
-            </div>
-        </div>
-
-        <div class="card table-card p-4 mt-4">
-            <h6 class="fw-bold">
-                Identificador Interno
-            </h6>
-            <p class="mb-0 text-muted small">
-                Código único da sala: <code class="text-dark fw-bold">{{ sala.codigo }}</code>
+    <!-- CABEÇALHO -->
+    <div class="welcome-card mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <h1 class="welcome-title">
+                <i class="bi bi-door-closed me-2"></i>Detalhes da Sala
+            </h1>
+            <p class="welcome-subtitle">
+                Visualização completa das informações e dependências físicas da sala no FindLog.
             </p>
         </div>
+        <div>
+            <a href="{{ url_for('lista_salas') }}" class="btn btn-secondary-custom">
+                <i class="bi bi-arrow-left me-1"></i> Voltar à Lista
+            </a>
+        </div>
+    </div>
 
+    <div class="row g-4">
+        <!-- INFORMAÇÕES DA SALA -->
+        <div class="col-12 col-lg-8">
+            <div class="card table-card p-4">
+                
+                <!-- HEADER DO AMBIENTE -->
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center pb-3 mb-4 border-bottom gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="icon-avatar-md">
+                            <i class="bi bi-door-closed-fill"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-1 text-dark">Sala {{ sala.numero }}</h4>
+                            <span class="text-muted small">Prédio / Bloco: <strong class="text-secondary">{{ sala.predio }}</strong></span>
+                        </div>
+                    </div>
+                    <div>
+                        {% if sala.laboratorio %}
+                            <span class="badge-role badge-role-manager me-1"><i class="bi bi-cpu-fill me-1"></i>Laboratório</span>
+                        {% endif %}
+                        {% if sala.sala_de_aula %}
+                            <span class="badge-role badge-role-user"><i class="bi bi-book-fill me-1"></i>Sala de Aula</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- GRADE DE DADOS -->
+                <div class="row g-4">
+                    <div class="col-12 col-md-6">
+                        <span class="profile-data-label">Número da Sala</span>
+                        <div class="profile-data-value">
+                            <i class="bi bi-hash profile-info-icon"></i>
+                            <span>{{ sala.numero }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="profile-data-label">Prédio / Edificação</span>
+                        <div class="profile-data-value">
+                            <i class="bi bi-building profile-info-icon"></i>
+                            <span>{{ sala.predio }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="profile-data-label">Andar / Pavimento</span>
+                        <div class="profile-data-value">
+                            <i class="bi bi-layers profile-info-icon"></i>
+                            <span>{{ sala.andar or 'Não informado' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="profile-data-label">Ramal / Telefone</span>
+                        <div class="profile-data-value telefone-format">
+                            <i class="bi bi-telephone profile-info-icon"></i>
+                            <span>{{ sala.telefone or 'Não informado' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <span class="profile-data-label">Instituição Vinculada (CNPJ)</span>
+                        <div class="profile-data-value cnpj-format">
+                            <i class="bi bi-building-check profile-info-icon"></i>
+                            <span>{{ sala.instituicao }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <span class="profile-data-label">Descrição e Observações</span>
+                        <div class="message-content-box mt-1">
+                            {{ sala.descricao or 'Nenhuma descrição detalhada informada para esta sala.' }}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- PAINEL LATERAL DE AÇÕES -->
+        <div class="col-12 col-lg-4">
+            <div class="card table-card p-4 mb-4">
+                <h5 class="card-section-title pb-2 mb-3 border-bottom">Ações</h5>
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('editar_sala', codigo=sala.codigo) }}" class="btn btn-primary-custom d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-pencil-square"></i>
+                        <span>Editar Sala</span>
+                    </a>
+                    <a href="{{ url_for('lista_salas') }}" class="btn btn-outline-custom d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-arrow-left"></i>
+                        <span>Voltar para Lista</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card table-card security-notice-card p-4">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-info-circle-fill text-primary fs-5"></i>
+                    <h6 class="fw-bold mb-0 text-dark">Identificador do Espaço</h6>
+                </div>
+                <p class="mb-0 text-muted small">
+                    Código de rastreamento do ambiente: <strong class="text-dark">#{{ sala.codigo }}</strong>.
+                </p>
+            </div>
+        </div>
     </div>
 
 </div>
-
 {% endblock %}
 
 {% block scripts %}

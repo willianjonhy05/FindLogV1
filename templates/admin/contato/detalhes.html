@@ -1,131 +1,116 @@
 {% extends "base.html" %}
-
-{% block title %}
-Detalhes da Mensagem
-{% endblock %}
+{% block title %}Detalhes da Mensagem{% endblock %}
 
 {% block content %}
+<div class="container-fluid px-0">
 
-<div class="welcome-card mb-4">
-    <h1 class="fw-bold">
-        <i class="bi bi-envelope-open"></i>
-        Detalhes da Mensagem
-    </h1>
-    <p class="mb-0">
-        Visualização completa das informações do contato recebido.
-    </p>
-</div>
+    <!-- CABEÇALHO -->
+    <div class="welcome-card mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <h1 class="welcome-title"><i class="bi bi-envelope-open me-2"></i>Detalhes da Mensagem</h1>
+            <p class="welcome-subtitle">Visualização completa do contato recebido pelo formulário público.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('lista_contatos') }}" class="btn btn-secondary-custom">
+                <i class="bi bi-arrow-left me-1"></i> Voltar para Lista
+            </a>
+        </div>
+    </div>
 
-<div class="row g-4">
-
-    <!-- Informações principais -->
-    <div class="col-lg-8">
-        <div class="card table-card p-4">
-            
-            <!-- Cabeçalho interno espelhando o formato do avatar de usuário -->
-            <div class="d-flex align-items-center mb-4 gap-3">
-                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 55px; height: 55px; font-size: 24px;">
-                    <i class="bi bi-person-lines-fill"></i>
-                </div>
-                <div>
-                    <h4 class="fw-bold mb-0">
-                        {{ contato.nome or 'Nome não informado' }}
-                    </h4>
-                    <span class="text-muted small">Código da Mensagem: <strong>{{ contato.codigo or '-' }}</strong></span>
-                </div>
-            </div>
-
-            <div class="row g-4">
+    <div class="row g-4">
+        <!-- DETALHES PRINCIPAIS E CONTEÚDO -->
+        <div class="col-12 col-lg-8">
+            <div class="card table-card p-4">
                 
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        E-mail
-                    </label>
-                    <div class="fw-semibold">
-                        <i class="bi bi-envelope text-info me-1"></i>
-                        {{ contato.email or '-' }}
+                <!-- IDENTIFICAÇÃO DO REMETENTE -->
+                <div class="d-flex align-items-center mb-4 pb-3 border-bottom gap-3">
+                    <div class="icon-avatar-md">
+                        <i class="bi bi-person-lines-fill"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-1 text-dark">{{ contato.nome or 'Nome não informado' }}</h4>
+                        <span class="text-muted small">Identificador Único: <strong class="text-secondary">#{{ contato.codigo or '-' }}</strong></span>
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        Telefone
-                    </label>
-                    <div class="fw-semibold telefone-format">
-                        <i class="bi bi-telephone text-info me-1"></i>
-                        {{ contato.telefone or '-' }}
+                <!-- METADADOS DA MENSAGEM -->
+                <div class="row g-4">
+                    <div class="col-12 col-md-6">
+                        <span class="profile-data-label">E-mail do Remetente</span>
+                        <div class="profile-data-value">
+                            <i class="bi bi-envelope profile-info-icon"></i>
+                            <span>{{ contato.email or '-' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="profile-data-label">Telefone de Contato</span>
+                        <div class="profile-data-value telefone-format">
+                            <i class="bi bi-telephone profile-info-icon"></i>
+                            <span>{{ contato.telefone or '-' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="profile-data-label">Assunto</span>
+                        <div class="profile-data-value">
+                            <i class="bi bi-chat-square-text profile-info-icon"></i>
+                            <span>{{ contato.assunto or '-' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="profile-data-label">Data de Recebimento</span>
+                        <div class="profile-data-value">
+                            <i class="bi bi-calendar-event profile-info-icon"></i>
+                            <span>{{ contato.data_envio_formatada }}</span>
+                        </div>
+                    </div>
+
+                    <!-- CORPO DA MENSAGEM (SEM ESTILOS INLINE) -->
+                    <div class="col-12">
+                        <span class="profile-data-label">Conteúdo da Mensagem</span>
+                        <div class="message-content-box mt-1">
+                            {{ contato.mensagem or 'Nenhum texto contido nesta mensagem.' }}
+                        </div>
                     </div>
                 </div>
-
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        Assunto
-                    </label>
-                    <div class="fw-semibold">
-                        <i class="bi bi-chat-square-text text-info me-1"></i>
-                        {{ contato.assunto or '-' }}
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="text-muted small">
-                        Data de Envio
-                    </label>
-                    <div class="fw-semibold">
-                        <i class="bi bi-calendar-event text-info me-1"></i>
-                        {{ contato.data_envio_formatada }}
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <label class="text-muted small">
-                        Mensagem
-                    </label>
-                    <div class="fw-normal border rounded p-3 mt-1 bg-light text-break" style="white-space: pre-wrap;">{{ contato.mensagem or '-' }}</div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Card lateral de Ações e Resumo -->
-    <div class="col-lg-4">
-
-        <div class="card table-card p-4">
-            <h5 class="fw-bold mb-4">
-                Ações
-            </h5>
-
-            <div class="d-grid gap-3">
-                <!-- Botão extra útil: abre o cliente de email padrão já preenchido -->
-                <a href="mailto:{{ contato.email }}?subject=Ref: {{ contato.assunto }}" class="btn btn-primary-custom">
-                    <i class="bi bi-reply"></i>
-                    Responder por E-mail
-                </a>
-
-                <a href="{{ url_for('lista_contatos') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left"></i>
-                    Voltar para Lista
-                </a>
             </div>
         </div>
 
-        <div class="card table-card p-4 mt-4">
-            <h6 class="fw-bold">
-                Informações do Sistema
-            </h6>
-            <p class="mb-0 text-muted small">
-                Esta mensagem foi submetida publicamente através do formulário de contato e salva no banco de dados. 
-            </p>
-        </div>
+        <!-- PAINEL LATERAL DE AÇÕES -->
+        <div class="col-12 col-lg-4">
+            <div class="card table-card p-4 mb-4">
+                <h5 class="card-section-title pb-2 mb-3 border-bottom">Ações Disponíveis</h5>
+                <div class="d-grid gap-2">
+                    {% if contato.email %}
+                    <a href="mailto:{{ contato.email }}?subject=Ref: {{ contato.assunto or 'Contato FindLog' }}" class="btn btn-primary-custom d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-reply-fill fs-5"></i>
+                        <span>Responder por E-mail</span>
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('lista_contatos') }}" class="btn btn-outline-custom d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-arrow-left"></i>
+                        <span>Voltar para Lista</span>
+                    </a>
+                </div>
+            </div>
 
+            <div class="card table-card security-notice-card p-4">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-info-circle-fill text-primary fs-5"></i>
+                    <h6 class="fw-bold mb-0 text-dark">Informações do Sistema</h6>
+                </div>
+                <p class="mb-0 text-muted small">
+                    Esta mensagem foi submetida publicamente através do canal de atendimento do portal e encontra-se salva de forma segura na base do FindLog.
+                </p>
+            </div>
+        </div>
     </div>
 
 </div>
-
 {% endblock %}
 
 {% block scripts %}
-<!-- Opcional: mantive a importação do formatar_dados caso você precise formatar o telefone dinamicamente no front -->
 <script src="{{ url_for('static', filename='js/formatar_dados.js') }}"></script>
 {% endblock %}

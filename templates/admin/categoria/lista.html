@@ -1,198 +1,132 @@
 {% extends "base.html" %}
-
-{% block title %}
-Lista de Categorias
-{% endblock %}
-
+{% block title %}Lista de Categorias{% endblock %}
 
 {% block content %}
+<div class="container-fluid px-0">
 
+    <!-- CABEÇALHO -->
+    <div class="welcome-card mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <h1 class="welcome-title">
+                <i class="bi bi-bookmarks me-2"></i>Categorias
+            </h1>
+            <p class="welcome-subtitle">
+                Gerencie as categorias utilizadas para classificar os achados e perdidos no FindLog.
+            </p>
+        </div>
+        <div>
+            <a href="{{ url_for('nova_categoria') }}" class="btn btn-primary-custom d-inline-flex align-items-center gap-2">
+                <i class="bi bi-plus-circle-fill"></i>
+                <span>Nova Categoria</span>
+            </a>
+        </div>
+    </div>
 
-<div class="welcome-card mb-4">
+    <!-- TABELA -->
+    <div class="card table-card p-3 p-md-4">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center pb-3 mb-3 border-bottom gap-2">
+            <div>
+                <h4 class="card-section-title mb-1">Categorias Cadastradas</h4>
+                <p class="text-muted small mb-0">Classificação de itens e objetos registrados no sistema</p>
+            </div>
+            <div class="text-muted small">
+                Total: <strong>{{ categorias|length }}</strong> categoria(s)
+            </div>
+        </div>
 
-
-    <h1 class="fw-bold">
-
-        <i class="bi bi-bookmarks"></i>
-
-            Lista de Categorias
-
-    </h1>
-
-
-    <p class="mb-0">
-
-        Gerencie as categorias cadastradas no FindLog.
-
-    </p>
-
+        <div class="table-responsive">
+            <table class="table table-custom table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col" style="min-width: 180px;">Nome</th>
+                        <th scope="col" style="min-width: 280px;">Descrição</th>
+                        <th scope="col" class="text-center" style="width: 120px;">Status</th>
+                        <th scope="col" class="text-end" style="min-width: 130px;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for categoria in categorias %}
+                    <tr>
+                        <td class="fw-bold text-dark">{{ categoria.nome }}</td>
+                        <td class="text-secondary">{{ categoria.descricao }}</td>
+                        <td class="text-center">
+                            {% if categoria.ativa %}
+                            <span class="badge-status badge-status-ativo">
+                                <i class="bi bi-check-circle-fill me-1"></i>Ativo
+                            </span>
+                            {% else %}
+                            <span class="badge-status badge-status-inativo">
+                                <i class="bi bi-dash-circle-fill me-1"></i>Inativo
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <div class="action-buttons-group d-inline-flex gap-1 justify-content-end">
+                                <a href="{{ url_for('view_categoria', codigo=categoria.codigo) }}" class="btn-action btn-action-view" title="Visualizar categoria">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{{ url_for('atualizar_categoria', codigo=categoria.codigo) }}" class="btn-action btn-action-edit" title="Editar categoria">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                
+                                <!-- FORMULÁRIO DE EXCLUSÃO POST SEGURO INTEGRADO AO MODAL -->
+                                <form action="{{ url_for('deletar_categoria', codigo=categoria.codigo) }}" method="POST" class="d-inline form-delete-action">
+                                    <button type="button" class="btn-action btn-action-delete btn-delete" data-nome="{{ categoria.nome }}" title="Excluir categoria">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="bi bi-bookmarks fs-1 text-muted d-block mb-2"></i>
+                                <h6 class="fw-bold text-secondary">Nenhuma categoria cadastrada</h6>
+                                <p class="small text-muted mb-3">Cadastre categorias para que os itens possam ser organizados no sistema.</p>
+                                <a href="{{ url_for('nova_categoria') }}" class="btn btn-sm btn-primary-custom">Cadastrar Primeira Categoria</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </div>
 
-
-
-
-<div class="card table-card p-4">
-
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-
-        <h4 class="fw-bold mb-0">
-
-            Lista de Categorias
-
-        </h4>
-
-
-        <a href="{{ url_for('nova_categoria') }}" class="btn btn-primary-custom">
-
-
-            <i class="bi bi-plus-circle"></i>
-
-            Nova Categoria
-
-
-        </a>
-
-
+<!-- MODAL DE EXCLUSÃO BOOTSTRAP -->
+<div class="modal fade" id="modalConfirmarExclusao" tabindex="-1" aria-labelledby="modalConfirmarExclusaoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content custom-modal-content">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title d-flex align-items-center gap-2 text-danger fw-bold" id="modalConfirmarExclusaoLabel">
+                    <i class="bi bi-exclamation-triangle-fill fs-5"></i> Confirmar Exclusão
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body py-4">
+                <p class="text-secondary mb-2">Tem certeza de que deseja excluir a categoria?</p>
+                <div class="modal-highlight-box p-3 rounded">
+                    <strong class="d-block text-dark text-break" id="modalItemNome">Categoria</strong>
+                </div>
+                <small class="text-danger mt-2 d-inline-block">
+                    <i class="bi bi-info-circle me-1"></i> Esta ação poderá impactar a classificação de itens já cadastrados.
+                </small>
+            </div>
+            <div class="modal-footer border-top-0 pt-0">
+                <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="modalBtnConfirmar" class="btn btn-danger-custom">
+                    <i class="bi bi-trash-fill me-1"></i> Sim, excluir
+                </button>
+            </div>
+        </div>
     </div>
-
-
-
-
-
-    <div class="table-responsive">
-
-
-        <table class="table align-middle">
-
-
-            <thead>
-
-                <tr>
-
-                    
-                    <th>Nome</th>
-                    <th>Descrição</th>
-                    <th>Status</th>
-
-
-                    <th colspan="3">Ações</th>
-
-                </tr>
-
-            </thead>
-
-
-
-            <tbody>
-
-
-                {% for categoria in categorias %}
-
-
-                <tr>
-
-
-                    <td class="cnpj-format">
-
-                        {{ categoria.nome }}
-
-                    </td>
-
-
-                    <td>
-
-                        {{ categoria.descricao }}
-
-                    </td>
-
-
-
-                    <td>
-
-                        {% if categoria.ativa %}
-
-                        <span class="badge bg-success">
-
-                            Ativo
-
-                        </span>
-
-
-                        {% else %}
-
-
-                        <span class="badge bg-danger">
-
-                            Inativo
-
-                        </span>
-
-
-                        {% endif %}
-
-
-                    </td>
-
-
-
-
-                    <td>
-
-
-                        <a href="{{ url_for('atualizar_categoria', codigo=categoria.codigo) }}"
-                            class="btn btn-sm btn-outline-primary">
-
-
-                            <i class="bi bi-pencil"></i>
-
-
-                        </a>
-
-
-
-                    </td>
-                    <td>
-                        <form action="{{ url_for('deletar_categoria', codigo=categoria.codigo) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir a categoria {{ categoria.nome }}?');">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-                    <td>
-                        <a href="{{ url_for('view_categoria', codigo=categoria.codigo) }}"
-                            class="btn btn-sm btn-outline-info">
-                            <i class="bi bi-eye"></i>
-                        </a>
-
-                    </td>
-
-
-                </tr>
-
-
-                {% endfor %}
-
-
-
-            </tbody>
-
-
-        </table>
-
-
-    </div>
-
-
-
 </div>
-
-
 {% endblock %}
 
-
 {% block scripts %}
-    <script src="{{ url_for('static', filename='js/excluir_categoria.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/confirmar_exclusao.js') }}"></script>
 {% endblock %}

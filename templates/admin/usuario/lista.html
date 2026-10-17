@@ -1,102 +1,126 @@
 {% extends "base.html" %}
-
-{% block title %}
-Lista de Usuários
-{% endblock %}
+{% block title %}Lista de Usuários{% endblock %}
 
 {% block content %}
+<div class="container-fluid px-0">
 
-<div class="welcome-card mb-4">
-    <h1 class="fw-bold">
-        <i class="bi bi-people"></i>
-        Usuários
-    </h1>
-    <p class="mb-0">
-        Gerencie os usuários e permissões cadastrados no FindLog.
-    </p>
-</div>
-
-<div class="card table-card p-4">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-bold mb-0">
-            Lista de Usuários
-        </h4>
-
-        <a href="{{ url_for('novo_usuario') }}" class="btn btn-primary-custom">
-            <i class="bi bi-person-plus"></i>
-            Novo Usuário
-        </a>
+    <!-- CABEÇALHO -->
+    <div class="welcome-card mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <h1 class="welcome-title"><i class="bi bi-people me-2"></i>Usuários</h1>
+            <p class="welcome-subtitle">Gerencie os acessos, permissões e contas cadastradas no FindLog.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('novo_usuario') }}" class="btn btn-primary-custom d-inline-flex align-items-center gap-2">
+                <i class="bi bi-person-plus-fill"></i>
+                <span>Novo Usuário</span>
+            </a>
+        </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table align-middle">
-            <thead>
-                <tr>
-                    <th>Primeiro Nome</th>
-                    <th>E-mail</th>
-                    <th>CPF</th>
-                    <th>Tipo</th>
-                    <th colspan="3">Ações</th>
-                </tr>
-            </thead>
+    <!-- TABELA -->
+    <div class="card table-card p-3 p-md-4">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center pb-3 mb-3 border-bottom gap-2">
+            <div>
+                <h4 class="card-section-title mb-1">Contas Registradas</h4>
+                <p class="text-muted small mb-0">Listagem de usuários com credenciais ativas no sistema</p>
+            </div>
+            <div class="text-muted small">
+                Total: <strong>{{ usuarios|length }}</strong> usuário(s)
+            </div>
+        </div>
 
-            <tbody>
-                {% for usuario in usuarios %}
-                <tr>
-                    <td>
-                        <strong>{{ usuario.primeiro_nome }}</strong>
-                    </td>
-                    <td>
-                        {{ usuario.email }}
-                    </td>
-                    <td class="cpf-format">
-                        {{ usuario.cpf }}
-                    </td>
-                    <td>
-                        {% if usuario.tipo_usuario == 1 %}
-                            <span class="badge bg-danger">Administrador</span>
-                        {% elif usuario.tipo_usuario == 3 %}
-                            <span class="badge bg-info text-dark">Gestor de Sala</span>
-                        {% else %}
-                            <span class="badge bg-secondary">Comum</span>
-                        {% endif %}
-                    </td>
-
-                    <!-- Ações -->
-                    <td>
-                        <a href="{{ url_for('editar_usuario', username=usuario.username) }}"
-                            class="btn btn-sm btn-outline-primary" title="Editar">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                    </td>
-                   <td>
-                        <form action="{{ url_for('deletar_usuario', username=usuario.username) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir o usuário {{ usuario.nome }}?');">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-                    <td>
-                        <a href="{{ url_for('visualizar_usuario', username=usuario.username) }}"
-                            class="btn btn-sm btn-outline-info" title="Visualizar">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="7" class="text-center text-muted py-4">
-                        Nenhum usuário cadastrado no momento.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-custom table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col" style="min-width: 170px;">Nome</th>
+                        <th scope="col" style="min-width: 220px;">E-mail</th>
+                        <th scope="col" style="min-width: 140px;">CPF</th>
+                        <th scope="col" class="text-center" style="min-width: 140px;">Função</th>
+                        <th scope="col" class="text-end" style="min-width: 130px;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td class="fw-bold text-dark">{{ usuario.primeiro_nome }}</td>
+                        <td class="text-secondary">{{ usuario.email }}</td>
+                        <td class="text-secondary fw-semibold cpf-format">{{ usuario.cpf }}</td>
+                        <td class="text-center">
+                            {% if usuario.tipo_usuario == 1 %}
+                                <span class="badge-role badge-role-admin"><i class="bi bi-shield-lock-fill me-1"></i>Administrador</span>
+                            {% elif usuario.tipo_usuario == 3 %}
+                                <span class="badge-role badge-role-manager"><i class="bi bi-door-open-fill me-1"></i>Gestor de Sala</span>
+                            {% else %}
+                                <span class="badge-role badge-role-user"><i class="bi bi-person-fill me-1"></i>Comum</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <div class="action-buttons-group d-inline-flex gap-1 justify-content-end">
+                                <a href="{{ url_for('visualizar_usuario', username=usuario.username) }}" class="btn-action btn-action-view" title="Visualizar detalhes">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{{ url_for('editar_usuario', username=usuario.username) }}" class="btn-action btn-action-edit" title="Editar usuário">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                
+                                <!-- FORMULÁRIO DE EXCLUSÃO POST SEGURO INTEGRADO AO MODAL -->
+                                <form action="{{ url_for('deletar_usuario', username=usuario.username) }}" method="POST" class="d-inline form-delete-action">
+                                    <button type="button" class="btn-action btn-action-delete btn-delete" data-nome="{{ usuario.nome }}" title="Excluir usuário">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="bi bi-people fs-1 text-muted d-block mb-2"></i>
+                                <h6 class="fw-bold text-secondary">Nenhum usuário cadastrado no momento</h6>
+                                <p class="small text-muted mb-3">Novas contas criadas serão listadas aqui.</p>
+                                <a href="{{ url_for('novo_usuario') }}" class="btn btn-sm btn-primary-custom">Criar Primeiro Usuário</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>
 
+<!-- MODAL DE EXCLUSÃO BOOTSTRAP -->
+<div class="modal fade" id="modalConfirmarExclusao" tabindex="-1" aria-labelledby="modalConfirmarExclusaoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content custom-modal-content">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title d-flex align-items-center gap-2 text-danger fw-bold" id="modalConfirmarExclusaoLabel">
+                    <i class="bi bi-exclamation-triangle-fill fs-5"></i> Confirmar Exclusão
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body py-4">
+                <p class="text-secondary mb-2">Tem certeza de que deseja remover a conta do usuário?</p>
+                <div class="modal-highlight-box p-3 rounded">
+                    <strong class="d-block text-dark text-break" id="modalItemNome">Usuário</strong>
+                </div>
+                <small class="text-danger mt-2 d-inline-block">
+                    <i class="bi bi-info-circle me-1"></i> O usuário perderá o acesso imediato ao painel administrativo.
+                </small>
+            </div>
+            <div class="modal-footer border-top-0 pt-0">
+                <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="modalBtnConfirmar" class="btn btn-danger-custom">
+                    <i class="bi bi-trash-fill me-1"></i> Sim, excluir
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

@@ -1,191 +1,73 @@
 {% extends "base.html" %}
-
-
-{% block title %}
-Atualizar Categoria
-{% endblock %}
-
-
+{% block title %}Atualizar Categoria{% endblock %}
 
 {% block content %}
-
-
-
-<div class="welcome-card mb-4">
-
-
-    <h1 class="fw-bold">
-
-        <i class="bi bi-pencil-square"></i>
-
-        Atualizar Categoria
-
-    </h1>
-
-
-    <p class="mb-0">
-
-        Edite as informações da instituição cadastrada no FindLog.
-
-    </p>
-
-
-</div>
-
-
-
-
-
-<div class="card table-card p-4">
-
-
-    <form method="POST" action="{{ url_for('atualizar_categoria', codigo=categoria.codigo) }}">
-
-
-
-        <div class="row g-4">
-
-
-
-
-
-            <div class="col-12">
-
-
-                <label class="form-label fw-semibold">
-
-                    Nome da Categoria
-
-                </label>
-
-
-                <input type="text" name="nome" class="form-control" value="{{ categoria.nome }}" required>
-
-
-            </div>
-
-
-            <div class="col-12">
-
-
-                <label class="form-label fw-semibold">
-
-                    Descrição da Categoria
-
-                </label>
-
-
-                <input type="text" name="descricao" class="form-control" value="{{ categoria.descricao }}" required>
-
-
-            </div>
-
-
-
-
-            <!-- Status -->
-
-
-            <div class="col-md-6">
-
-
-                <label class="form-label fw-semibold">
-
-                    Status da Categoria
-
-                </label>
-
-
-
-                <select name="ativo" class="form-select">
-
-
-
-                    <option value="1" {% if categoria.ativa %} selected {% endif %}>
-
-                        Ativo
-
-                    </option>
-
-
-
-
-                    <option value="0" {% if not categoria.ativa %} selected {% endif %}>
-
-                        Inativo
-
-                    </option>
-
-
-
-                </select>
-
-
-
-            </div>
-
-
-
-
-
+<div class="container-fluid px-0">
+
+    <!-- CABEÇALHO -->
+    <div class="welcome-card mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <h1 class="welcome-title">
+                <i class="bi bi-pencil-square me-2"></i>Atualizar Categoria
+            </h1>
+            <p class="welcome-subtitle">
+                Edite as informações cadastrais e o status da categoria selecionada.
+            </p>
         </div>
-
-
-
-
-
-
-        <hr class="my-4">
-
-
-
-
-
-
-        <div class="d-flex justify-content-end gap-3">
-
-
-            <a href="{{ url_for('lista_categorias') }}" class="btn btn-outline-secondary">
-
-
-                <i class="bi bi-arrow-left"></i>
-
-                Cancelar
-
-
+        <div>
+            <a href="{{ url_for('lista_categorias') }}" class="btn btn-secondary-custom">
+                <i class="bi bi-arrow-left me-1"></i> Voltar à Lista
             </a>
-
-
-
-
-
-            <button type="submit" class="btn btn-primary-custom">
-
-
-                <i class="bi bi-check-circle"></i>
-
-                Salvar Alterações
-
-
-            </button>
-
-
-
         </div>
+    </div>
 
+    <!-- FORMULÁRIO -->
+    <div class="card table-card p-4">
+        <form method="POST" action="{{ url_for('atualizar_categoria', codigo=categoria.codigo) }}">
+            <div class="row g-4">
+                
+                <!-- Nome da Categoria -->
+                <div class="col-12 col-md-8">
+                    <label class="form-label form-label-custom" for="nome">
+                        Nome da Categoria <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" id="nome" name="nome" class="form-control form-control-custom" value="{{ categoria.nome }}" required>
+                </div>
 
+                <!-- Status da Categoria -->
+                <div class="col-12 col-md-4">
+                    <label class="form-label form-label-custom" for="ativo">
+                        Status de Operação <span class="text-danger">*</span>
+                    </label>
+                    <select id="ativo" name="ativo" class="form-select form-select-custom">
+                        <option value="1" {% if categoria.ativa %} selected {% endif %}>Ativo</option>
+                        <option value="0" {% if not categoria.ativa %} selected {% endif %}>Inativo</option>
+                    </select>
+                </div>
 
+                <!-- Descrição da Categoria -->
+                <div class="col-12">
+                    <label class="form-label form-label-custom" for="descricao">
+                        Descrição Detalhada <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" id="descricao" name="descricao" class="form-control form-control-custom" value="{{ categoria.descricao }}" required>
+                </div>
 
+            </div>
 
-    </form>
+            <hr class="my-4 hr-custom">
 
-
+            <!-- BOTÕES DE AÇÃO -->
+            <div class="d-flex justify-content-end align-items-center gap-2">
+                <a href="{{ url_for('lista_categorias') }}" class="btn btn-secondary-custom">
+                    <i class="bi bi-x-circle me-1"></i> Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary-custom">
+                    <i class="bi bi-check-circle-fill me-1"></i> Salvar Alterações
+                </button>
+            </div>
+        </form>
+    </div>
 
 </div>
-
-
-
-
-
 {% endblock %}
-

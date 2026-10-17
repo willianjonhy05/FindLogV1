@@ -1,102 +1,130 @@
 {% extends "base.html" %}
-
-{% block title %}
-Lista de Salas
-{% endblock %}
+{% block title %}Lista de Salas{% endblock %}
 
 {% block content %}
+<div class="container-fluid px-0">
 
-<div class="welcome-card mb-4">
-    <h1 class="fw-bold">
-        <i class="bi bi-door-closed"></i>
-        Salas
-    </h1>
-    <p class="mb-0">
-        Gerencie as salas e laboratórios cadastrados no FindLog.
-    </p>
-</div>
-
-<div class="card table-card p-4">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-bold mb-0">
-            Lista de Salas
-        </h4>
-
-        <a href="{{ url_for('nova_sala') }}" class="btn btn-primary-custom">
-            <i class="bi bi-plus-circle"></i>
-            Nova Sala
-        </a>
+    <!-- CABEÇALHO -->
+    <div class="welcome-card mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <h1 class="welcome-title">
+                <i class="bi bi-door-closed me-2"></i>Salas e Laboratórios
+            </h1>
+            <p class="welcome-subtitle">
+                Gerencie as salas cadastradas e acompanhe a distribuição dos espaços físicos.
+            </p>
+        </div>
+        <div>
+            <a href="{{ url_for('nova_sala') }}" class="btn btn-primary-custom d-inline-flex align-items-center gap-2">
+                <i class="bi bi-plus-circle-fill"></i>
+                <span>Nova Sala</span>
+            </a>
+        </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table align-middle">
-            <thead>
-                <tr>
-                    <th>Número</th>
-                    <th>Prédio</th>
-                    <th>Andar</th>
-                    <th>Tipo</th>
-                    <th colspan="3">Ações</th>
-                </tr>
-            </thead>
+    <!-- TABELA -->
+    <div class="card table-card p-3 p-md-4">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center pb-3 mb-3 border-bottom gap-2">
+            <div>
+                <h4 class="card-section-title mb-1">Salas Registradas</h4>
+                <p class="text-muted small mb-0">Relação completa de dependências físicas cadastradas</p>
+            </div>
+            <div class="text-muted small">
+                Total: <strong>{{ salas|length }}</strong> sala(s)
+            </div>
+        </div>
 
-            <tbody>
-                {% for sala in salas %}
-                <tr>
-                    <td>
-                        <strong>{{ sala.numero }}</strong>
-                    </td>
-                    <td>
-                        {{ sala.predio }}
-                    </td>
-                    <td>
-                        {{ sala.andar }}
-                    </td>
-                    <td>
-                        {% if sala.laboratorio %}
-                            <span class="badge bg-info text-dark">Laboratório</span>
-                        {% elif sala.sala_de_aula %}
-                            <span class="badge bg-secondary">Sala de Aula</span>
-                        {% else %}
-                            <span class="badge bg-light text-dark">Outro</span>
-                        {% endif %}
-                    </td>
-
-                    <!-- Ações -->
-                    <td>
-                        <a href="{{ url_for('editar_sala', codigo=sala.codigo) }}"
-                            class="btn btn-sm btn-outline-primary" title="Editar">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <form action="{{ url_for('deletar_sala', codigo=sala.codigo) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir a sala {{ sala.codigo }}?');">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-                    <td>
-                        <a href="{{ url_for('detalhes_sala', codigo=sala.codigo) }}"
-                            class="btn btn-sm btn-outline-info" title="Visualizar">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="7" class="text-center text-muted py-4">
-                        Nenhuma sala cadastrada no momento.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-custom table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col" style="min-width: 140px;">Número</th>
+                        <th scope="col" style="min-width: 180px;">Prédio / Bloco</th>
+                        <th scope="col" style="min-width: 130px;">Andar</th>
+                        <th scope="col" class="text-center" style="min-width: 160px;">Tipo de Espaço</th>
+                        <th scope="col" class="text-end" style="min-width: 130px;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sala in salas %}
+                    <tr>
+                        <td class="fw-bold text-dark">Sala {{ sala.numero }}</td>
+                        <td class="text-secondary">{{ sala.predio }}</td>
+                        <td class="text-secondary">{{ sala.andar or '-' }}</td>
+                        <td class="text-center">
+                            {% if sala.laboratorio %}
+                                <span class="badge-role badge-role-manager"><i class="bi bi-cpu-fill me-1"></i>Laboratório</span>
+                            {% elif sala.sala_de_aula %}
+                                <span class="badge-role badge-role-user"><i class="bi bi-book-fill me-1"></i>Sala de Aula</span>
+                            {% else %}
+                                <span class="badge-role badge-role-user">Outro</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <div class="action-buttons-group d-inline-flex gap-1 justify-content-end">
+                                <a href="{{ url_for('detalhes_sala', codigo=sala.codigo) }}" class="btn-action btn-action-view" title="Visualizar sala">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{{ url_for('editar_sala', codigo=sala.codigo) }}" class="btn-action btn-action-edit" title="Editar sala">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                
+                                <!-- FORMULÁRIO DE EXCLUSÃO POST INTEGRADO AO MODAL -->
+                                <form action="{{ url_for('deletar_sala', codigo=sala.codigo) }}" method="POST" class="d-inline form-delete-action">
+                                    <button type="button" class="btn-action btn-action-delete btn-delete" data-nome="Sala {{ sala.numero }}" title="Excluir sala">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="bi bi-door-closed fs-1 text-muted d-block mb-2"></i>
+                                <h6 class="fw-bold text-secondary">Nenhuma sala cadastrada no momento</h6>
+                                <p class="small text-muted mb-3">Cadastre salas para associar gestores e vincular a localização de achados e perdidos.</p>
+                                <a href="{{ url_for('nova_sala') }}" class="btn btn-sm btn-primary-custom">Cadastrar Primeira Sala</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>
 
+<!-- MODAL DE EXCLUSÃO BOOTSTRAP -->
+<div class="modal fade" id="modalConfirmarExclusao" tabindex="-1" aria-labelledby="modalConfirmarExclusaoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content custom-modal-content">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title d-flex align-items-center gap-2 text-danger fw-bold" id="modalConfirmarExclusaoLabel">
+                    <i class="bi bi-exclamation-triangle-fill fs-5"></i> Confirmar Exclusão
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body py-4">
+                <p class="text-secondary mb-2">Tem certeza de que deseja excluir permanentemente esta sala?</p>
+                <div class="modal-highlight-box p-3 rounded">
+                    <strong class="d-block text-dark text-break" id="modalItemNome">Sala</strong>
+                </div>
+                <small class="text-danger mt-2 d-inline-block">
+                    <i class="bi bi-info-circle me-1"></i> Certifique-se de que não haja itens ou gestores vinculados a este espaço.
+                </small>
+            </div>
+            <div class="modal-footer border-top-0 pt-0">
+                <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="modalBtnConfirmar" class="btn btn-danger-custom">
+                    <i class="bi bi-trash-fill me-1"></i> Sim, excluir
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

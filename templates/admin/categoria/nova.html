@@ -1,133 +1,59 @@
 {% extends "base.html" %}
-
-
-{% block title %}
-Nova Categoria
-{% endblock %}
-
-
+{% block title %}Nova Categoria{% endblock %}
 
 {% block content %}
+<div class="container-fluid px-0">
 
-
-
-<div class="welcome-card mb-4">
-
-
-    <h1 class="fw-bold">
-
-        <i class="bi bi-bookmarks"></i>
-
-        Nova Categoria
-
-    </h1>
-
-
-    <p>
-
-        Cadastre uma nova categoria no sistema.
-
-    </p>
-
-
-</div>
-
-
-
-
-
-<div class="card table-card p-4">
-
-
-    <form method="POST" action="{{ url_for('nova_categoria') }}">
-
-
-
-        <div class="row g-4">
-
-
-
-            <div class="col-12">
-
-
-                <label class="form-label fw-semibold" for="nome">
-
-                    Nome da Categoria
-
-                </label>
-
-
-                <input type="text" id="nome" name="nome" class="form-control"
-                    placeholder="Ex: Eletrônicos" required>
-
-
-            </div>
-
-
-
-
-
-
-            <div class="col-12">
-
-
-                <label for="descricao" class="form-label fw-semibold">
-
-                    Descrição da Categoria
-
-                </label>
-
-
-                <textarea id="descricao" name="descricao" class="form-control" rows="3"
-                    placeholder="Ex: Produtos eletrônicos de qualidade" required></textarea>
-
- 
-
-            </div>
-
+    <!-- CABEÇALHO -->
+    <div class="welcome-card mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <h1 class="welcome-title">
+                <i class="bi bi-bookmark-plus me-2"></i>Nova Categoria
+            </h1>
+            <p class="welcome-subtitle">
+                Cadastre uma nova categoria para agrupar e organizar os itens de achados e perdidos.
+            </p>
         </div>
-
-        <hr class="my-4">
-
-
-
-        <div class="d-flex justify-content-end gap-3">
-
-
-            <a href="{{ url_for('lista_categorias') }}" class="btn btn-outline-secondary">
-
-
-                Cancelar
-
+        <div>
+            <a href="{{ url_for('lista_categorias') }}" class="btn btn-secondary-custom">
+                <i class="bi bi-arrow-left me-1"></i> Voltar à Lista
             </a>
-
-
-
-
-            <button type="submit" class="btn btn-primary-custom">
-
-
-                <i class="bi bi-check-circle"></i>
-
-                Salvar
-
-
-            </button>
-
-
-
         </div>
+    </div>
 
+    <!-- FORMULÁRIO -->
+    <div class="card table-card p-4">
+        <form method="POST" action="{{ url_for('nova_categoria') }}">
+            <div class="row g-4">
+                
+                <div class="col-12">
+                    <label class="form-label form-label-custom" for="nome">
+                        Nome da Categoria <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" id="nome" name="nome" class="form-control form-control-custom" placeholder="Ex: Eletrônicos, Documentos, Acessórios" required>
+                </div>
 
+                <div class="col-12">
+                    <label for="descricao" class="form-label form-label-custom">
+                        Descrição da Categoria <span class="text-danger">*</span>
+                    </label>
+                    <textarea id="descricao" name="descricao" class="form-control form-control-custom" rows="3" placeholder="Ex: Celulares, carregadores, fones de ouvido e dispositivos eletrônicos em geral" required></textarea>
+                </div>
 
-    </form>
+            </div>
 
+            <hr class="my-4 hr-custom">
 
+            <div class="d-flex justify-content-end align-items-center gap-2">
+                <a href="{{ url_for('lista_categorias') }}" class="btn btn-secondary-custom">
+                    <i class="bi bi-x-circle me-1"></i> Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary-custom">
+                    <i class="bi bi-check-circle-fill me-1"></i> Salvar Categoria
+                </button>
+            </div>
+        </form>
+    </div>
 
 </div>
-
-
-
-
 {% endblock %}
-
