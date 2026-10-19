@@ -7,6 +7,7 @@ from routes.categoria_routes import categoria_routes
 from routes.usuario_routes import usuario_routes
 from routes.item_routes import item_rotas
 from routes.contato_routes import registrar_rotas_contato
+from routes.reivindicacao_routes import reivindicacao_rotas
 
 import os
 from supabase import create_client, Client
@@ -37,6 +38,7 @@ item_rotas(app)
 usuario_routes(app)
 sala_rotas(app)
 registrar_rotas_contato(app)
+reivindicacao_rotas(app)
 
 if __name__ == "__main__":
     app.run()

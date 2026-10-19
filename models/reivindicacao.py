@@ -5,7 +5,7 @@ from datetime import datetime
 import random
 from daos.reivindicacao_dao import ReivindicacaoDAO
 
-class Reivindicacao():
+class Reivindicacao:
     STATUS = {
         1: "Pendente",
         2: "Em Análise",
@@ -19,30 +19,30 @@ class Reivindicacao():
         self.errors = []
 
         # Data da reivindicação preenchida automaticamente se não existir
-        if not self.data.get("data"):
-            self.data["data"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")   
+        if not self.data.get("data_criacao"):
+            self.data["data_criacao"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")   
 
+        # Correção: chamando o classmethod corretamente pelo nome certo
         if not self.data.get("protocolo"):
-            self.data["protocolo"] = self._gerar_id()
+            self.data["protocolo"] = Reivindicacao._gerar_protocolo()
 
         if not self.data.get("status"):
-            self.data["status"] = self.STATUS[1] # Pendente         
-
-
-
+            self.data["status"] = self.STATUS[1] # Pendente        
 
     def validate(self, is_new=True):
         self.errors = []
 
         autor = self.data.get("autor")
-        if autor and not Usuario.get_by_username(autor):
-            self.errors.append("O autor da reivindicação não existe")  
+        if not autor or not Usuario.get_by_username(autor):
+            self.errors.append("O autor da reivindicação não existe ou não foi informado.")  
 
-        item_codigo = self.data.get["item_codigo"]  
-        if item_codigo and not Item.get_by_codigo(item_codigo):
-            self.errors.append("O item da reivindicação não existe")
+        # Correção: 'get' é um método, exige parênteses e não colchetes
+        item_codigo = self.data.get("item_codigo")  
+        if not item_codigo or not Item.get_by_codigo(item_codigo):
+            self.errors.append("O item da reivindicação não existe ou não foi informado.")
 
-        instituicao_cnpj = self.data.get("instituicao")
+        # Correção: padronizado para a mesma chave da property (instituicao_cnpj)
+        instituicao_cnpj = self.data.get("instituicao_cnpj")
         if not instituicao_cnpj:
             self.errors.append("A instituição é obrigatória.")
         else:
@@ -51,12 +51,16 @@ class Reivindicacao():
                 self.errors.append("A instituição selecionada não existe.")   
 
         prova_propriedade = self.data.get("prova_propriedade")        
-        if len(prova_propriedade) < 10:
-            self.errors.append("Descrição insuficiente")
-
+        # Correção: garantindo que a prova seja uma string antes de medir o tamanho (evita erro se for None)
+        if not prova_propriedade or len(str(prova_propriedade).strip()) < 10:
+            self.errors.append("Descrição da prova de propriedade insuficiente.")
 
         return len(self.errors) == 0
 
+
+    def save(self):
+        dao = ReivindicacaoDAO
+        return dao.inserir(self)
 
     @classmethod
     def _gerar_protocolo(cls):
@@ -70,10 +74,23 @@ class Reivindicacao():
         dao = ReivindicacaoDAO()
         return dao.buscar_reivincacao_por_protocolo(protocolo)
 
+    @staticmethod
+    def get_all():        
+        dao = ReivindicacaoDAO()
+        return dao.get_reivindicacoes()
+
+    @staticmethod
+    def quantidade_de_revindicacoes():
+        dao = ReivindicacaoDAO()
+        return dao.contar_total()    
 
     @property
     def protocolo(self):
         return self.data.get("protocolo")
+        
+    @property
+    def data_criacao(self):
+        return self.data.get("data_criacao")
 
     @property
     def item_codigo(self):
@@ -87,10 +104,6 @@ class Reivindicacao():
     def instituicao_cnpj(self):
         return self.data.get("instituicao_cnpj")
 
-    @property
-    def descricao(self):
-        return self.data.get("descricao")
-        
     @property
     def prova_propriedade(self):
         return self.data.get("prova_propriedade")
@@ -114,3 +127,23 @@ class Reivindicacao():
     @property
     def local_devolucao(self):
         return self.data.get("local_devolucao")
+
+    @property
+    def data_devolucao(self):
+        return self.data.get("data_devolucao")
+
+    @property
+    def item_obj(self):
+        """Busca o objeto Item completo no banco de dados baseado no item_codigo"""
+        if not self.item_codigo:
+            return None
+        from models.item import Item
+        return Item.get_by_codigo(self.item_codigo)    
+
+    @property
+    def autor_obj(self):
+        """Busca o objeto Usuario completo no banco de dados baseado no username (autor)"""
+        if not self.autor:
+            return None
+        from models.usuario import Usuario
+        return Usuario.get_by_username(self.autor)    

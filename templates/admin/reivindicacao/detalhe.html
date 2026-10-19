@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block title %}Detalhes da Reivindicação{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <!-- CABEÇALHO -->
+    <div class="welcome-card mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <h1 class="welcome-title"><i class="bi bi-clipboard-check me-2"></i>Detalhes da Reivindicação</h1>
+            <p class="welcome-subtitle">Visualização completa do pedido de reconhecimento e devolução de item.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('lista_reivindicacoes') }}" class="btn btn-secondary-custom">
+                <i class="bi bi-arrow-left me-1"></i> Voltar para Lista
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- DETALHES PRINCIPAIS E CONTEÚDO -->
+        <div class="col-12 col-lg-8">
+            <div class="card table-card p-4">
+                
+                <!-- IDENTIFICAÇÃO DO AUTOR -->
+                <div class="d-flex align-items-center mb-4 pb-3 border-bottom gap-3">
+                    <div class="icon-avatar-md bg-primary bg-opacity-10 text-primary">
+                        <i class="bi bi-person-badge-fill"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-1 text-dark">{{ reivindicacao.autor_obj.nome if reivindicacao.autor_obj else reivindicacao.autor }}</h4>
+                        <span class="text-muted small">Protocolo da Reivindicação: <strong class="text-secondary">#{{ reivindicacao.protocolo or '-' }}</strong></span>
+                    </div>
+                </div>
+
+                <!-- METADADOS DA REIVINDICAÇÃO -->
+                <div class="row g-4">
+                    <div class="col-12 col-md-6">
+                        <span class="profile-data-label">Item Reivindicado</span>
+                        <div class="profile-data-value">
+                            <i class="bi bi-box-seam profile-info-icon"></i>
+                            <span>{{ reivindicacao.item_obj.nome if reivindicacao.item_obj else 'Código: ' ~ reivindicacao.item_codigo }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="profile-data-label">Status Atual</span>
+                        <div class="profile-data-value">
+                            <i class="bi bi-info-circle profile-info-icon"></i>
+                            <span class="badge 
+                                {% if reivindicacao.status == 'Pendente' %}bg-warning text-dark
+                                {% elif reivindicacao.status == 'Em Análise' %}bg-info text-dark
+                                {% elif reivindicacao.status == 'Aprovada' %}bg-success
+                                {% elif reivindicacao.status == 'Recusada' %}bg-danger
+                                {% elif reivindicacao.status == 'Entregue' %}bg-secondary
+                                {% else %}bg-light text-dark{% endif %}">
+                                {{ reivindicacao.status or 'Desconhecido' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="profile-data-label">Data da Solicitação</span>
+                        <div class="profile-data-value">
+                            <i class="bi bi-calendar-event profile-info-icon"></i>
+                            <span>{{ reivindicacao.data_criacao or '-' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="profile-data-label">Instituição Responsável</span>
+                        <div class="profile-data-value">
+                            <i class="bi bi-building profile-info-icon"></i>
+                            <span>{{ reivindicacao.instituicao_cnpj or '-' }}</span>
+                        </div>
+                    </div>
+
+                    <!-- PROVA DE PROPRIEDADE (DESTAQUE) -->
+                    <div class="col-12">
+                        <span class="profile-data-label text-primary fw-bold"><i class="bi bi-shield-check me-1"></i> Prova de Propriedade</span>
+                        <div class="message-content-box mt-1 bg-light border-primary border border-opacity-25">
+                            {{ reivindicacao.prova_propriedade or 'O usuário não forneceu detalhes suficientes para comprovar a propriedade.' }}
+                        </div>
+                    </div>
+
+                    <!-- DESCRIÇÃO ADICIONAL -->
+                    {% if reivindicacao.descricao %}
+                    <div class="col-12">
+                        <span class="profile-data-label">Descrição / Comentários Adicionais</span>
+                        <div class="message-content-box mt-1">
+                            {{ reivindicacao.descricao }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- PAINEL LATERAL DE AÇÕES E ADMINISTRAÇÃO -->
+        <div class="col-12 col-lg-4">
+            
+            <!-- AÇÕES -->
+            <div class="card table-card p-4 mb-4">
+                <h5 class="card-section-title pb-2 mb-3 border-bottom">Ações Administrativas</h5>
+                <div class="d-grid gap-2">
+                    <!-- Botão para futura implementação de mudança de status -->
+                    <button type="button" class="btn btn-primary-custom d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-pencil-square fs-5"></i>
+                        <span>Atualizar Status</span>
+                    </button>
+                    
+                    <!-- Contato com o autor -->
+                    {% if reivindicacao.autor_obj and reivindicacao.autor_obj.email %}
+                    <a href="mailto:{{ reivindicacao.autor_obj.email }}?subject=Sobre a sua reivindicação do item {{ reivindicacao.item_obj.nome if reivindicacao.item_obj else reivindicacao.item_codigo }}" class="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2 mt-2">
+                        <i class="bi bi-envelope-fill"></i>
+                        <span>Contatar Autor</span>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- OBSERVAÇÕES INTERNAS DO ADMIN -->
+            <div class="card table-card security-notice-card p-4 mb-4" style="background-color: #fff8e1; border-left: 4px solid #ffc107;">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-journal-text text-warning fs-5"></i>
+                    <h6 class="fw-bold mb-0 text-dark">Observações Internas</h6>
+                </div>
+                <p class="mb-0 text-muted small">
+                    {{ reivindicacao.observacoes_admin or 'Nenhuma anotação interna registrada para esta reivindicação até o momento.' }}
+                </p>
+            </div>
+
+            <!-- INFORMAÇÃO DO SISTEMA -->
+            <div class="card table-card security-notice-card p-4">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-info-circle-fill text-primary fs-5"></i>
+                    <h6 class="fw-bold mb-0 text-dark">Informações do Sistema</h6>
+                </div>
+                <p class="mb-0 text-muted small">
+                    O status da reivindicação dita o ciclo de vida do item. Aprove apenas se as evidências (Prova de Propriedade) forem conclusivas.
+                </p>
+            </div>
+            
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

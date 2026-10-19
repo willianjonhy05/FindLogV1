@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Reivindicação de Itens{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <!-- CABEÇALHO DA SEÇÃO -->
+    <div class="welcome-card mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <h1 class="welcome-title"><i class="bi bi-clipboard-data me-2"></i>Reivindicação de Itens</h1>
+            <p class="welcome-subtitle">Consulte a lista e veja detalhes das reivindicações de itens perdidos.</p>
+        </div>
+        <div>
+            <span class="welcome-badge">
+                <i class="bi bi-clipboard-data me-1"></i> Total: {{ reivindicacoes|length }} reivindicações
+            </span>
+        </div>
+    </div>
+
+
+    <!-- CARD DA TABELA -->
+    <div class="card table-card p-3 p-md-4">
+        <div
+            class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center pb-3 mb-3 border-bottom gap-2">
+            <div>
+                <h4 class="card-section-title mb-1">Reivindicações</h4>
+                <p class="text-muted small mb-0">Usuários que reconheceram itens que podem pertencer a eles</p>
+            </div>
+            <div class="text-muted small">
+                Mostrando <strong>{{ reivindicacoes|length }}</strong> registro(s)
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-custom table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col" style="min-width: 150px;">Protocolo</th>
+                        <th scope="col" style="min-width: 150px;">Item (Código)</th>
+                        <th scope="col" style="min-width: 150px;">Autor</th>
+                        <th scope="col" style="min-width: 150px;">Data</th>
+                        <th scope="col" style="min-width: 150px;">Status</th>
+                        <th scope="col" class="text-end" style="min-width: 120px;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in reivindicacoes %}
+                    <tr>
+                        <td class="fw-bold text-dark">{{ r.protocolo or '-' }}</td>
+                        <!-- Coluna do Item com Foto -->
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <!-- Verifica se o objeto item existe e se tem foto -->
+                                {% if r.item_obj and r.item_obj.foto %}
+                                <img src="{{ r.item_obj.foto }}" alt="Foto do item" class="rounded me-2 border"
+                                    style="width: 45px; height: 45px; object-fit: cover;">
+                                {% else %}
+                                <!-- Placeholder caso o item não tenha foto -->
+                                <div class="bg-light text-secondary border rounded d-flex justify-content-center align-items-center me-2"
+                                    style="width: 45px; height: 45px;">
+                                    <i class="bi bi-box-seam fs-5"></i>
+                                </div>
+                                {% endif %}
+
+                                <div>
+                                    <!-- Nome do item (se existir) e o código embaixo -->
+                                    <span class="d-block fw-medium text-dark mb-0" style="line-height: 1.2;">
+                                        {{ r.item_obj.nome if r.item_obj else 'Item desconhecido' }}
+                                    </span>
+                                    <small class="text-muted" style="font-size: 0.8em;">Cód: {{ r.item_codigo or '-'
+                                        }}</small>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Coluna do Autor com Nome -->
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <!-- Avatar genérico com a inicial do autor ou ícone -->
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex justify-content-center align-items-center me-2"
+                                    style="width: 35px; height: 35px;">
+                                    <i class="bi bi-person-fill"></i>
+                                </div>
+                                <div>
+                                    <!-- Nome real do autor (se existir) e o username embaixo -->
+                                    <span class="d-block text-dark mb-0" style="line-height: 1.2;">
+                                        {{ r.autor_obj.nome if r.autor_obj else r.autor }}
+                                    </span>
+                                    <small class="text-muted" style="font-size: 0.8em;">@{{ r.autor or '-' }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-secondary small">{{ r.data_criacao or '-' }}</td>
+                        <td>
+                            <!-- Exemplo de formatação baseada no status -->
+                            <span class="badge 
+                                {% if r.status == 'Pendente' %}bg-warning text-dark
+                                {% elif r.status == 'Em Análise' %}bg-info text-dark
+                                {% elif r.status == 'Aprovada' %}bg-success
+                                {% elif r.status == 'Recusada' %}bg-danger
+                                {% elif r.status == 'Entregue' %}bg-secondary
+                                {% else %}bg-light text-dark{% endif %}">
+                                {{ r.status or '-' }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <div class="action-buttons-group d-inline-flex gap-1 justify-content-end">
+                                <a href="{{ url_for('detalhar_reivindicacao', protocolo=r.protocolo) }}"
+                                    class="btn-action btn-action-view" title="Visualizar detalhes da reivindicação">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="bi bi-inbox fs-1 text-muted d-block mb-2"></i>
+                                <h6 class="fw-bold text-secondary">Nenhuma reivindicação encontrada</h6>
+                                <p class="small text-muted mb-0">As reivindicações recebidas através do portal
+                                    aparecerão listadas aqui.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

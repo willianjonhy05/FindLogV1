@@ -94,6 +94,10 @@
                 <i class="bi bi-people"></i>
                 <span>Usuários</span>
             </a>
+            <a href="{{ url_for('lista_reivindicacoes') }}" class="nav-item {{ 'active' if request.endpoint == 'lista_reivindicacoes' else '' }}">
+                <i class="bi bi-clipboard-data"></i>
+                <span>Reivindicações</span>
+            </a>
             <a href="#" class="nav-item">
                 <i class="bi bi-box-seam"></i>
                 <span>Itens Cadastrados</span>

@@ -104,6 +104,38 @@ CREATE TABLE contatos (
     data_envio TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+
+CREATE TABLE reivindicacoes (
+    -- O protocolo serve como chave primária pois você gera um código único inteiro
+    protocolo INT PRIMARY KEY,
+    
+    -- Relacionamentos (Chaves Estrangeiras)
+    autor VARCHAR(100) NOT NULL, -- Supondo que referencia um 'username'
+    item_codigo VARCHAR(50) NOT NULL, -- Supondo que o código do item seja texto
+    instituicao_cnpj VARCHAR(18) NOT NULL,
+    
+    -- Campos de texto da Reivindicação
+    prova_propriedade TEXT NOT NULL,
+    
+    -- Controle de Status e Administração
+    status VARCHAR(50) NOT NULL DEFAULT 'Pendente',
+    observacoes_admin TEXT,
+    anexos TEXT, -- Pode guardar links separados por vírgula ou um array JSON
+    responsavel_id INT, -- ID do funcionário/admin que atendeu o caso
+    
+    -- Informações de Devolução
+    local_devolucao VARCHAR(255),
+    data_devolucao TIMESTAMP,
+    
+    -- Data de criação
+    data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    -- Constraints de integridade referencial (Ajuste os nomes das tabelas se necessário)
+    CONSTRAINT fk_reivindicacao_autor FOREIGN KEY (autor) REFERENCES usuarios(username) ON DELETE CASCADE,
+    CONSTRAINT fk_reivindicacao_item FOREIGN KEY (item_codigo) REFERENCES itens(codigo) ON DELETE CASCADE,
+    CONSTRAINT fk_reivindicacao_instituicao FOREIGN KEY (instituicao_cnpj) REFERENCES instituicoes(cnpj) ON DELETE CASCADE
+);
+
 -- CREATE TABLE IF NOT EXISTS itens (
 --     id INTEGER PRIMARY KEY,
 --     cor TEXT,
