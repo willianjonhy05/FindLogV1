@@ -114,6 +114,12 @@ class Categoria:
         return dao.get_categorias()
 
     @staticmethod
+    def get_all_activas():
+        from daos.categoria_dao import CategoriaDAO
+        dao = CategoriaDAO()
+        return dao.get_categorias_ativas()
+
+    @staticmethod
     def get_by_codigo(codigo):
         from daos.categoria_dao import CategoriaDAO
         dao = CategoriaDAO()

@@ -84,6 +84,11 @@ class Reivindicacao:
         dao = ReivindicacaoDAO()
         return dao.contar_total()    
 
+    @staticmethod
+    def get_by_item(codigo):
+        dao = ReivindicacaoDAO()
+        return dao.get_reivindicacoes_por_item(codigo)
+
     @property
     def protocolo(self):
         return self.data.get("protocolo")

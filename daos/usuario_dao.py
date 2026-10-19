@@ -84,6 +84,21 @@ class UsuarioDAO:
             print(f"Erro ao buscar usuário por email: {erro}") # <--- Corrigido a mensagem
 
         return None
+    
+
+    def get_nome_usuario_by_username(self, username):
+        from main import supabase
+        from models.usuario import Usuario
+
+        try:
+            resposta = supabase.table("usuarios").select("nome").eq("username", username).execute()
+            if resposta.data:
+                return resposta.data[0].get("nome")
+            return None
+
+        except Exception as erro:
+            print(f"Erro ao buscar o nome do usuário ({username}): {repr(erro)}")
+
 
 
     def get_usuario_by_cpf(self, cpf):

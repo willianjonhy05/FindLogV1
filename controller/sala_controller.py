@@ -27,7 +27,7 @@ def nova_sala():
         if sala.validate(is_new=True):
             if sala.save():
                 return redirect(url_for('lista_salas'))
-            return "Erro ao salvar sala no banco de dados", 500
+            return render_template("admin/errors/500.html"), 500
 
         # Se falhar na validação, retorna para o template com os erros e as instituições
         instituicoes = Instituicao.listar_instituicoes_ativas()

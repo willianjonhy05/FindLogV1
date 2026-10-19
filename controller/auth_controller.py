@@ -26,6 +26,10 @@ def login():
             session['usuario_nome'] = usuario.primeiro_nome
             session['usuario_tipo'] = int(usuario.tipo_usuario)
             session['usuario_foto'] = usuario.foto_perfil
+            session['usuario_cnpj_instituicao'] = usuario.instituicao
+
+            if usuario.tipo_usuario == 3:
+                session['usuario_sala_codigo'] = usuario.sala_codigo
             
 
             return _redirecionar_por_tipo(usuario.tipo_usuario)

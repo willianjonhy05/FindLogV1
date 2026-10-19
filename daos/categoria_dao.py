@@ -35,6 +35,15 @@ class CategoriaDAO:
 
         return categorias
 
+
+    def get_categorias_ativas(self):
+        from main import supabase
+        from models.categoria import Categoria
+
+        response = supabase.table('categorias').select("codigo, nome").eq("ativa", True).execute()
+        return response.data if hasattr(response, 'data') else response
+    
+
     def get_categoria_by_codigo(self, codigo):
         from main import supabase
         from models.categoria import Categoria

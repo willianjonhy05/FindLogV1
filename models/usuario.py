@@ -182,6 +182,11 @@ class Usuario:
         dao = UsuarioDAO()
         return dao.get_usuario_by_username(username)
 
+    @staticmethod
+    def buscar_nome_por_username(username):
+        from daos.usuario_dao import UsuarioDAO
+        dao = UsuarioDAO()
+        return dao.get_nome_usuario_by_username(username)
 
     @staticmethod
     def get_by_email(email):

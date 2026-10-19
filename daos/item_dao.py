@@ -23,6 +23,54 @@ class ItemDAO:
             
         return itens
 
+
+    def get_itens_by_instituicao(self, cnpj):
+        from main import supabase
+        from models.item import Item
+
+        response = supabase.table('itens').select("*").eq("instituicao_cnpj", cnpj).execute()
+        itens = []
+
+        data_rows = response.data if hasattr(response, 'data') else response
+
+        for row in data_rows:
+            # Mapeia as colunas do banco para as chaves limpas que a classe Item espera
+            row_data = row.copy()
+            row_data["categoria"] = row.get("categoria_codigo")
+            row_data["instituicao"] = row.get("instituicao_cnpj")
+            row_data["onde_guardado"] = row.get("onde_guardado_codigo")
+            row_data["quem_encontrou"] = row.get("quem_encontrou_username")
+            row_data["dono"] = row.get("dono_username")
+            
+            item = Item(data=row_data)
+            itens.append(item)
+
+        return itens
+
+
+    def get_itens_by_instituicao_by_categoria(cnpj, codigo_categoria):
+        from main import supabase
+        from models.item import Item
+
+        response = supabase.table('itens').select("*").eq("instituicao_cnpj", cnpj).eq("categoria_codigo", codigo_categoria).execute()
+        itens = []
+
+        data_rows = response.data if hasattr(response, 'data') else response
+
+        for row in data_rows:
+            # Mapeia as colunas do banco para as chaves limpas que a classe Item espera
+            row_data = row.copy()
+            row_data["categoria"] = row.get("categoria_codigo")
+            row_data["instituicao"] = row.get("instituicao_cnpj")
+            row_data["onde_guardado"] = row.get("onde_guardado_codigo")
+            row_data["quem_encontrou"] = row.get("quem_encontrou_username")
+            row_data["dono"] = row.get("dono_username")
+            
+            item = Item(data=row_data)
+            itens.append(item)
+
+        return itens        
+
     def add_item(self, item):
         from main import supabase
         

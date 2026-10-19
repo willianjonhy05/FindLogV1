@@ -33,6 +33,32 @@ class ReivindicacaoDAO:
             reivindicacoes.append(reivindicacao)
         return reivindicacoes
 
+    def get_reivindicacoes_por_item(self, codigo_item):
+        from main import supabase
+        from models.reivindicacao import Reivindicacao
+
+        try:
+            response = supabase.table('reivindicacoes').select("*").eq("item_codigo", codigo_item).execute()
+            reivindicacoes = []
+
+            # Garante que data_rows receba os dados corretamente
+            data_rows = response.data if hasattr(response, 'data') else response
+            
+            # Previne erro de iteração caso a consulta não retorne nada (None)
+            if not data_rows:
+                return []
+            
+            for row in data_rows:
+                # Passamos o dicionário row diretamente para o construtor da Reivindicacao
+                reivindicacao = Reivindicacao(data=row)
+                reivindicacoes.append(reivindicacao)
+                
+            return reivindicacoes
+
+        except Exception as erro:
+            print(f"Erro ao buscar reivindicações para o item {codigo_item}: {repr(erro)}")
+            return []  # Retorna lista vazia em caso de falha para não quebrar a aplicação
+
 
     def inserir(self, reivindicacao):
         from main import supabase

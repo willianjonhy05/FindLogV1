@@ -128,6 +128,18 @@ class Item:
         return dao.get_itens()
 
     @staticmethod
+    def get_all_instituicao(cnpj):
+        from daos.item_dao import ItemDAO
+        dao = ItemDAO()
+        return dao.get_itens_by_instituicao(cnpj)
+
+    @staticmethod
+    def get_all_instituicao_by_categoria(cnpj, codigo_categoria):
+        from daos.item_dao import ItemDAO
+        dao = ItemDAO()
+        return dao.get_itens_by_instituicao_by_categoria(cnpj, codigo_categoria)
+
+    @staticmethod
     def get_by_codigo(codigo):
         from daos.item_dao import ItemDAO
         dao = ItemDAO()

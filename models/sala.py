@@ -113,6 +113,12 @@ class Sala:
         return dao.get_salas()
 
     @staticmethod
+    def get_all_by_cnpj(cnpj):
+        from daos.sala_dao import SalaDAO
+        dao = SalaDAO()
+        return dao.get_salas_por_cnpj(cnpj)
+
+    @staticmethod
     def get_by_codigo(codigo):
         from daos.sala_dao import SalaDAO
         dao = SalaDAO()

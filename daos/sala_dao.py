@@ -19,6 +19,27 @@ class SalaDAO:
             salas.append(sala)
             
         return salas
+
+
+    def get_salas_por_cnpj(self, cnpj):
+        from main import supabase
+        from models.sala import Sala
+
+        response = supabase.table('salas').select("*").eq("instituicao_cnpj", cnpj).execute()
+        salas = []
+        
+        data_rows = response.data if hasattr(response, 'data') else response
+        
+        for row in data_rows:
+            # Fazemos uma cópia para mapear a coluna do banco 'instituicao_cnpj' 
+            # para a chave 'instituicao' que a classe Sala utiliza internamente.
+            row_data = row.copy()
+            row_data["instituicao"] = row.get("instituicao_cnpj")
+            
+            sala = Sala(data=row_data)
+            salas.append(sala)
+            
+        return salas        
     
     def add_sala(self, sala):
         from main import supabase
